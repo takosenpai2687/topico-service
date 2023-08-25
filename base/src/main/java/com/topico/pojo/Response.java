@@ -8,8 +8,6 @@ import org.springframework.http.HttpStatus;
 
 @Data
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 public class Response<T> {
     private int code;
     private String message;
@@ -26,15 +24,12 @@ public class Response<T> {
         return Response.<T>builder().code(HttpStatus.OK.value()).message("success").data(data).build();
     }
 
+
     public static <T> Response<T> success() {
         return Response.<T>builder().code(HttpStatus.OK.value()).message("success").build();
     }
 
-    // BAD REQUEST
-
-    // FORBIDDEN
-
-    // NOT FOUND
-
-    // INTERNAL ERROR
+    public static <T> Response<T> fail(Integer code, String message) {
+        return Response.<T>builder().code(code).message(message).build();
+    }
 }

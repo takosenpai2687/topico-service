@@ -31,9 +31,6 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
-    private String salt;
-
     @Column(nullable = false, columnDefinition = "TINYINT default 0")
     private Gender gender;
 
