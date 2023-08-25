@@ -1,9 +1,9 @@
 package com.topico.web;
 
+import com.topico.dto.UpdateUserDto;
 import com.topico.entity.User;
 import com.topico.pojo.Response;
-import com.topico.dto.CreateUserDTO;
-import com.topico.dto.UpdateUserDTO;
+import com.topico.dto.CreateUserDto;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import com.topico.service.UserService;
@@ -27,7 +27,7 @@ public class UserController {
     }
 
     @PostMapping()
-    public Response<User> createUser(@RequestBody @Valid CreateUserDTO createUserDTO) {
+    public Response<User> createUser(@RequestBody @Valid CreateUserDto createUserDTO) {
         final User user = userService.createUser(createUserDTO);
         return Response.success(user);
     }
@@ -39,9 +39,9 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public Response<User> updateUser(@PathVariable("id") Long id, @RequestBody @Valid UpdateUserDTO updateUserDTO) {
-        updateUserDTO.setId(id);
-        User updatedUser = userService.updateUser(updateUserDTO);
+    public Response<User> updateUser(@PathVariable("id") Long id, @RequestBody @Valid UpdateUserDto updateUserDto) {
+        updateUserDto.setId(id);
+        User updatedUser = userService.updateUser(updateUserDto);
         return Response.success(updatedUser);
     }
 

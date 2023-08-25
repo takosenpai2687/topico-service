@@ -4,20 +4,17 @@ package com.topico.entity;
 import com.topico.enums.Gender;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
 @Builder
-@AllArgsConstructor
-@MappedSuperclass
-@NoArgsConstructor
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class User extends BaseEntity {
 
     @NotBlank
@@ -51,11 +48,7 @@ public class User extends BaseEntity {
 
     // Subscribed communities
     @ManyToMany
-    @JoinTable(
-            name = "user_community_subscription",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "community_id")
-    )
+    @JoinTable(name = "user_community_subscription", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "community_id"))
     private Set<Community> subscribedCommunities = new HashSet<>();
 
     // Check in

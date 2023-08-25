@@ -12,6 +12,7 @@
         <module>base</module>
         <module>gateway</module>
         <module>user</module>
+        <module>eureka-server</module>
     </modules>
 
     <properties>
@@ -121,16 +122,21 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.0</version>
                 <configuration>
-                    <source>17</source>
-                    <target>17</target>
+                    <source>20</source>
+                    <target>20</target>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.mapstruct</groupId>
                             <artifactId>mapstruct-processor</artifactId>
                             <version>${org.mapstruct.version}</version>
                         </path>
-                        <!-- other annotation processors -->
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>1.18.28</version>
+                        </path>
                     </annotationProcessorPaths>
+
                 </configuration>
             </plugin>
 

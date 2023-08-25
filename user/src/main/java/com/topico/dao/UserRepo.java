@@ -8,5 +8,5 @@ public interface UserRepo extends JpaRepository<User, Long> {
 
     User findUserByNickNameAndDeletedIsFalse(String nickName);
 
-    User findUserByEmailIgnoreCaseAAndDeletedIsFalse(String email);
+    User findUserByEmailIgnoreCaseAndDeletedIsFalse(String email);
 }

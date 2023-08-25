@@ -1,16 +1,11 @@
 package com.topico.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class CreateUserDTO {
+public class CreateUserDto {
     @NotBlank
     private String email;
     @NotBlank

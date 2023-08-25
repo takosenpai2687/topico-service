@@ -6,9 +6,7 @@ import lombok.*;
 
 @Data
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class UpdateUserDTO {
+public class UpdateUserDto {
     private Long id;
     @Nullable
     private String nickName;

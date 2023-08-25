@@ -3,12 +3,12 @@ package com.topico.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Data
 @Builder
-@AllArgsConstructor
-@MappedSuperclass
-@NoArgsConstructor
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class UserCommunityRole extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")

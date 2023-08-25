@@ -1,9 +1,8 @@
 package com.topico.mapper;
 
+import com.topico.dto.UpdateUserDto;
 import com.topico.entity.User;
-import com.topico.dto.UpdateUserDTO;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
@@ -11,6 +10,5 @@ import org.mapstruct.factory.Mappers;
 public interface UserMapper {
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
-    @Mapping(target = "id", ignore = true)
-    User updateFromDTO(UpdateUserDTO updateUserDTO, @MappingTarget User user);
+    User updateFromDTO(UpdateUserDto updateUserDTO, @MappingTarget User user);
 }

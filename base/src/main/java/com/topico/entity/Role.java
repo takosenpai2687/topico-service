@@ -7,12 +7,12 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
 @Builder
-@AllArgsConstructor
-@MappedSuperclass
-@NoArgsConstructor
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class Role extends BaseEntity {
     @NotBlank
     @Column(nullable = false, unique = true)

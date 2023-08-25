@@ -4,12 +4,12 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
-@Data
 @Builder
-@AllArgsConstructor
-@MappedSuperclass
-@NoArgsConstructor
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class Permission extends BaseEntity {
     @NotBlank
     @Column(nullable = false, unique = true)

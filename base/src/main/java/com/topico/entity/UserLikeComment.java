@@ -2,17 +2,14 @@ package com.topico.entity;
 
 import com.topico.enums.LikeStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
 @Builder
-@AllArgsConstructor
-@MappedSuperclass
-@NoArgsConstructor
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class UserLikeComment extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")

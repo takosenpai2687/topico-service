@@ -1,22 +1,21 @@
 package com.topico.util;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
-@Component
+
 public class PasswordUtil {
-    private final BCryptPasswordEncoder passwordEncoder;
+    private static final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 
-    public PasswordUtil(BCryptPasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
-    }
-
-    public String hash(String inputPass) {
+    public static String hash(String inputPass) {
         return passwordEncoder.encode(inputPass);
     }
 
-    public boolean isCorrect(String inputPass, String dbPassword) {
+    public static boolean isCorrect(String inputPass, String dbPassword) {
         return passwordEncoder.encode(inputPass).equals(dbPassword);
     }
 
