@@ -1,12 +1,11 @@
 package com.topico.pojo;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.http.HttpStatus;
 
 @Data
+@Getter
+@Setter
 @Builder
 public class Response<T> {
     private int code;
