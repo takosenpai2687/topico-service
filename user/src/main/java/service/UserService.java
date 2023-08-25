@@ -1,7 +1,7 @@
 package service;
 
 import org.springframework.stereotype.Service;
-import repo.UserRepo;
+import dao.UserRepo;
 
 @Service
 public class UserService {

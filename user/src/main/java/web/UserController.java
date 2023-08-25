@@ -1,4 +1,4 @@
-package controller;
+package web;
 
 import org.springframework.web.bind.annotation.RestController;
 import service.UserService;
