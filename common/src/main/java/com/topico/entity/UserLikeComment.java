@@ -10,15 +10,16 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Setter
-public class UserLikePost extends BaseEntity {
+public class UserLikeComment extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.ORDINAL)
     private LikeStatus likeStatus;
 
     @ManyToOne
-    @JoinColumn(name = "post_id")
-    private Post post;
+    @JoinColumn(name = "comment_id")
+    private Comment comment;
 }

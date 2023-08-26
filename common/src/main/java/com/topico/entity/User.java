@@ -5,7 +5,10 @@ import com.topico.enums.Gender;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,7 +18,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 @Setter
-public class User extends BaseEntity {
+public class User extends BaseEntity implements UserDetails {
 
     @NotBlank
     @Column(unique = true, nullable = false)
@@ -29,6 +32,7 @@ public class User extends BaseEntity {
     private String password;
 
     @Column(nullable = false, columnDefinition = "TINYINT default 0")
+    @Enumerated(EnumType.ORDINAL)
     private Gender gender;
 
     @Column(nullable = true)
@@ -55,5 +59,41 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user")
     private Set<CommunityCheckin> communityCheckins = new HashSet<>();
 
+    // Roles
+    @OneToMany(mappedBy = "user")
+    private Set<UserCommunityRole> userCommunityRoles = new HashSet<>();
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Set<GrantedAuthority> authorities = new HashSet<>();
+        for (UserCommunityRole userCommunityRole : this.userCommunityRoles) {
+            authorities.add(userCommunityRole.getRole());
+        }
+        return authorities;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.nickName;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return !deleted;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return !deleted;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return !deleted;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return !deleted;
+    }
 }

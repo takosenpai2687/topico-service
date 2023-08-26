@@ -1,9 +1,7 @@
 package com.topico.entity;
 
 import com.topico.enums.NotificationType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -16,6 +14,7 @@ import java.time.LocalDateTime;
 @Setter
 public class Notification extends BaseEntity {
     @Column(nullable = false)
+    @Enumerated(EnumType.ORDINAL)
     private NotificationType type;
 
     @Column(name = "related_id")

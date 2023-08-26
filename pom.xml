@@ -9,10 +9,10 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
-        <module>base</module>
+        <module>common</module>
         <module>gateway</module>
         <module>user</module>
-        <module>eureka-server</module>
+        <module>eureka</module>
     </modules>
 
     <properties>
