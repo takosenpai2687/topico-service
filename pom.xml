@@ -13,6 +13,15 @@
         <module>gateway</module>
         <module>user</module>
         <module>eureka</module>
+        <module>community</module>
+        <module>post</module>
+        <module>admin</module>
+        <module>notification</module>
+        <module>comment</module>
+        <module>home</module>
+        <module>explore</module>
+        <module>admin</module>
+        <module>notification</module>
     </modules>
 
     <properties>
