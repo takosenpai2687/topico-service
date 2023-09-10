@@ -1,0 +1,28 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/topico?useSSL=false&serverTimezone=UTC
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: 123456
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # This logs SQL statements to the console
+  type-aliases-package: com.yourpackage.model # Replace with your package that contains model/entity classes
+  mapper-locations: classpath:mappers/*.xml # Path to your MyBatis mapper XML files, adjust if needed
+
+logging:
+  level:
+    org:
+      springframework: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
