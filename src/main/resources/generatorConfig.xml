@@ -26,6 +26,8 @@
         </javaClientGenerator>
 
         <!--        <table schema="topico" tableName="mytable" domainObjectName="MyEntity"></table>-->
-        <table schema="topico" tableName="%"></table>
+        <table schema="topico" tableName="t_%">
+            <domainObjectRenamingRule searchString="^T" replaceString=""/>
+        </table>
     </context>
 </generatorConfiguration>

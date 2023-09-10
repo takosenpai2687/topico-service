@@ -79,15 +79,6 @@ CREATE TABLE `t_notification`
     PRIMARY KEY (`id`)
 );
 
-CREATE TABLE `t_permission`
-(
-    `id`    int          NOT NULL AUTO_INCREMENT,
-    `name`  varchar(255) NOT NULL,
-    `ctime` datetime     NOT NULL,
-    `utime` datetime     NOT NULL,
-    PRIMARY KEY (`id`)
-);
-
 CREATE TABLE `t_post`
 (
     `id`           int          NOT NULL AUTO_INCREMENT,
@@ -119,15 +110,6 @@ CREATE TABLE `t_role`
     PRIMARY KEY (`id`)
 );
 
-CREATE TABLE `t_role_permission`
-(
-    `id`            int      NOT NULL AUTO_INCREMENT,
-    `role_id`       int      NOT NULL,
-    `permission_id` int      NOT NULL,
-    `ctime`         datetime NOT NULL,
-    `utime`         datetime NOT NULL,
-    PRIMARY KEY (`id`)
-);
 
 CREATE TABLE `t_tag`
 (
@@ -220,10 +202,6 @@ ALTER TABLE `t_post_tag`
     ADD CONSTRAINT `t_post_tag_post_id` FOREIGN KEY (`post_id`) REFERENCES `t_post` (`id`);
 ALTER TABLE `t_post_tag`
     ADD CONSTRAINT `t_post_tag_tag_id` FOREIGN KEY (`tag_id`) REFERENCES `t_tag` (`id`);
-ALTER TABLE `t_role_permission`
-    ADD CONSTRAINT `role_id_copy_1` FOREIGN KEY (`role_id`) REFERENCES `t_role` (`id`);
-ALTER TABLE `t_role_permission`
-    ADD CONSTRAINT `permission_id` FOREIGN KEY (`permission_id`) REFERENCES `t_permission` (`id`);
 ALTER TABLE `t_user_community_role`
     ADD CONSTRAINT `t_user_community_role_user_id` FOREIGN KEY (`user_id`) REFERENCES `t_user` (`id`);
 ALTER TABLE `t_user_community_role`
