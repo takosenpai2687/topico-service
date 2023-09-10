@@ -58,15 +58,6 @@ CREATE TABLE `t_community_tag`
     PRIMARY KEY (`id`)
 );
 
-CREATE TABLE `t_community_tag_copy_1`
-(
-    `id`           int      NOT NULL AUTO_INCREMENT,
-    `community_id` int      NOT NULL,
-    `tag_id`       int      NOT NULL,
-    `ctime`        datetime NOT NULL,
-    `utime`        datetime NOT NULL,
-    PRIMARY KEY (`id`)
-);
 
 CREATE TABLE `t_image`
 (
@@ -217,10 +208,6 @@ ALTER TABLE `t_community_tag`
     ADD CONSTRAINT `community_id_copy_4` FOREIGN KEY (`community_id`) REFERENCES `t_community` (`id`);
 ALTER TABLE `t_community_tag`
     ADD CONSTRAINT `t_community_tag_tag_id` FOREIGN KEY (`tag_id`) REFERENCES `t_tag` (`id`);
-ALTER TABLE `t_community_tag_copy_1`
-    ADD CONSTRAINT `community_id_copy_3` FOREIGN KEY (`community_id`) REFERENCES `t_community` (`id`);
-ALTER TABLE `t_community_tag_copy_1`
-    ADD CONSTRAINT `tag_id_copy_1` FOREIGN KEY (`tag_id`) REFERENCES `t_tag` (`id`);
 ALTER TABLE `t_notification`
     ADD CONSTRAINT `sender_id` FOREIGN KEY (`sender_id`) REFERENCES `t_user` (`id`);
 ALTER TABLE `t_notification`
