@@ -1,18 +1,14 @@
 package usyd.elec5619.topicoservice.dto.user;
 
 import jakarta.annotation.Nullable;
+import lombok.Data;
 import usyd.elec5619.topicoservice.type.Gender;
 
+@Data
 public class UpdateUserDto {
 
     @Nullable
-    Long id;
-
-    @Nullable
     String nickName;
-
-    @Nullable
-    String password;
 
     @Nullable
     Gender gender;

@@ -127,6 +127,7 @@ CREATE TABLE `t_user`
     `email`       varchar(255) NOT NULL,
     `nick_name`   varchar(255) NOT NULL,
     `password`    varchar(255) NOT NULL,
+    `role`        int         NOT NULL DEFAULT 0,
     `gender`      tinyint      NOT NULL DEFAULT 0 COMMENT 'ISO/IEC 5218',
     `location`    varchar(255) NULL     DEFAULT '',
     `avatar`      varchar(255) NULL     DEFAULT '',
