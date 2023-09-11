@@ -26,3 +26,9 @@ logging:
       springframework: INFO
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+
+
+jwt:
+  secret: elec5619
+  expiration-ms: 604800000  # 7 days
+

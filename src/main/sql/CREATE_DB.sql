@@ -3,22 +3,22 @@ CREATE DATABASE `topico`;
 USE `topico`;
 CREATE TABLE `t_browse_history`
 (
-    `id`      int      NOT NULL AUTO_INCREMENT,
-    `user_id` int      NOT NULL,
-    `post_id` int      NOT NULL,
-    `ctime`   datetime NOT NULL,
-    `utime`   datetime NOT NULL,
+    `id`      int NOT NULL AUTO_INCREMENT,
+    `user_id` int NOT NULL,
+    `post_id` int NOT NULL,
+    `ctime`   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `utime`   TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `t_checkin`
 (
-    `id`               int      NOT NULL AUTO_INCREMENT,
-    `user_id`          int      NOT NULL,
-    `community_id`     int      NOT NULL,
-    `accumulated_days` int      NOT NULL DEFAULT 1,
-    `ctime`            datetime NOT NULL,
-    `utime`            datetime NOT NULL,
+    `id`               int NOT NULL AUTO_INCREMENT,
+    `user_id`          int NOT NULL,
+    `community_id`     int NOT NULL,
+    `accumulated_days` int NOT NULL DEFAULT 1,
+    `ctime`            TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
+    `utime`            TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 );
 
@@ -31,9 +31,8 @@ CREATE TABLE `t_comment`
     `reply_to_user_id`    int          NULL,
     `reply_to_name`       varchar(255) NULL,
     `content`             text         NOT NULL,
-    `ctime`               datetime     NOT NULL,
-    `utime`               datetime     NOT NULL,
-    `deleted`             tinyint      NOT NULL DEFAULT 0,
+    `ctime`               TIMESTAMP             DEFAULT CURRENT_TIMESTAMP,
+    `utime`               TIMESTAMP             DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 );
 
@@ -42,40 +41,41 @@ CREATE TABLE `t_community`
     `id`          int          NOT NULL AUTO_INCREMENT,
     `name`        varchar(255) NOT NULL,
     `description` text         NULL,
-    `ctime`       datetime     NOT NULL,
-    `utime`       datetime     NOT NULL,
-    `deleted`     tinyint      NOT NULL DEFAULT 0,
+    `ctime`       TIMESTAMP             DEFAULT CURRENT_TIMESTAMP,
+    `utime`       TIMESTAMP             DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `t_community_tag`
 (
-    `id`           int      NOT NULL AUTO_INCREMENT,
-    `community_id` int      NOT NULL,
-    `tag_id`       int      NOT NULL,
-    `ctime`        datetime NOT NULL,
-    `utime`        datetime NOT NULL,
+    `id`           int NOT NULL AUTO_INCREMENT,
+    `community_id` int NOT NULL,
+    `tag_id`       int NOT NULL,
+    `ctime`        TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `utime`        TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 );
 
 
 CREATE TABLE `t_image`
 (
-    `uuid` varchar(255) NOT NULL,
-    `path` varchar(255) NOT NULL,
+    `uuid`  varchar(255) NOT NULL,
+    `path`  varchar(255) NOT NULL,
+    `ctime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `utime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`uuid`)
 );
 
 CREATE TABLE `t_notification`
 (
-    `id`          int      NOT NULL AUTO_INCREMENT,
-    `type`        tinyint  NOT NULL DEFAULT 0,
-    `sender_id`   int      NOT NULL,
-    `receiver_id` int      NOT NULL,
-    `content`     text     NULL,
-    `unread`      tinyint  NOT NULL DEFAULT 1,
-    `ctime`       datetime NOT NULL,
-    `utime`       datetime NOT NULL,
+    `id`          int     NOT NULL AUTO_INCREMENT,
+    `type`        tinyint NOT NULL DEFAULT 0,
+    `sender_id`   int     NOT NULL,
+    `receiver_id` int     NOT NULL,
+    `content`     text    NULL,
+    `unread`      tinyint NOT NULL DEFAULT 1,
+    `ctime`       TIMESTAMP        DEFAULT CURRENT_TIMESTAMP,
+    `utime`       TIMESTAMP        DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 );
 
@@ -87,9 +87,8 @@ CREATE TABLE `t_post`
     `title`        varchar(255) NOT NULL,
     `content`      varchar(255) NOT NULL,
     `spoiler`      tinyint      NOT NULL DEFAULT 0,
-    `ctime`        datetime     NOT NULL,
-    `utime`        datetime     NOT NULL,
-    `deleted`      tinyint      NOT NULL DEFAULT 0,
+    `ctime`        TIMESTAMP             DEFAULT CURRENT_TIMESTAMP,
+    `utime`        TIMESTAMP             DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 );
 
@@ -98,6 +97,8 @@ CREATE TABLE `t_post_tag`
     `id`      int NOT NULL AUTO_INCREMENT,
     `post_id` int NOT NULL,
     `tag_id`  int NOT NULL,
+    `ctime`   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `utime`   TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 );
 
@@ -105,8 +106,8 @@ CREATE TABLE `t_role`
 (
     `id`    int          NOT NULL AUTO_INCREMENT,
     `name`  varchar(255) NOT NULL,
-    `ctime` datetime     NOT NULL,
-    `utime` datetime     NOT NULL,
+    `ctime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `utime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 );
 
@@ -115,8 +116,8 @@ CREATE TABLE `t_tag`
 (
     `id`    int          NOT NULL AUTO_INCREMENT,
     `name`  varchar(255) NOT NULL,
-    `ctime` datetime     NOT NULL,
-    `utime` datetime     NOT NULL,
+    `ctime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `utime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 );
 
@@ -128,48 +129,47 @@ CREATE TABLE `t_user`
     `password`    varchar(255) NOT NULL,
     `gender`      tinyint      NOT NULL DEFAULT 0 COMMENT 'ISO/IEC 5218',
     `location`    varchar(255) NULL     DEFAULT '',
-    `avatar`      varchar(255) NULL,
-    `description` text         NULL,
-    `ctime`       datetime     NOT NULL,
-    `utime`       datetime     NOT NULL,
-    `deleted`     tinyint      NOT NULL DEFAULT 0,
+    `avatar`      varchar(255) NULL     DEFAULT '',
+    `description` text         NULL     DEFAULT NULL,
+    `ctime`       TIMESTAMP             DEFAULT CURRENT_TIMESTAMP,
+    `utime`       TIMESTAMP             DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `t_user_community_role`
 (
-    `id`           int      NOT NULL AUTO_INCREMENT,
-    `user_id`      int      NOT NULL,
-    `community_id` int      NOT NULL,
-    `role_id`      int      NOT NULL,
-    `level`        int      NOT NULL DEFAULT 1,
-    `exp`          int      NOT NULL DEFAULT 0,
-    `ctime`        datetime NOT NULL,
-    `utime`        datetime NOT NULL,
+    `id`           int NOT NULL AUTO_INCREMENT,
+    `user_id`      int NOT NULL,
+    `community_id` int NOT NULL,
+    `role_id`      int NOT NULL,
+    `level`        int NOT NULL DEFAULT 1,
+    `exp`          int NOT NULL DEFAULT 0,
+    `ctime`        TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
+    `utime`        TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `t_user_like_comment`
 (
-    `id`         int      NOT NULL AUTO_INCREMENT,
-    `user_id`    int      NOT NULL,
-    `author_id`  int      NOT NULL,
-    `comment_id` int      NOT NULL,
-    `like`       tinyint  NOT NULL DEFAULT 1,
-    `ctime`      datetime NOT NULL,
-    `utime`      datetime NOT NULL,
+    `id`         int     NOT NULL AUTO_INCREMENT,
+    `user_id`    int     NOT NULL,
+    `author_id`  int     NOT NULL,
+    `comment_id` int     NOT NULL,
+    `like`       tinyint NOT NULL DEFAULT 1,
+    `ctime`      TIMESTAMP        DEFAULT CURRENT_TIMESTAMP,
+    `utime`      TIMESTAMP        DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `t_user_like_post`
 (
-    `id`        int      NOT NULL AUTO_INCREMENT,
-    `user_id`   int      NOT NULL,
-    `post_id`   int      NOT NULL,
-    `author_id` int      NOT NULL,
-    `like`      tinyint  NOT NULL DEFAULT 1,
-    `ctime`     datetime NOT NULL,
-    `utime`     datetime NOT NULL,
+    `id`        int     NOT NULL AUTO_INCREMENT,
+    `user_id`   int     NOT NULL,
+    `post_id`   int     NOT NULL,
+    `author_id` int     NOT NULL,
+    `like`      tinyint NOT NULL DEFAULT 1,
+    `ctime`     TIMESTAMP        DEFAULT CURRENT_TIMESTAMP,
+    `utime`     TIMESTAMP        DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 );
 

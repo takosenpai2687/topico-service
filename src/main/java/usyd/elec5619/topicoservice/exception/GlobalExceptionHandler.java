@@ -3,7 +3,7 @@ package usyd.elec5619.topicoservice.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import usyd.elec5619.topicoservice.dto.CommonResponse;
+import usyd.elec5619.topicoservice.pojo.CommonResponse;
 
 import java.util.Objects;
 

@@ -1,4 +1,4 @@
-package usyd.elec5619.topicoservice.dto;
+package usyd.elec5619.topicoservice.pojo;
 
 import lombok.Builder;
 import lombok.Data;
