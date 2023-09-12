@@ -31,8 +31,8 @@ CREATE TABLE `t_comment`
     `reply_to_user_id`    int          NULL,
     `reply_to_name`       varchar(255) NULL,
     `content`             text         NOT NULL,
-    `ctime`               TIMESTAMP             DEFAULT CURRENT_TIMESTAMP,
-    `utime`               TIMESTAMP             DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `ctime`               TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `utime`               TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 );
 
@@ -41,8 +41,8 @@ CREATE TABLE `t_community`
     `id`          int          NOT NULL AUTO_INCREMENT,
     `name`        varchar(255) NOT NULL,
     `description` text         NULL,
-    `ctime`       TIMESTAMP             DEFAULT CURRENT_TIMESTAMP,
-    `utime`       TIMESTAMP             DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `ctime`       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `utime`       TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 );
 
@@ -102,16 +102,6 @@ CREATE TABLE `t_post_tag`
     PRIMARY KEY (`id`)
 );
 
-CREATE TABLE `t_role`
-(
-    `id`    int          NOT NULL AUTO_INCREMENT,
-    `name`  varchar(255) NOT NULL,
-    `ctime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `utime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`)
-);
-
-
 CREATE TABLE `t_tag`
 (
     `id`    int          NOT NULL AUTO_INCREMENT,
@@ -127,13 +117,13 @@ CREATE TABLE `t_user`
     `email`       varchar(255) NOT NULL,
     `nick_name`   varchar(255) NOT NULL,
     `password`    varchar(255) NOT NULL,
-    `role`        int         NOT NULL DEFAULT 0,
-    `gender`      tinyint      NOT NULL DEFAULT 0 COMMENT 'ISO/IEC 5218',
-    `location`    varchar(255) NULL     DEFAULT '',
-    `avatar`      varchar(255) NULL     DEFAULT '',
-    `description` text         NULL     DEFAULT NULL,
-    `ctime`       TIMESTAMP             DEFAULT CURRENT_TIMESTAMP,
-    `utime`       TIMESTAMP             DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `gender`      varchar(20)  NOT NULL COMMENT 'ISO/IEC 5218',
+    `location`    varchar(255) NULL DEFAULT '',
+    `avatar`      varchar(255) NULL DEFAULT '',
+    `description` text         NULL DEFAULT NULL,
+    `role`        varchar(255) NULL DEFAULT 'user',
+    `ctime`       TIMESTAMP         DEFAULT CURRENT_TIMESTAMP,
+    `utime`       TIMESTAMP         DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 );
 
@@ -207,8 +197,6 @@ ALTER TABLE `t_user_community_role`
     ADD CONSTRAINT `t_user_community_role_user_id` FOREIGN KEY (`user_id`) REFERENCES `t_user` (`id`);
 ALTER TABLE `t_user_community_role`
     ADD CONSTRAINT `community_id` FOREIGN KEY (`community_id`) REFERENCES `t_community` (`id`);
-ALTER TABLE `t_user_community_role`
-    ADD CONSTRAINT `role_id` FOREIGN KEY (`role_id`) REFERENCES `t_role` (`id`);
 ALTER TABLE `t_user_like_comment`
     ADD CONSTRAINT `t_user_like_comment_user_id` FOREIGN KEY (`user_id`) REFERENCES `t_user` (`id`);
 ALTER TABLE `t_user_like_comment`

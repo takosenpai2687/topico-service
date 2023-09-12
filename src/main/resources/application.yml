@@ -29,6 +29,6 @@ logging:
 
 
 jwt:
-  secret: elec5619
-  expiration-ms: 604800000  # 7 days
+  secret: elec5619elec5619elec5619elec5619elec5619elec5619elec5619elec5619elec5619elec5619elec5619elec5619
+  # 7 days
 

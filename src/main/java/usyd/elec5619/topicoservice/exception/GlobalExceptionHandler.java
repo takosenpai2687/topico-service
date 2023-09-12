@@ -14,11 +14,11 @@ public class GlobalExceptionHandler {
         return CommonResponse.fail(ex);
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public CommonResponse<?> handleRuntimeException(RuntimeException ex) {
-        if (ex instanceof ApiException) return handleApiException((ApiException) ex);
-        Integer code = HttpStatus.INTERNAL_SERVER_ERROR.value();
-        String message = Objects.requireNonNullElse(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
-        return CommonResponse.fail(code, message);
-    }
+//    @ExceptionHandler(RuntimeException.class)
+//    public CommonResponse<?> handleRuntimeException(RuntimeException ex) {
+//        if (ex instanceof ApiException) return handleApiException((ApiException) ex);
+//        Integer code = HttpStatus.INTERNAL_SERVER_ERROR.value();
+//        String message = Objects.requireNonNullElse(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
+//        return CommonResponse.fail(code, message);
+//    }
 }

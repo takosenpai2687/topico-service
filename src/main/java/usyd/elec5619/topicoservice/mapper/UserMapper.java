@@ -4,13 +4,15 @@ import org.apache.ibatis.annotations.*;
 import usyd.elec5619.topicoservice.dto.user.UpdateUserDto;
 import usyd.elec5619.topicoservice.model.User;
 
+import java.util.Optional;
+
 @Mapper
 public interface UserMapper {
-    @Insert("INSERT INTO t_user (email, nick_name, password) " + "VALUES (#{email}, #{nickName}, #{password})")
+    @Insert("INSERT INTO t_user (email, nick_name, password, gender, role) " + "VALUES (#{email}, #{nickName}, #{password}, #{gender}, #{role})")
     void insertOne(User user);
 
-    @Select("SELECT * FROM t_user WHERE id = #{id}")
-    User getByEmail(String email);
+    @Select("SELECT * FROM t_user WHERE email = #{email}")
+    Optional<User> getByEmail(String email);
 
     @Select("SELECT * FROM t_user WHERE nick_name = #{nickName}")
     User getByNickName(String nickName);

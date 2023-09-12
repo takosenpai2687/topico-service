@@ -1,48 +1,25 @@
 package usyd.elec5619.topicoservice.service.impl;
 
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
-import usyd.elec5619.topicoservice.dto.user.CreateUserDto;
 import usyd.elec5619.topicoservice.dto.user.UpdatePasswordDto;
 import usyd.elec5619.topicoservice.dto.user.UpdateUserDto;
 import usyd.elec5619.topicoservice.exception.http.BadRequestException;
 import usyd.elec5619.topicoservice.exception.http.ForbiddenException;
+import usyd.elec5619.topicoservice.exception.http.NotFoundException;
 import usyd.elec5619.topicoservice.mapper.UserMapper;
 import usyd.elec5619.topicoservice.model.User;
 import usyd.elec5619.topicoservice.service.UserService;
-import usyd.elec5619.topicoservice.util.PasswordUtil;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
-    private final PasswordUtil passwordUtil;
 
-    public UserServiceImpl(UserMapper userMapper, PasswordUtil passwordUtil) {
+    public UserServiceImpl(UserMapper userMapper) {
         this.userMapper = userMapper;
-        this.passwordUtil = passwordUtil;
     }
 
-    public User createUser(CreateUserDto createUserDTO) {
-        // Check existing email
-        final String email = createUserDTO.getEmail();
-        if (userMapper.getByEmail(email) != null) {
-            throw new BadRequestException("Email already exists");
-        }
-        // Check existing nickName
-        final String nickName = createUserDTO.getNickName();
-        if (userMapper.getByNickName(nickName) != null) {
-            throw new BadRequestException("NickName already exists");
-        }
-        // Check password
-        final String password = createUserDTO.getPassword();
-        if (!passwordUtil.isValid(password)) {
-            throw new BadRequestException("Password must be 6-16 characters");
-        }
-        // Create user
-        User user = User.builder().email(email).password(passwordUtil.hashPassword(password)).build();
-        userMapper.insertOne(user);
-        return user;
-    }
 
     @Override
     public void deleteUser(Long id) {
@@ -56,25 +33,30 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updatePassword(Long id, UpdatePasswordDto updatePasswordDto) {
-        // Check new password
-        if (!passwordUtil.isValid(updatePasswordDto.getNewPassword())) {
-            throw new BadRequestException("Password must be 6-16 characters");
-        }
-        // Check user exists
-        final User dbUser = userMapper.getUserById(id);
-        if (dbUser == null) {
-            throw new ForbiddenException("User not found");
-        }
-        // Check old password
-        if (passwordUtil.isCorrect(updatePasswordDto.getOldPassword(), dbUser.getPassword())) {
-            throw new ForbiddenException("Old password is incorrect");
-        }
-        // Update password
-        userMapper.updateUserPassword(id, passwordUtil.hashPassword(updatePasswordDto.getNewPassword()));
+//        // Check new password
+//        if (!passwordUtil.isValid(updatePasswordDto.getNewPassword())) {
+//            throw new BadRequestException("Password must be 6-16 characters");
+//        }
+//        // Check user exists
+//        final User dbUser = userMapper.getUserById(id);
+//        if (dbUser == null) {
+//            throw new ForbiddenException("User not found");
+//        }
+//        // Check old password
+//        if (passwordUtil.isCorrect(updatePasswordDto.getOldPassword(), dbUser.getPassword())) {
+//            throw new ForbiddenException("Old password is incorrect");
+//        }
+//        // Update password
+//        userMapper.updateUserPassword(id, passwordUtil.hashPassword(updatePasswordDto.getNewPassword()));
     }
 
     public User getUserByEmail(String email) {
-        return userMapper.getByEmail(email);
+        return userMapper.getByEmail(email).orElseThrow(() -> new NotFoundException("user not found"));
+    }
+
+    @Override
+    public UserDetailsService userDetailsService() {
+        return email -> userMapper.getByEmail(email).orElseThrow(() -> new NotFoundException("User not found"));
     }
 
     public User getUserById(Long id) {
