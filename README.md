@@ -11,7 +11,7 @@
 
 ## Setup
 
-- Make sure you have the environment mentioned above installed.
+- Make sure you have **JDK20**, **Intellij Idea** and **Docker** installed.
 - Open the project in IntelliJ Idea.
 - Open `pom.xml` and install the maven packages.
 - Note: Make sure to stop __MySQL__ and __Redis__ service from your local machine
