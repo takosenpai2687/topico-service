@@ -2,7 +2,6 @@ package usyd.elec5619.topicoservice.service;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
-import usyd.elec5619.topicoservice.dto.user.CreateUserDto;
 import usyd.elec5619.topicoservice.dto.user.UpdatePasswordDto;
 import usyd.elec5619.topicoservice.dto.user.UpdateUserDto;
 import usyd.elec5619.topicoservice.model.User;

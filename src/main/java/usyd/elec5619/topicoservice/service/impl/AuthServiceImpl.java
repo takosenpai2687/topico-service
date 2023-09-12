@@ -6,8 +6,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import usyd.elec5619.topicoservice.dto.LoginDto;
-import usyd.elec5619.topicoservice.dto.user.CreateUserDto;
+import usyd.elec5619.topicoservice.dto.auth.LoginDto;
+import usyd.elec5619.topicoservice.dto.auth.SignupDto;
 import usyd.elec5619.topicoservice.exception.http.BadRequestException;
 import usyd.elec5619.topicoservice.mapper.UserMapper;
 import usyd.elec5619.topicoservice.model.User;
@@ -29,20 +29,20 @@ public class AuthServiceImpl implements AuthService {
 
 
     @Override
-    public String signup(CreateUserDto createUserDto) {
+    public String signup(SignupDto signupDto) {
         // Check existing email
-        final String email = createUserDto.getEmail();
+        final String email = signupDto.getEmail();
         Optional<User> dbUser = userMapper.getByEmail(email);
         if (dbUser.isPresent()) {
             throw new BadRequestException("Email already exists");
         }
         // Check existing nickName
-        final String nickName = createUserDto.getNickName();
+        final String nickName = signupDto.getNickName();
         if (userMapper.getByNickName(nickName) != null) {
             throw new BadRequestException("NickName already exists");
         }
         // Check password
-        final String password = createUserDto.getPassword();
+        final String password = signupDto.getPassword();
         if (password.length() < 6 || password.length() > 16) {
             throw new BadRequestException("Password must be 6-16 characters");
         }

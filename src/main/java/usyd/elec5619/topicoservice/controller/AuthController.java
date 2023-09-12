@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import usyd.elec5619.topicoservice.dto.LoginDto;
-import usyd.elec5619.topicoservice.dto.user.CreateUserDto;
+import usyd.elec5619.topicoservice.dto.auth.LoginDto;
+import usyd.elec5619.topicoservice.dto.auth.SignupDto;
 import usyd.elec5619.topicoservice.pojo.CommonResponse;
 import usyd.elec5619.topicoservice.service.AuthService;
 
@@ -17,8 +17,8 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/signup")
-    public CommonResponse<String> signup(@RequestBody CreateUserDto createUserDto) {
-        return CommonResponse.success(authService.signup(createUserDto));
+    public CommonResponse<String> signup(@RequestBody SignupDto signupDto) {
+        return CommonResponse.success(authService.signup(signupDto));
     }
 
     @PostMapping("/login")

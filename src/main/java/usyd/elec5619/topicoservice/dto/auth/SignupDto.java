@@ -1,11 +1,11 @@
-package usyd.elec5619.topicoservice.dto.user;
+package usyd.elec5619.topicoservice.dto.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class CreateUserDto {
+public class SignupDto {
     @Email
     @NotBlank
     private String email;
