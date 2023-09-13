@@ -49,20 +49,20 @@ public class AuthServiceImpl implements AuthService {
         }
         // Create user
         User user = User.builder()
-                .email(email)
-                .nickName(nickName)
-                .password(passwordEncoder.encode(password))
-                .role(Role.ROLE_USER)
-                .gender(Gender.NOT_KNOWN)
-                .build();
+                        .email(email)
+                        .nickName(nickName)
+                        .password(passwordEncoder.encode(password))
+                        .role(Role.ROLE_USER)
+                        .gender(Gender.NOT_KNOWN)
+                        .build();
         userMapper.insertOne(user);
         // JWT
         String token = jwtService.generateToken(user);
         return LoginVO.builder()
-                .email(email)
-                .nickName(nickName)
-                .token(token)
-                .build();
+                      .email(email)
+                      .nickName(nickName)
+                      .token(token)
+                      .build();
     }
 
     @Override
@@ -71,9 +71,9 @@ public class AuthServiceImpl implements AuthService {
         var user = userMapper.getByEmail(loginDto.getEmail()).orElseThrow(() -> new IllegalArgumentException("Invalid email"));
         String token = jwtService.generateToken(user);
         return LoginVO.builder()
-                .email(user.getEmail())
-                .nickName(user.getNickName())
-                .token(token)
-                .build();
+                      .email(user.getEmail())
+                      .nickName(user.getNickName())
+                      .token(token)
+                      .build();
     }
 }

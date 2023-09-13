@@ -1,5 +1,6 @@
 package usyd.elec5619.topicoservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,16 +16,19 @@ import java.util.Collections;
 @Data
 @Builder
 public class User implements UserDetails {
-    private Integer id;
+    private Long id;
     private String email;
     private String nickName;
+    @JsonIgnore
     private String password;
     private Gender gender;
     private String location;
     private String avatar;
     private String description;
     private Role role;
+    @JsonIgnore
     private LocalDateTime ctime;
+    @JsonIgnore
     private LocalDateTime utime;
 
     @Override

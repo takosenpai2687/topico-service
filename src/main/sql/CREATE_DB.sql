@@ -92,6 +92,16 @@ CREATE TABLE `t_post`
     PRIMARY KEY (`id`)
 );
 
+CREATE TABLE `t_post_image`
+(
+    `id`         int          NOT NULL AUTO_INCREMENT,
+    `post_id`    int          NOT NULL,
+    `image_uuid` varchar(255) NOT NULL,
+    `ctime`      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `utime`      TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+);
+
 CREATE TABLE `t_post_tag`
 (
     `id`      int NOT NULL AUTO_INCREMENT,
@@ -127,12 +137,11 @@ CREATE TABLE `t_user`
     PRIMARY KEY (`id`)
 );
 
-CREATE TABLE `t_user_community_role`
+CREATE TABLE `t_user_community`
 (
     `id`           int NOT NULL AUTO_INCREMENT,
     `user_id`      int NOT NULL,
     `community_id` int NOT NULL,
-    `role_id`      int NOT NULL,
     `level`        int NOT NULL DEFAULT 1,
     `exp`          int NOT NULL DEFAULT 0,
     `ctime`        TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
@@ -193,10 +202,14 @@ ALTER TABLE `t_post_tag`
     ADD CONSTRAINT `t_post_tag_post_id` FOREIGN KEY (`post_id`) REFERENCES `t_post` (`id`);
 ALTER TABLE `t_post_tag`
     ADD CONSTRAINT `t_post_tag_tag_id` FOREIGN KEY (`tag_id`) REFERENCES `t_tag` (`id`);
-ALTER TABLE `t_user_community_role`
-    ADD CONSTRAINT `t_user_community_role_user_id` FOREIGN KEY (`user_id`) REFERENCES `t_user` (`id`);
-ALTER TABLE `t_user_community_role`
-    ADD CONSTRAINT `community_id` FOREIGN KEY (`community_id`) REFERENCES `t_community` (`id`);
+ALTER TABLE `t_post_image`
+    ADD CONSTRAINT `t_post_image_post_id` FOREIGN KEY (`post_id`) REFERENCES `t_post` (`id`);
+ALTER TABLE `t_post_image`
+    ADD CONSTRAINT `t_post_image_image_uuid` FOREIGN KEY (`image_uuid`) REFERENCES `t_image` (`uuid`);
+ALTER TABLE `t_user_community`
+    ADD CONSTRAINT `t_user_community_user_id` FOREIGN KEY (`user_id`) REFERENCES `t_user` (`id`);
+ALTER TABLE `t_user_community`
+    ADD CONSTRAINT `t_user_community_community_id` FOREIGN KEY (`community_id`) REFERENCES `t_community` (`id`);
 ALTER TABLE `t_user_like_comment`
     ADD CONSTRAINT `t_user_like_comment_user_id` FOREIGN KEY (`user_id`) REFERENCES `t_user` (`id`);
 ALTER TABLE `t_user_like_comment`

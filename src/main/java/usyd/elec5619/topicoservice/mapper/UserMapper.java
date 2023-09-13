@@ -2,12 +2,19 @@ package usyd.elec5619.topicoservice.mapper;
 
 import org.apache.ibatis.annotations.*;
 import usyd.elec5619.topicoservice.dto.user.UpdateUserDto;
+import usyd.elec5619.topicoservice.model.Community;
+import usyd.elec5619.topicoservice.model.Post;
 import usyd.elec5619.topicoservice.model.User;
 
+import java.util.List;
 import java.util.Optional;
 
 @Mapper
 public interface UserMapper {
+
+    @Select("SELECT id FROM t_user WHERE email = #{email}")
+    Optional<Long> emailToId(String email);
+
     @Insert("INSERT INTO t_user (email, nick_name, password, gender, role) " + "VALUES (#{email}, #{nickName}, #{password}, #{gender}, #{role})")
     void insertOne(User user);
 
@@ -31,4 +38,8 @@ public interface UserMapper {
 
     @Select("SELECT * FROM t_user WHERE id = #{id}")
     User getUserById(Long id);
+
+    @Select("SELECT * FROM t_user")
+    List<User> getAllUsers();
+
 }

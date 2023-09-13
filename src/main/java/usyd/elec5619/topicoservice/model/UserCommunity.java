@@ -5,10 +5,12 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class Tag {
+public class UserCommunity {
     private Long id;
-    private String name;
+    private Long userId;
+    private Long communityId;
+    private Integer level;
+    private Integer exp;
     private LocalDateTime ctime;
     private LocalDateTime utime;
-
 }
