@@ -15,6 +15,7 @@ import usyd.elec5619.topicoservice.service.AuthService;
 import usyd.elec5619.topicoservice.service.JwtService;
 import usyd.elec5619.topicoservice.type.Gender;
 import usyd.elec5619.topicoservice.type.Role;
+import usyd.elec5619.topicoservice.vo.LoginVO;
 
 import java.util.Optional;
 
@@ -29,7 +30,7 @@ public class AuthServiceImpl implements AuthService {
 
 
     @Override
-    public String signup(SignupDto signupDto) {
+    public LoginVO signup(SignupDto signupDto) {
         // Check existing email
         final String email = signupDto.getEmail();
         Optional<User> dbUser = userMapper.getByEmail(email);
@@ -48,21 +49,31 @@ public class AuthServiceImpl implements AuthService {
         }
         // Create user
         User user = User.builder()
-                        .email(email)
-                        .nickName(nickName)
-                        .password(passwordEncoder.encode(password))
-                        .role(Role.ROLE_USER)
-                        .gender(Gender.NOT_KNOWN)
-                        .build();
+                .email(email)
+                .nickName(nickName)
+                .password(passwordEncoder.encode(password))
+                .role(Role.ROLE_USER)
+                .gender(Gender.NOT_KNOWN)
+                .build();
         userMapper.insertOne(user);
         // JWT
-        return jwtService.generateToken(user);
+        String token = jwtService.generateToken(user);
+        return LoginVO.builder()
+                .email(email)
+                .nickName(nickName)
+                .token(token)
+                .build();
     }
 
     @Override
-    public String login(LoginDto loginDto) {
+    public LoginVO login(LoginDto loginDto) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
         var user = userMapper.getByEmail(loginDto.getEmail()).orElseThrow(() -> new IllegalArgumentException("Invalid email"));
-        return jwtService.generateToken(user);
+        String token = jwtService.generateToken(user);
+        return LoginVO.builder()
+                .email(user.getEmail())
+                .nickName(user.getNickName())
+                .token(token)
+                .build();
     }
 }
