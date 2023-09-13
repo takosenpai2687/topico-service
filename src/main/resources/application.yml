@@ -17,7 +17,7 @@ mybatis:
   configuration:
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # This logs SQL statements to the console
-  type-aliases-package: com.yourpackage.model # Replace with your package that contains model/entity classes
+  type-aliases-package: usyd.elec5619.topicoservice.model # Replace with your package that contains model/entity classes
   mapper-locations: classpath:mappers/*.xml # Path to your MyBatis mapper XML files, adjust if needed
 
 logging:
