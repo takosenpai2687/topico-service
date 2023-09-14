@@ -32,6 +32,7 @@ public interface PostMapper {
             @Result(column = "author_id", property = "author", javaType = User.class, one = @One(select = "UserMapper.getUserById")),
             @Result(column = "id", property = "tags", javaType = List.class, many = @Many(select = "TagMapper.getTagsByPostId")),
             @Result(column = "id", property = "commentsCount", javaType = Integer.class, one = @One(select = "CommentMapper.countCommentsByPostId")),
+            @Result(column = "id", property = "images", javaType = List.class, many = @Many(select = "getImageUuidsByPostId"))
     })
     List<PostVO> getPostsByUserId(Long userId, Integer offset, Integer size);
 
@@ -39,7 +40,7 @@ public interface PostMapper {
     Integer countPostsByUserId(Long userId);
 
     @Select("SELECT image_uuid FROM t_post_image WHERE post_id = #{id}")
-    List<String> getImagesByPostId(Long id);
+    List<String> getImageUuidsByPostId(Long id);
 
     @Select("SELECT COUNT(id) FROM t_user_like_post WHERE post_id = #{id} AND `like` = TRUE")
     Integer countLikesByPostId(Long id);
@@ -72,6 +73,7 @@ public interface PostMapper {
             @Result(column = "author_id", property = "author", javaType = User.class, one = @One(select = "UserMapper.getUserById")),
             @Result(column = "id", property = "tags", javaType = List.class, many = @Many(select = "TagMapper.getTagsByPostId")),
             @Result(column = "id", property = "commentsCount", javaType = Integer.class, one = @One(select = "CommentMapper.countCommentsByPostId")),
+            @Result(column = "id", property = "images", javaType = List.class, many = @Many(select = "getImageUuidsByPostId"))
     })
     List<PostVO> getNewPostsByCommunityId(Long communityId, Integer offset, Integer size);
 
@@ -99,6 +101,7 @@ public interface PostMapper {
             @Result(column = "author_id", property = "author", javaType = User.class, one = @One(select = "UserMapper.getUserById")),
             @Result(column = "id", property = "tags", javaType = List.class, many = @Many(select = "TagMapper.getTagsByPostId")),
             @Result(column = "id", property = "commentsCount", javaType = Integer.class, one = @One(select = "CommentMapper.countCommentsByPostId")),
+            @Result(column = "id", property = "images", javaType = List.class, many = @Many(select = "getImageUuidsByPostId"))
     })
     List<PostVO> getHotPostsByCommunityId(Long communityId, Integer offset, Integer size);
 
