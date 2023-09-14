@@ -28,4 +28,9 @@ public class CommunityServiceImpl implements CommunityService {
     public List<Community> getCommunitiesRecommendedToUser(Long userId, Integer limit) {
         return communityMapper.getCommunitiesRecommendedToUser(userId, limit);
     }
+
+    @Override
+    public Community getCommunityByPostId(Long postId) {
+        return communityMapper.getCommunityByPostId(postId);
+    }
 }

@@ -17,4 +17,8 @@ public interface CommunityMapper {
 
     @Select("SELECT * FROM t_community WHERE id NOT IN (SELECT community_id FROM t_user_community WHERE user_id = #{userId}) ORDER BY RAND() LIMIT #{limit}")
     List<Community> getCommunitiesRecommendedToUser(Long userId, Integer limit);
+
+
+    @Select("SELECT * FROM t_community WHERE id IN (SELECT community_id FROM t_post WHERE id = #{postId})")
+    Community getCommunityByPostId(Long postId);
 }

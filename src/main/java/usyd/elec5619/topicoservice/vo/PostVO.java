@@ -27,5 +27,6 @@ public class PostVO {
     @NonNull LocalDateTime utime;
     @NonNull Integer likes;
     @NonNull Integer dislikes;
-    @NonNull List<Comment> comments;
+    @NonNull Integer commentsCount;
+    List<Comment> comments;
 }
