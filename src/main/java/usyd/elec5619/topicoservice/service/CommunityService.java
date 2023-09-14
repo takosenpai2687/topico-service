@@ -2,6 +2,7 @@ package usyd.elec5619.topicoservice.service;
 
 import org.springframework.stereotype.Service;
 import usyd.elec5619.topicoservice.model.Community;
+import usyd.elec5619.topicoservice.model.UserCommunity;
 
 import java.util.List;
 
@@ -16,4 +17,10 @@ public interface CommunityService {
     Community getCommunityByPostId(Long postId);
 
     List<Community> searchByName(String keyword, Integer limit);
+
+    UserCommunity getUserCommunity(Long userId, Long communityId);
+
+    UserCommunity follow(Long userId, Long communityId);
+
+    UserCommunity unfollow(Long userId, Long communityId);
 }

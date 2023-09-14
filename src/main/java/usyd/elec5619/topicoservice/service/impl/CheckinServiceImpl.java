@@ -8,6 +8,7 @@ import usyd.elec5619.topicoservice.mapper.CheckinMapper;
 import usyd.elec5619.topicoservice.model.UserCommunity;
 import usyd.elec5619.topicoservice.service.CheckinService;
 import usyd.elec5619.topicoservice.util.BitUtil;
+import usyd.elec5619.topicoservice.util.LevelUtil;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -23,7 +24,8 @@ public class CheckinServiceImpl implements CheckinService {
     @Override
     public void checkin(Long userId, Long communityId) {
         // Get checkin bit map
-        Integer checkinBitMap = checkinMapper.getCheckinBitMap(userId, communityId);
+        UserCommunity userCommunity = checkinMapper.getUserCommunity(userId, communityId);
+        Integer checkinBitMap = userCommunity.getCheckin();
         if (checkinBitMap == null) {
             throw new BadRequestException("You are not a member of this community");
         }
@@ -35,8 +37,10 @@ public class CheckinServiceImpl implements CheckinService {
         }
         // Set today bit
         checkinBitMap = BitUtil.setBit(checkinBitMap, todayIdx);
+        userCommunity.setCheckin(checkinBitMap);
+        userCommunity.setExp(userCommunity.getExp() + LevelUtil.CHECKIN_EXP);
         // Update checkin bit map
-        checkinMapper.updateCheckinBitMap(userId, communityId, checkinBitMap);
+        checkinMapper.checkin(userCommunity);
     }
 
     @Override
@@ -58,17 +62,19 @@ public class CheckinServiceImpl implements CheckinService {
             updated.set(true);
             int newCheckinBitMap = BitUtil.setBit(checkinBitMap, todayIdx);
             userCommunity.setCheckin(newCheckinBitMap);
+            userCommunity.setExp(userCommunity.getExp() + LevelUtil.CHECKIN_EXP);
         });
         if (!updated.get()) {
             throw new BadRequestException("You have already checked in today");
         }
-        checkinMapper.updateCheckinBitMaps(userCommunities);
+        checkinMapper.checkinForAll(userCommunities);
     }
 
     @Override
     public Boolean isCheckedInToday(Long userId, Long communityId) {
         // Get checkin bit map
-        Integer checkinBitMap = checkinMapper.getCheckinBitMap(userId, communityId);
+        UserCommunity userCommunity = checkinMapper.getUserCommunity(userId, communityId);
+        Integer checkinBitMap = userCommunity.getCheckin();
         if (checkinBitMap == null) {
             throw new BadRequestException("You are not a member of this community");
         }
@@ -79,7 +85,8 @@ public class CheckinServiceImpl implements CheckinService {
     @Override
     public List<Boolean> getCheckinRecordsThisMonth(Long userId, Long communityId) {
         // Get checkin bit map
-        Integer checkinBitMap = checkinMapper.getCheckinBitMap(userId, communityId);
+        UserCommunity userCommunity = checkinMapper.getUserCommunity(userId, communityId);
+        Integer checkinBitMap = userCommunity.getCheckin();
         if (checkinBitMap == null) {
             throw new BadRequestException("You are not a member of this community");
         }

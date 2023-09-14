@@ -1,16 +1,6 @@
 DROP DATABASE `topico`;
 CREATE DATABASE `topico`;
 USE `topico`;
-CREATE TABLE `t_browse_history`
-(
-    `id`      int NOT NULL AUTO_INCREMENT,
-    `user_id` int NOT NULL,
-    `post_id` int NOT NULL,
-    `ctime`   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `utime`   TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`)
-);
-
 
 CREATE TABLE `t_comment`
 (
@@ -169,10 +159,6 @@ CREATE TABLE `t_user_like_post`
 );
 
 
-ALTER TABLE `t_browse_history`
-    ADD CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `t_user` (`id`);
-ALTER TABLE `t_browse_history`
-    ADD CONSTRAINT `brow_history_post_id` FOREIGN KEY (`post_id`) REFERENCES `t_post` (`id`);
 ALTER TABLE `t_comment`
     ADD CONSTRAINT `comment_post_id` FOREIGN KEY (`post_id`) REFERENCES `t_post` (`id`);
 ALTER TABLE `t_comment`

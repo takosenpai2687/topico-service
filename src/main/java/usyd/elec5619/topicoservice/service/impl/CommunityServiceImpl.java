@@ -2,8 +2,10 @@ package usyd.elec5619.topicoservice.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import usyd.elec5619.topicoservice.exception.http.BadRequestException;
 import usyd.elec5619.topicoservice.mapper.CommunityMapper;
 import usyd.elec5619.topicoservice.model.Community;
+import usyd.elec5619.topicoservice.model.UserCommunity;
 import usyd.elec5619.topicoservice.service.CommunityService;
 
 import java.util.List;
@@ -37,5 +39,28 @@ public class CommunityServiceImpl implements CommunityService {
     @Override
     public List<Community> searchByName(String keyword, Integer limit) {
         return communityMapper.searchByName(keyword, limit);
+    }
+
+    @Override
+    public UserCommunity getUserCommunity(Long userId, Long communityId) {
+        return communityMapper.getUserCommunity(userId, communityId);
+    }
+
+    @Override
+    public UserCommunity follow(Long userId, Long communityId) {
+        if (communityMapper.isUserFollowingCommunity(userId, communityId)) {
+            throw new BadRequestException("User has already followed this community");
+        }
+        communityMapper.follow(userId, communityId);
+        return communityMapper.getUserCommunity(userId, communityId);
+    }
+
+    @Override
+    public UserCommunity unfollow(Long userId, Long communityId) {
+        if (!communityMapper.isUserFollowingCommunity(userId, communityId)) {
+            throw new BadRequestException("User has not followed this community");
+        }
+        communityMapper.unfollow(userId, communityId);
+        return communityMapper.getUserCommunity(userId, communityId);
     }
 }
