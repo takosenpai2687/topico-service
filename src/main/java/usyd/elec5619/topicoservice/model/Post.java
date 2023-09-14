@@ -12,6 +12,8 @@ public class Post {
     private String title;
     private String content;
     private Boolean spoiler;
+    private Integer likes;
+    private Integer dislikes;
     private LocalDateTime ctime;
     private LocalDateTime utime;
 }

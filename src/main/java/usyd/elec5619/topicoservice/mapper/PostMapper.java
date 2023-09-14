@@ -1,19 +1,39 @@
 package usyd.elec5619.topicoservice.mapper;
 
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import usyd.elec5619.topicoservice.model.Community;
-import usyd.elec5619.topicoservice.model.Image;
-import usyd.elec5619.topicoservice.model.Post;
+import org.apache.ibatis.annotations.*;
+import usyd.elec5619.topicoservice.model.*;
 import usyd.elec5619.topicoservice.vo.PostVO;
 
 import java.util.List;
 
 @Mapper
 public interface PostMapper {
-    @Select("SELECT id, community_id, author_id, title, SUBSTR(content, 0, 144) as `content`, spoiler, ctime, utime FROM t_post WHERE author_id = #{userId} ORDER BY ctime DESC LIMIT #{offset}, #{size}")
-    List<Post> getPostsByUserId(Long userId, Integer offset, Integer size);
-
+    @Select("SELECT " +
+            "id,title," +
+            "SUBSTR(content, 0, 144) shortContent," +
+            "spoiler," +
+            "ctime,utime," +
+            "community_id," +
+            "author_id," +
+            "likes," +
+            "dislikes " +
+            "FROM t_post " +
+            "WHERE author_id = #{userId} ORDER BY ctime DESC LIMIT #{offset}, #{size}")
+    @Results({
+            @Result(column = "id", property = "id"),
+            @Result(column = "title", property = "title"),
+            @Result(column = "shortContent", property = "content"),
+            @Result(column = "spoiler", property = "spoiler"),
+            @Result(column = "likes", property = "likes"),
+            @Result(column = "dislikes", property = "dislikes"),
+            @Result(column = "ctime", property = "ctime"),
+            @Result(column = "utime", property = "utime"),
+            @Result(column = "community_id", property = "community", javaType = Community.class, one = @One(select = "CommunityMapper.getCommunityById")),
+            @Result(column = "author_id", property = "author", javaType = User.class, one = @One(select = "UserMapper.getUserById")),
+            @Result(column = "id", property = "tags", javaType = List.class, many = @Many(select = "TagMapper.getTagsByPostId")),
+            @Result(column = "id", property = "commentsCount", javaType = Integer.class, one = @One(select = "CommentMapper.countCommentsByPostId")),
+    })
+    List<PostVO> getPostsByUserId(Long userId, Integer offset, Integer size);
 
     @Select("SELECT COUNT(id) FROM t_post WHERE author_id = #{userId}")
     Integer countPostsByUserId(Long userId);
@@ -28,15 +48,59 @@ public interface PostMapper {
     Integer countDislikesByPostId(Long id);
 
 
-    @Select("SELECT COUNT(id) FROM t_comment WHERE post_id = #{id}")
-    Integer countCommentsByPostId(Long id);
+    @Select("SELECT " +
+            "id,title," +
+            "SUBSTR(content, 0, 144) shortContent," +
+            "spoiler," +
+            "ctime,utime," +
+            "community_id," +
+            "author_id," +
+            "likes," +
+            "dislikes " +
+            "FROM t_post " +
+            "WHERE community_id = #{communityId} ORDER BY ctime DESC LIMIT #{offset}, #{size}")
+    @Results({
+            @Result(column = "id", property = "id"),
+            @Result(column = "title", property = "title"),
+            @Result(column = "shortContent", property = "content"),
+            @Result(column = "spoiler", property = "spoiler"),
+            @Result(column = "likes", property = "likes"),
+            @Result(column = "dislikes", property = "dislikes"),
+            @Result(column = "ctime", property = "ctime"),
+            @Result(column = "utime", property = "utime"),
+            @Result(column = "community_id", property = "community", javaType = Community.class, one = @One(select = "CommunityMapper.getCommunityById")),
+            @Result(column = "author_id", property = "author", javaType = User.class, one = @One(select = "UserMapper.getUserById")),
+            @Result(column = "id", property = "tags", javaType = List.class, many = @Many(select = "TagMapper.getTagsByPostId")),
+            @Result(column = "id", property = "commentsCount", javaType = Integer.class, one = @One(select = "CommentMapper.countCommentsByPostId")),
+    })
+    List<PostVO> getNewPostsByCommunityId(Long communityId, Integer offset, Integer size);
 
-    @Select("SELECT * FROM t_post WHERE community_id = #{communityId} ORDER BY ctime DESC LIMIT #{offset}, #{size}")
-    List<Post> getNewPostsByCommunityId(Long communityId, Integer offset, Integer size);
-
-    @Select("SELECT * FROM t_post LEFT JOIN (SELECT post_id, COUNT(id) as count FROM t_user_like_post WHERE post_id = #{id} AND `like` = TRUE) AS `likes` ON " +
-            "t_post.id = `likes`.post_id WHERE t_post.community_id = ${communityId} ORDER BY `likes`.count DESC LIMIT #{offset}, #{size}")
-    List<Post> getHotPostsByCommunityId(Long communityId, Integer offset, Integer size);
+    @Select("SELECT " +
+            "id,title," +
+            "SUBSTR(content, 0, 144) shortContent," +
+            "spoiler," +
+            "ctime,utime," +
+            "community_id," +
+            "author_id," +
+            "likes," +
+            "dislikes " +
+            "FROM t_post " +
+            "WHERE community_id = #{communityId} ORDER BY likes DESC LIMIT #{offset}, #{size}")
+    @Results({
+            @Result(column = "id", property = "id"),
+            @Result(column = "title", property = "title"),
+            @Result(column = "shortContent", property = "content"),
+            @Result(column = "spoiler", property = "spoiler"),
+            @Result(column = "likes", property = "likes"),
+            @Result(column = "dislikes", property = "dislikes"),
+            @Result(column = "ctime", property = "ctime"),
+            @Result(column = "utime", property = "utime"),
+            @Result(column = "community_id", property = "community", javaType = Community.class, one = @One(select = "CommunityMapper.getCommunityById")),
+            @Result(column = "author_id", property = "author", javaType = User.class, one = @One(select = "UserMapper.getUserById")),
+            @Result(column = "id", property = "tags", javaType = List.class, many = @Many(select = "TagMapper.getTagsByPostId")),
+            @Result(column = "id", property = "commentsCount", javaType = Integer.class, one = @One(select = "CommentMapper.countCommentsByPostId")),
+    })
+    List<PostVO> getHotPostsByCommunityId(Long communityId, Integer offset, Integer size);
 
     @Select("SELECT COUNT(id) FROM t_post WHERE community_id = #{communityId}")
     Integer countPostsByCommunityId(Long communityId);

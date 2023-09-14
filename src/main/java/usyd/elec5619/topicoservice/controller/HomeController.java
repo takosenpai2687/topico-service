@@ -1,5 +1,6 @@
 package usyd.elec5619.topicoservice.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,7 +46,7 @@ public class HomeController {
     }
 
     @GetMapping("/my_posts")
-    public CommonResponse<PostsVO> getMyPosts(Authentication authentication, @RequestParam(required = false, defaultValue = "0") Integer page, @RequestParam(required = false, defaultValue = "10") Integer size) {
+    public CommonResponse<PostsVO> getMyPosts(Authentication authentication, @Valid @RequestParam(required = false, defaultValue = "0") Integer page, @Valid @RequestParam(required = false, defaultValue = "10") Integer size) {
         final String email = authentication.getName();
         final Long userId = userService.emailToId(email);
         PostsVO postsVO = postService.getPostsByUserId(userId, page, size);

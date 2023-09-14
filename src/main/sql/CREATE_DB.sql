@@ -87,6 +87,8 @@ CREATE TABLE `t_post`
     `title`        varchar(255) NOT NULL,
     `content`      varchar(255) NOT NULL,
     `spoiler`      tinyint      NOT NULL DEFAULT 0,
+    `likes`        int          NOT NULL DEFAULT 0,
+    `dislikes`     int          NOT NULL DEFAULT 0,
     `ctime`        TIMESTAMP             DEFAULT CURRENT_TIMESTAMP,
     `utime`        TIMESTAMP             DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
