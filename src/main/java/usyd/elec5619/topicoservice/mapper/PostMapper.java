@@ -43,12 +43,6 @@ public interface PostMapper {
     @Select("SELECT image_uuid FROM t_post_image WHERE post_id = #{id}")
     List<String> getImageUuidsByPostId(Long id);
 
-    @Select("SELECT COUNT(id) FROM t_user_like_post WHERE post_id = #{id} AND `like` = TRUE")
-    Integer countLikesByPostId(Long id);
-
-    @Select("SELECT COUNT(id) FROM t_user_like_post WHERE post_id = #{id} AND `like` = FALSE")
-    Integer countDislikesByPostId(Long id);
-
 
     @Select("SELECT " +
             "id,title," +

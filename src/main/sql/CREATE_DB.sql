@@ -147,25 +147,21 @@ CREATE TABLE `t_user_community`
 
 CREATE TABLE `t_user_like_comment`
 (
-    `id`         int     NOT NULL AUTO_INCREMENT,
-    `user_id`    int     NOT NULL,
-    `author_id`  int     NOT NULL,
-    `comment_id` int     NOT NULL,
-    `like`       tinyint NOT NULL DEFAULT 1,
-    `ctime`      TIMESTAMP        DEFAULT CURRENT_TIMESTAMP,
-    `utime`      TIMESTAMP        DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `id`         int NOT NULL AUTO_INCREMENT,
+    `user_id`    int NOT NULL,
+    `comment_id` int NOT NULL,
+    `ctime`      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `utime`      TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `t_user_like_post`
 (
-    `id`        int     NOT NULL AUTO_INCREMENT,
-    `user_id`   int     NOT NULL,
-    `post_id`   int     NOT NULL,
-    `author_id` int     NOT NULL,
-    `like`      tinyint NOT NULL DEFAULT 1,
-    `ctime`     TIMESTAMP        DEFAULT CURRENT_TIMESTAMP,
-    `utime`     TIMESTAMP        DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `id`      int NOT NULL AUTO_INCREMENT,
+    `user_id` int NOT NULL,
+    `post_id` int NOT NULL,
+    `ctime`   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `utime`   TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 );
 
@@ -206,12 +202,8 @@ ALTER TABLE `t_user_like_comment`
     ADD CONSTRAINT `t_user_like_comment_user_id` FOREIGN KEY (`user_id`) REFERENCES `t_user` (`id`);
 ALTER TABLE `t_user_like_comment`
     ADD CONSTRAINT `comment_id` FOREIGN KEY (`comment_id`) REFERENCES `t_comment` (`id`);
-ALTER TABLE `t_user_like_comment`
-    ADD CONSTRAINT `t_user_like_comment_author_id` FOREIGN KEY (`author_id`) REFERENCES `t_user` (`id`);
 ALTER TABLE `t_user_like_post`
     ADD CONSTRAINT `t_user_like_post_user_id` FOREIGN KEY (`user_id`) REFERENCES `t_user` (`id`);
 ALTER TABLE `t_user_like_post`
     ADD CONSTRAINT `post_id` FOREIGN KEY (`post_id`) REFERENCES `t_post` (`id`);
-ALTER TABLE `t_user_like_post`
-    ADD CONSTRAINT `t_user_like_post_author_id` FOREIGN KEY (`author_id`) REFERENCES `t_user` (`id`);
 
