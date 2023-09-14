@@ -14,14 +14,17 @@ public class ImageServiceImpl implements ImageService {
     private final ImageMapper imageMapper;
 
     @Override
-    public String uploadImage(String image) {
+    public String uploadImage(String imageBase64) {
+        // returns the generated uuid
         return null;
     }
 
     @Override
-    public void addImagesToPost(Long postId, List<String> images) {
-        for (String imageUuid : images) {
-            if (imageMapper.isImageExist(imageUuid))
+    public void addImagesToPost(Long postId, List<String> imgUuids) {
+        for (String imageUuid : imgUuids) {
+            if (!imageMapper.isImageExist(imageUuid))
+                continue;
+            if (!imageMapper.isImageInPost(imageUuid, postId))
                 continue;
             imageMapper.addImageToPost(postId, imageUuid);
         }

@@ -35,10 +35,10 @@ CREATE TABLE `t_community`
 
 CREATE TABLE `t_image`
 (
-    `uuid`  varchar(255) NOT NULL,
-    `path`  varchar(255) NOT NULL,
-    `ctime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `utime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `uuid`   varchar(255) NOT NULL,
+    `base64` text         NOT NULL,
+    `ctime`  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `utime`  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`uuid`)
 );
 

@@ -7,7 +7,7 @@ import java.util.List;
 @Service
 public interface ImageService {
 
-    String uploadImage(String image);
+    String uploadImage(String imageBase64);
 
-    void addImagesToPost(Long postId, List<String> images);
+    void addImagesToPost(Long postId, List<String> imgUuids);
 }
