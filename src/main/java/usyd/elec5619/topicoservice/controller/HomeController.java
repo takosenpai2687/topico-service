@@ -53,13 +53,6 @@ public class HomeController {
         return CommonResponse.success(posts);
     }
 
-    @PostMapping("/checkin/{communityId}")
-    public CommonResponse<Void> checkin(Authentication authentication, @Valid @PathVariable Long communityId) {
-        final String email = authentication.getName();
-        final Long userId = userService.emailToId(email);
-        checkinService.checkin(userId, communityId);
-        return CommonResponse.success();
-    }
 
     @PostMapping("/checkin")
     public CommonResponse<Void> checkinForAll(Authentication authentication) {

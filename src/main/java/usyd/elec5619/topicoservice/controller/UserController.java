@@ -23,7 +23,7 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping
+    @GetMapping("/")
     public CommonResponse<List<User>> getAllUsers() {
         List<User> allUsers = userService.getAllUsers();
         return CommonResponse.success(allUsers);

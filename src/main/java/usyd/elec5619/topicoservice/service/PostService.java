@@ -15,4 +15,6 @@ public interface PostService {
     Pager<PostVO> getPostsByUserId(Long userId, Integer page, Integer size);
 
     Pager<PostVO> getPostsByCommunityId(Long communityId, Integer page, Integer size, SortBy sortBy);
+
+    Pager<PostVO> searchByTitle(String keyword, Integer page, Integer size, SortBy sortBy);
 }

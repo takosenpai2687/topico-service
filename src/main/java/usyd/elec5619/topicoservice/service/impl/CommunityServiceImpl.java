@@ -33,4 +33,9 @@ public class CommunityServiceImpl implements CommunityService {
     public Community getCommunityByPostId(Long postId) {
         return communityMapper.getCommunityByPostId(postId);
     }
+
+    @Override
+    public List<Community> searchByName(String keyword, Integer limit) {
+        return communityMapper.searchByName(keyword, limit);
+    }
 }

@@ -14,4 +14,6 @@ public interface CommunityService {
     List<Community> getCommunitiesRecommendedToUser(Long userId, Integer limit);
 
     Community getCommunityByPostId(Long postId);
+
+    List<Community> searchByName(String keyword, Integer limit);
 }

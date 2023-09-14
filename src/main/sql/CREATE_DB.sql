@@ -33,8 +33,11 @@ CREATE TABLE `t_community`
     `id`          int          NOT NULL AUTO_INCREMENT,
     `name`        varchar(255) NOT NULL,
     `description` text         NULL,
-    `ctime`       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `utime`       TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `followers`   int          NOT NULL DEFAULT 0,
+    `avatar`      varchar(255) NULL     DEFAULT '',
+    `banner`      varchar(255) NULL     DEFAULT '',
+    `ctime`       TIMESTAMP             DEFAULT CURRENT_TIMESTAMP,
+    `utime`       TIMESTAMP             DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 );
 
@@ -122,11 +125,11 @@ CREATE TABLE `t_user`
     `email`       varchar(255) NOT NULL,
     `nick_name`   varchar(255) NOT NULL,
     `password`    varchar(255) NOT NULL,
-    `gender`      varchar(20)  NOT NULL COMMENT 'ISO/IEC 5218',
+    `gender`      varchar(20)  NOT NULL COMMENT ' ISO/IEC 5218 ',
     `location`    varchar(255) NULL DEFAULT '',
     `avatar`      varchar(255) NULL DEFAULT '',
     `description` text         NULL DEFAULT NULL,
-    `role`        varchar(255) NULL DEFAULT 'user',
+    `role`        varchar(255) NULL DEFAULT ' user ',
     `ctime`       TIMESTAMP         DEFAULT CURRENT_TIMESTAMP,
     `utime`       TIMESTAMP         DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)

@@ -21,4 +21,7 @@ public interface CommunityMapper {
 
     @Select("SELECT * FROM t_community WHERE id IN (SELECT community_id FROM t_post WHERE id = #{postId})")
     Community getCommunityByPostId(Long postId);
+
+    @Select("SELECT * FROM t_community WHERE name LIKE CONCAT('%', #{keyword}, '%') LIMIT #{limit}")
+    List<Community> searchByName(String keyword, Integer limit);
 }
