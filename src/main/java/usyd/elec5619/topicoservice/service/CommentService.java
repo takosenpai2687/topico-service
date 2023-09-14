@@ -12,5 +12,7 @@ public interface CommentService {
 
     Pager<CommentVO> getCommentsByPostId(Long postId, Integer page, Integer size, SortBy sortBy);
 
-    void createComment(Long userId, CreateCommentDto createCommentDto);
+    CommentVO createComment(Long userId, CreateCommentDto createCommentDto);
+
+    void deleteComment(Long userId, Long commentId);
 }

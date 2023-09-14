@@ -4,6 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import usyd.elec5619.topicoservice.dto.comment.CreateCommentDto;
+import usyd.elec5619.topicoservice.exception.http.BadRequestException;
+import usyd.elec5619.topicoservice.exception.http.InternalException;
+import usyd.elec5619.topicoservice.exception.http.NotFoundException;
 import usyd.elec5619.topicoservice.mapper.CommentMapper;
 import usyd.elec5619.topicoservice.model.Comment;
 import usyd.elec5619.topicoservice.service.CommentService;
@@ -26,11 +29,11 @@ public class CommentServiceImpl implements CommentService {
         List<CommentVO> commentVOList = commentMapper.getCommentsByUserId(userId, offset, size);
         Integer total = commentMapper.countCommentsByUserId(userId);
         return Pager.<CommentVO>builder()
-                    .data(commentVOList)
-                    .page(page)
-                    .size(size)
-                    .total(total)
-                    .build();
+                .data(commentVOList)
+                .page(page)
+                .size(size)
+                .total(total)
+                .build();
     }
 
     @Override
@@ -41,22 +44,34 @@ public class CommentServiceImpl implements CommentService {
                 : commentMapper.getNewCommentsByPostId(postId, offset, size);
         Integer total = commentMapper.countCommentsByPostId(postId);
         return Pager.<CommentVO>builder()
-                    .data(commentVOList)
-                    .page(page)
-                    .size(size)
-                    .total(total)
-                    .build();
+                .data(commentVOList)
+                .page(page)
+                .size(size)
+                .total(total)
+                .build();
     }
 
     @Override
-    public void createComment(Long userId, CreateCommentDto createCommentDto) {
+    public CommentVO createComment(Long userId, CreateCommentDto createCommentDto) {
         Comment comment = Comment.builder()
-                                 .postId(createCommentDto.getPostId())
-                                 .authorId(userId)
-                                 .parentId(createCommentDto.getParentId())
-                                 .replyToUserId(createCommentDto.getReplyToUserId())
-                                 .content(createCommentDto.getContent())
-                                 .build();
-        commentMapper.insertOne(comment);
+                .postId(createCommentDto.getPostId())
+                .authorId(userId)
+                .parentId(createCommentDto.getParentId())
+                .replyToUserId(createCommentDto.getReplyToUserId())
+                .content(createCommentDto.getContent())
+                .build();
+        Long id = commentMapper.insertOne(comment);
+        return commentMapper.getCommentVOById(id).orElseThrow(() -> new InternalException("Failed to create comment"));
     }
+
+    @Override
+    public void deleteComment(Long userId, Long commentId) {
+        Comment comment = commentMapper.getCommentById(commentId).orElseThrow(() -> new NotFoundException("Comment not found"));
+        if (!comment.getAuthorId().equals(userId)) {
+            throw new BadRequestException("not your comment");
+        }
+        commentMapper.deleteOne(commentId);
+    }
+
+
 }
