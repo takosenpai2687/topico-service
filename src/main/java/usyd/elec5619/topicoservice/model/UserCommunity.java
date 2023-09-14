@@ -11,6 +11,7 @@ public class UserCommunity {
     private Long communityId;
     private Integer level;
     private Integer exp;
+    private Integer checkin;
     private LocalDateTime ctime;
     private LocalDateTime utime;
 }

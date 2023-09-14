@@ -11,16 +11,6 @@ CREATE TABLE `t_browse_history`
     PRIMARY KEY (`id`)
 );
 
-CREATE TABLE `t_checkin`
-(
-    `id`               int NOT NULL AUTO_INCREMENT,
-    `user_id`          int NOT NULL,
-    `community_id`     int NOT NULL,
-    `accumulated_days` int NOT NULL DEFAULT 1,
-    `ctime`            TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
-    `utime`            TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`)
-);
 
 CREATE TABLE `t_comment`
 (
@@ -146,6 +136,7 @@ CREATE TABLE `t_user_community`
     `community_id` int NOT NULL,
     `level`        int NOT NULL DEFAULT 1,
     `exp`          int NOT NULL DEFAULT 0,
+    `checkin`      int NOT NULL DEFAULT 0,
     `ctime`        TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
     `utime`        TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
@@ -180,10 +171,6 @@ ALTER TABLE `t_browse_history`
     ADD CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `t_user` (`id`);
 ALTER TABLE `t_browse_history`
     ADD CONSTRAINT `brow_history_post_id` FOREIGN KEY (`post_id`) REFERENCES `t_post` (`id`);
-ALTER TABLE `t_checkin`
-    ADD CONSTRAINT `user_id_copy_1` FOREIGN KEY (`user_id`) REFERENCES `t_user` (`id`);
-ALTER TABLE `t_checkin`
-    ADD CONSTRAINT `community_id_copy_1` FOREIGN KEY (`community_id`) REFERENCES `t_community` (`id`);
 ALTER TABLE `t_comment`
     ADD CONSTRAINT `comment_post_id` FOREIGN KEY (`post_id`) REFERENCES `t_post` (`id`);
 ALTER TABLE `t_comment`

@@ -2,12 +2,11 @@ package usyd.elec5619.topicoservice.controller;
 
 import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import usyd.elec5619.topicoservice.model.Community;
 import usyd.elec5619.topicoservice.model.User;
 import usyd.elec5619.topicoservice.pojo.CommonResponse;
+import usyd.elec5619.topicoservice.service.CheckinService;
 import usyd.elec5619.topicoservice.service.CommunityService;
 import usyd.elec5619.topicoservice.service.PostService;
 import usyd.elec5619.topicoservice.service.UserService;
@@ -21,6 +20,7 @@ public class HomeController {
     private UserService userService;
     private PostService postService;
     private CommunityService communityService;
+    private CheckinService checkinService;
 
     @GetMapping("/communities_following")
     public CommonResponse<List<Community>> getCommunitiesFollowing(Authentication authentication) {
@@ -52,4 +52,21 @@ public class HomeController {
         PostsVO postsVO = postService.getPostsByUserId(userId, page, size);
         return CommonResponse.success(postsVO);
     }
+
+    @PostMapping("/checkin/{communityId}")
+    public CommonResponse<Void> checkin(Authentication authentication, @Valid @PathVariable Long communityId) {
+        final String email = authentication.getName();
+        final Long userId = userService.emailToId(email);
+        checkinService.checkin(userId, communityId);
+        return CommonResponse.success();
+    }
+
+    @PostMapping("/checkin")
+    public CommonResponse<Void> checkinForAll(Authentication authentication) {
+        final String email = authentication.getName();
+        final Long userId = userService.emailToId(email);
+        checkinService.checkinForAll(userId);
+        return CommonResponse.success();
+    }
+
 }
