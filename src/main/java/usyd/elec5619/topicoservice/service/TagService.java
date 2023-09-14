@@ -11,4 +11,5 @@ public interface TagService {
 
     List<Tag> getTagsByCommunityId(Long communityId);
 
+    void addTagsToPost(Long postId, List<String> tags);
 }

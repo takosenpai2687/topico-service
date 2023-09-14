@@ -8,16 +8,11 @@ import usyd.elec5619.topicoservice.dto.user.UpdateUserDto;
 import usyd.elec5619.topicoservice.exception.http.NotFoundException;
 import usyd.elec5619.topicoservice.mapper.UserMapper;
 import usyd.elec5619.topicoservice.model.*;
-import usyd.elec5619.topicoservice.service.CommunityService;
-import usyd.elec5619.topicoservice.service.PostService;
 import usyd.elec5619.topicoservice.service.UserService;
-import usyd.elec5619.topicoservice.vo.PostVO;
-import usyd.elec5619.topicoservice.vo.PostsVO;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

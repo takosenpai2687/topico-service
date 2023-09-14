@@ -1,10 +1,12 @@
 package usyd.elec5619.topicoservice.model;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
+@Builder
 public class Post {
     private Long id;
     private Long communityId;

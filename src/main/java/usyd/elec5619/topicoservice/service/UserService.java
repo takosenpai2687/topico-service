@@ -4,10 +4,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import usyd.elec5619.topicoservice.dto.user.UpdatePasswordDto;
 import usyd.elec5619.topicoservice.dto.user.UpdateUserDto;
-import usyd.elec5619.topicoservice.model.Community;
 import usyd.elec5619.topicoservice.model.User;
-import usyd.elec5619.topicoservice.vo.PostVO;
-import usyd.elec5619.topicoservice.vo.PostsVO;
 
 import java.util.List;
 

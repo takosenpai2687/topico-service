@@ -6,13 +6,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import usyd.elec5619.topicoservice.dto.user.UpdatePasswordDto;
 import usyd.elec5619.topicoservice.dto.user.UpdateUserDto;
-import usyd.elec5619.topicoservice.model.Community;
 import usyd.elec5619.topicoservice.model.User;
 import usyd.elec5619.topicoservice.pojo.CommonResponse;
-import usyd.elec5619.topicoservice.service.JwtService;
 import usyd.elec5619.topicoservice.service.UserService;
-import usyd.elec5619.topicoservice.vo.PostVO;
-import usyd.elec5619.topicoservice.vo.PostsVO;
 
 import java.util.List;
 
