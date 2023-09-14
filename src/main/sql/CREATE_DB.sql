@@ -14,15 +14,17 @@ CREATE TABLE `t_browse_history`
 
 CREATE TABLE `t_comment`
 (
-    `id`                  int          NOT NULL AUTO_INCREMENT,
-    `post_id`             int          NOT NULL,
-    `author_id`           int          NOT NULL,
-    `reply_to_comment_id` int          NULL,
-    `reply_to_user_id`    int          NULL,
-    `reply_to_name`       varchar(255) NULL,
-    `content`             text         NOT NULL,
-    `ctime`               TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `utime`               TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `id`               int  NOT NULL AUTO_INCREMENT,
+    `post_id`          int  NOT NULL,
+    `author_id`        int  NOT NULL,
+    `parent_id`        int  NULL,
+    `reply_to_user_id` int  NULL,
+    `content`          text NOT NULL,
+    `likes`            int  not null default 0,
+    `dislikes`         int  not null default 0,
+    `replies`          int  not null default 0,
+    `ctime`            TIMESTAMP     DEFAULT CURRENT_TIMESTAMP,
+    `utime`            TIMESTAMP     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 );
 
@@ -79,6 +81,7 @@ CREATE TABLE `t_post`
     `spoiler`      tinyint      NOT NULL DEFAULT 0,
     `likes`        int          NOT NULL DEFAULT 0,
     `dislikes`     int          NOT NULL DEFAULT 0,
+    `replies`      int          not null default 0,
     `ctime`        TIMESTAMP             DEFAULT CURRENT_TIMESTAMP,
     `utime`        TIMESTAMP             DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
@@ -174,7 +177,7 @@ ALTER TABLE `t_browse_history`
 ALTER TABLE `t_comment`
     ADD CONSTRAINT `comment_post_id` FOREIGN KEY (`post_id`) REFERENCES `t_post` (`id`);
 ALTER TABLE `t_comment`
-    ADD CONSTRAINT `reply_to` FOREIGN KEY (`reply_to_comment_id`) REFERENCES `t_comment` (`id`);
+    ADD CONSTRAINT `reply_to` FOREIGN KEY (`parent_id`) REFERENCES `t_comment` (`id`);
 ALTER TABLE `t_community_tag`
     ADD CONSTRAINT `community_id_copy_4` FOREIGN KEY (`community_id`) REFERENCES `t_community` (`id`);
 ALTER TABLE `t_community_tag`

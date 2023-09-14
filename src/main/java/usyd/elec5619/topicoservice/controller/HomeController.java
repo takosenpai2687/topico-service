@@ -6,11 +6,10 @@ import org.springframework.web.bind.annotation.*;
 import usyd.elec5619.topicoservice.model.Community;
 import usyd.elec5619.topicoservice.model.User;
 import usyd.elec5619.topicoservice.pojo.CommonResponse;
-import usyd.elec5619.topicoservice.service.CheckinService;
-import usyd.elec5619.topicoservice.service.CommunityService;
-import usyd.elec5619.topicoservice.service.PostService;
-import usyd.elec5619.topicoservice.service.UserService;
-import usyd.elec5619.topicoservice.vo.PostsVO;
+import usyd.elec5619.topicoservice.service.*;
+import usyd.elec5619.topicoservice.vo.CommentVO;
+import usyd.elec5619.topicoservice.vo.Pager;
+import usyd.elec5619.topicoservice.vo.PostVO;
 
 import java.util.List;
 
@@ -21,6 +20,7 @@ public class HomeController {
     private PostService postService;
     private CommunityService communityService;
     private CheckinService checkinService;
+    private CommentService commentService;
 
     @GetMapping("/communities_following")
     public CommonResponse<List<Community>> getCommunitiesFollowing(Authentication authentication) {
@@ -46,11 +46,11 @@ public class HomeController {
     }
 
     @GetMapping("/my_posts")
-    public CommonResponse<PostsVO> getMyPosts(Authentication authentication, @Valid @RequestParam(required = false, defaultValue = "0") Integer page, @Valid @RequestParam(required = false, defaultValue = "10") Integer size) {
+    public CommonResponse<Pager<PostVO>> getMyPosts(Authentication authentication, @Valid @RequestParam(required = false, defaultValue = "0") Integer page, @Valid @RequestParam(required = false, defaultValue = "10") Integer size) {
         final String email = authentication.getName();
         final Long userId = userService.emailToId(email);
-        PostsVO postsVO = postService.getPostsByUserId(userId, page, size);
-        return CommonResponse.success(postsVO);
+        Pager<PostVO> posts = postService.getPostsByUserId(userId, page, size);
+        return CommonResponse.success(posts);
     }
 
     @PostMapping("/checkin/{communityId}")
@@ -67,6 +67,14 @@ public class HomeController {
         final Long userId = userService.emailToId(email);
         checkinService.checkinForAll(userId);
         return CommonResponse.success();
+    }
+
+    @GetMapping("/my_comments")
+    public CommonResponse<Pager<CommentVO>> getMyComments(Authentication authentication, @Valid @RequestParam(required = false, defaultValue = "0") Integer page, @Valid @RequestParam(required = false, defaultValue = "10") Integer size) {
+        final String email = authentication.getName();
+        final Long userId = userService.emailToId(email);
+        Pager<CommentVO> comments = commentService.getCommentsByUserId(userId, page, size);
+        return CommonResponse.success(comments);
     }
 
 }

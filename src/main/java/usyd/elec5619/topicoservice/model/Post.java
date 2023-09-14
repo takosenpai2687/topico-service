@@ -14,6 +14,7 @@ public class Post {
     private Boolean spoiler;
     private Integer likes;
     private Integer dislikes;
+    private Integer replies;
     private LocalDateTime ctime;
     private LocalDateTime utime;
 }
