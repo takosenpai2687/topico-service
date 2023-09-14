@@ -26,18 +26,9 @@ CREATE TABLE `t_community`
     `followers`   int          NOT NULL DEFAULT 0,
     `avatar`      varchar(255) NULL     DEFAULT '',
     `banner`      varchar(255) NULL     DEFAULT '',
+    `tags`        text,
     `ctime`       TIMESTAMP             DEFAULT CURRENT_TIMESTAMP,
     `utime`       TIMESTAMP             DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`)
-);
-
-CREATE TABLE `t_community_tag`
-(
-    `id`           int NOT NULL AUTO_INCREMENT,
-    `community_id` int NOT NULL,
-    `tag_id`       int NOT NULL,
-    `ctime`        TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `utime`        TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 );
 
@@ -75,6 +66,7 @@ CREATE TABLE `t_post`
     `likes`        int          NOT NULL DEFAULT 0,
     `dislikes`     int          NOT NULL DEFAULT 0,
     `replies`      int          not null default 0,
+    `tags`         text,
     `ctime`        TIMESTAMP             DEFAULT CURRENT_TIMESTAMP,
     `utime`        TIMESTAMP             DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
@@ -90,24 +82,6 @@ CREATE TABLE `t_post_image`
     PRIMARY KEY (`id`)
 );
 
-CREATE TABLE `t_post_tag`
-(
-    `id`      int NOT NULL AUTO_INCREMENT,
-    `post_id` int NOT NULL,
-    `tag_id`  int NOT NULL,
-    `ctime`   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `utime`   TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`)
-);
-
-CREATE TABLE `t_tag`
-(
-    `id`    int          NOT NULL AUTO_INCREMENT,
-    `name`  varchar(255) NOT NULL,
-    `ctime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `utime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`)
-);
 
 CREATE TABLE `t_user`
 (
@@ -163,10 +137,6 @@ ALTER TABLE `t_comment`
     ADD CONSTRAINT `comment_post_id` FOREIGN KEY (`post_id`) REFERENCES `t_post` (`id`);
 ALTER TABLE `t_comment`
     ADD CONSTRAINT `reply_to` FOREIGN KEY (`parent_id`) REFERENCES `t_comment` (`id`);
-ALTER TABLE `t_community_tag`
-    ADD CONSTRAINT `community_id_copy_4` FOREIGN KEY (`community_id`) REFERENCES `t_community` (`id`);
-ALTER TABLE `t_community_tag`
-    ADD CONSTRAINT `t_community_tag_tag_id` FOREIGN KEY (`tag_id`) REFERENCES `t_tag` (`id`);
 ALTER TABLE `t_notification`
     ADD CONSTRAINT `sender_id` FOREIGN KEY (`sender_id`) REFERENCES `t_user` (`id`);
 ALTER TABLE `t_notification`
@@ -175,10 +145,6 @@ ALTER TABLE `t_post`
     ADD CONSTRAINT `t_post_author_id` FOREIGN KEY (`author_id`) REFERENCES `t_user` (`id`);
 ALTER TABLE `t_post`
     ADD CONSTRAINT `community_id_copy_2` FOREIGN KEY (`community_id`) REFERENCES `t_community` (`id`);
-ALTER TABLE `t_post_tag`
-    ADD CONSTRAINT `t_post_tag_post_id` FOREIGN KEY (`post_id`) REFERENCES `t_post` (`id`);
-ALTER TABLE `t_post_tag`
-    ADD CONSTRAINT `t_post_tag_tag_id` FOREIGN KEY (`tag_id`) REFERENCES `t_tag` (`id`);
 ALTER TABLE `t_post_image`
     ADD CONSTRAINT `t_post_image_post_id` FOREIGN KEY (`post_id`) REFERENCES `t_post` (`id`);
 ALTER TABLE `t_post_image`

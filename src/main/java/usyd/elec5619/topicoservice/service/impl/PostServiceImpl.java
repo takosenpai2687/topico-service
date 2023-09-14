@@ -45,9 +45,9 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Pager<PostVO> searchByTitle(String keyword, Integer page, Integer size, SortBy sortBy) {
+    public Pager<PostVO> searchByKeyword(String keyword, Integer page, Integer size, SortBy sortBy) {
         final int offset = page * size;
-        List<PostVO> posts = sortBy.equals(SortBy.MOST_LIKES) ? postMapper.searchHotByTitle(keyword, offset, size) : postMapper.searchNewByTitle(keyword, offset, size);
+        List<PostVO> posts = sortBy.equals(SortBy.MOST_LIKES) ? postMapper.searchHotByKeyword(keyword, offset, size) : postMapper.searchNewByKeyword(keyword, offset, size);
         final Integer total = postMapper.countSearchByTitle(keyword);
         return Pager.<PostVO>builder().data(posts).page(page).size(size).total(total).build();
     }

@@ -12,7 +12,7 @@ public interface PostService {
 
     Pager<PostVO> getPostsByCommunityId(Long communityId, Integer page, Integer size, SortBy sortBy);
 
-    Pager<PostVO> searchByTitle(String keyword, Integer page, Integer size, SortBy sortBy);
+    Pager<PostVO> searchByKeyword(String keyword, Integer page, Integer size, SortBy sortBy);
 
     PostVO getPostById(Long id);
 

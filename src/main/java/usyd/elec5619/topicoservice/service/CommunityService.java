@@ -16,7 +16,7 @@ public interface CommunityService {
 
     Community getCommunityByPostId(Long postId);
 
-    List<Community> searchByName(String keyword, Integer limit);
+    List<Community> searchByKeyword(String keyword, Integer limit);
 
     UserCommunity getUserCommunity(Long userId, Long communityId);
 

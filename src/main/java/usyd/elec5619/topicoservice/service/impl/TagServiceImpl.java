@@ -2,8 +2,6 @@ package usyd.elec5619.topicoservice.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import usyd.elec5619.topicoservice.mapper.TagMapper;
-import usyd.elec5619.topicoservice.model.Tag;
 import usyd.elec5619.topicoservice.service.TagService;
 
 import java.util.List;

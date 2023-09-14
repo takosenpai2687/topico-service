@@ -1,12 +1,10 @@
 package usyd.elec5619.topicoservice.vo;
 
-import jakarta.annotation.Nullable;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
 import usyd.elec5619.topicoservice.model.Comment;
 import usyd.elec5619.topicoservice.model.Community;
-import usyd.elec5619.topicoservice.model.Tag;
 import usyd.elec5619.topicoservice.model.User;
 
 import java.time.LocalDateTime;
@@ -18,7 +16,7 @@ public class PostVO {
     @NonNull Long id;
     @NonNull Community community;
     @NonNull User author;
-    @NonNull List<Tag> tags;
+    @NonNull String tags;
     @NonNull String title;
     @NonNull String content;
     @NonNull Boolean spoiler;

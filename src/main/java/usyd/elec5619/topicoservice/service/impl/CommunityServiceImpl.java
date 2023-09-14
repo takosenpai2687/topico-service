@@ -37,8 +37,8 @@ public class CommunityServiceImpl implements CommunityService {
     }
 
     @Override
-    public List<Community> searchByName(String keyword, Integer limit) {
-        return communityMapper.searchByName(keyword, limit);
+    public List<Community> searchByKeyword(String keyword, Integer limit) {
+        return communityMapper.searchByKeyword(keyword, limit);
     }
 
     @Override

@@ -1,7 +1,6 @@
 package usyd.elec5619.topicoservice.service.impl;
 
 import org.springframework.stereotype.Service;
-import usyd.elec5619.topicoservice.mapper.CommunityMapper;
 import usyd.elec5619.topicoservice.model.Community;
 import usyd.elec5619.topicoservice.service.CommunityService;
 import usyd.elec5619.topicoservice.service.ExploreService;
@@ -31,8 +30,8 @@ public class ExploreServiceImpl implements ExploreService {
 
     @Override
     public SearchResultVO search(String keyword, Integer page, Integer size, SortBy sortBy) {
-        List<Community> communities = communityService.searchByName(keyword, 5);
-        Pager<PostVO> posts = postService.searchByTitle(keyword, page, size, sortBy);
+        List<Community> communities = communityService.searchByKeyword(keyword, 5);
+        Pager<PostVO> posts = postService.searchByKeyword(keyword, page, size, sortBy);
         return SearchResultVO.builder().communities(communities).posts(posts).sortBy(sortBy).build();
     }
 }

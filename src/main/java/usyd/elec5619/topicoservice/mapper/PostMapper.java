@@ -31,11 +31,11 @@ public interface PostMapper {
             @Result(column = "likes", property = "likes"),
             @Result(column = "dislikes", property = "dislikes"),
             @Result(column = "replies", property = "replies"),
+            @Result(column = "tags", property = "tags"),
             @Result(column = "ctime", property = "ctime"),
             @Result(column = "utime", property = "utime"),
             @Result(column = "community_id", property = "community", javaType = Community.class, one = @One(select = "CommunityMapper.getCommunityById")),
             @Result(column = "author_id", property = "author", javaType = User.class, one = @One(select = "UserMapper.getUserById")),
-            @Result(column = "id", property = "tags", javaType = List.class, many = @Many(select = "TagMapper.getTagsByPostId")),
             @Result(column = "id", property = "images", javaType = List.class, many = @Many(select = "getImageUuidsByPostId"))
     })
     List<PostVO> getPostsByUserId(Long userId, Integer offset, Integer size);
@@ -65,11 +65,11 @@ public interface PostMapper {
             @Result(column = "spoiler", property = "spoiler"),
             @Result(column = "likes", property = "likes"),
             @Result(column = "dislikes", property = "dislikes"),
+            @Result(column = "tags", property = "tags"),
             @Result(column = "ctime", property = "ctime"),
             @Result(column = "utime", property = "utime"),
             @Result(column = "community_id", property = "community", javaType = Community.class, one = @One(select = "CommunityMapper.getCommunityById")),
             @Result(column = "author_id", property = "author", javaType = User.class, one = @One(select = "UserMapper.getUserById")),
-            @Result(column = "id", property = "tags", javaType = List.class, many = @Many(select = "TagMapper.getTagsByPostId")),
             @Result(column = "id", property = "commentsCount", javaType = Integer.class, one = @One(select = "CommentMapper.countCommentsByPostId")),
             @Result(column = "id", property = "images", javaType = List.class, many = @Many(select = "getImageUuidsByPostId"))
     })
@@ -93,11 +93,11 @@ public interface PostMapper {
             @Result(column = "spoiler", property = "spoiler"),
             @Result(column = "likes", property = "likes"),
             @Result(column = "dislikes", property = "dislikes"),
+            @Result(column = "tags", property = "tags"),
             @Result(column = "ctime", property = "ctime"),
             @Result(column = "utime", property = "utime"),
             @Result(column = "community_id", property = "community", javaType = Community.class, one = @One(select = "CommunityMapper.getCommunityById")),
             @Result(column = "author_id", property = "author", javaType = User.class, one = @One(select = "UserMapper.getUserById")),
-            @Result(column = "id", property = "tags", javaType = List.class, many = @Many(select = "TagMapper.getTagsByPostId")),
             @Result(column = "id", property = "commentsCount", javaType = Integer.class, one = @One(select = "CommentMapper.countCommentsByPostId")),
             @Result(column = "id", property = "images", javaType = List.class, many = @Many(select = "getImageUuidsByPostId"))
     })
@@ -122,7 +122,7 @@ public interface PostMapper {
             "likes," +
             "dislikes " +
             "FROM t_post " +
-            "WHERE title LIKE CONCAT('%', #{keyword}, '%') ORDER BY ctime DESC LIMIT #{offset}, #{size}")
+            "WHERE title LIKE CONCAT('%', #{keyword}, '%') OR tags LIKE CONCAT('%', #{keyword}, '%') ORDER BY ctime DESC LIMIT #{offset}, #{size}")
     @Results({
             @Result(column = "id", property = "id"),
             @Result(column = "title", property = "title"),
@@ -130,15 +130,15 @@ public interface PostMapper {
             @Result(column = "spoiler", property = "spoiler"),
             @Result(column = "likes", property = "likes"),
             @Result(column = "dislikes", property = "dislikes"),
+            @Result(column = "tags", property = "tags"),
             @Result(column = "ctime", property = "ctime"),
             @Result(column = "utime", property = "utime"),
             @Result(column = "community_id", property = "community", javaType = Community.class, one = @One(select = "CommunityMapper.getCommunityById")),
             @Result(column = "author_id", property = "author", javaType = User.class, one = @One(select = "UserMapper.getUserById")),
-            @Result(column = "id", property = "tags", javaType = List.class, many = @Many(select = "TagMapper.getTagsByPostId")),
             @Result(column = "id", property = "commentsCount", javaType = Integer.class, one = @One(select = "CommentMapper.countCommentsByPostId")),
             @Result(column = "id", property = "images", javaType = List.class, many = @Many(select = "getImageUuidsByPostId"))
     })
-    List<PostVO> searchNewByTitle(String keyword, int offset, Integer size);
+    List<PostVO> searchNewByKeyword(String keyword, int offset, Integer size);
 
     @Select("SELECT " +
             "id,title," +
@@ -150,7 +150,7 @@ public interface PostMapper {
             "likes," +
             "dislikes " +
             "FROM t_post " +
-            "WHERE title LIKE CONCAT('%', #{keyword}, '%') ORDER BY likes DESC LIMIT #{offset}, #{size}")
+            "WHERE title LIKE CONCAT('%', #{keyword}, '%') OR tags LIKE CONCAT('%', #{keyword}, '%') ORDER BY likes DESC LIMIT #{offset}, #{size}")
     @Results({
             @Result(column = "id", property = "id"),
             @Result(column = "title", property = "title"),
@@ -158,15 +158,15 @@ public interface PostMapper {
             @Result(column = "spoiler", property = "spoiler"),
             @Result(column = "likes", property = "likes"),
             @Result(column = "dislikes", property = "dislikes"),
+            @Result(column = "tags", property = "tags"),
             @Result(column = "ctime", property = "ctime"),
             @Result(column = "utime", property = "utime"),
             @Result(column = "community_id", property = "community", javaType = Community.class, one = @One(select = "CommunityMapper.getCommunityById")),
             @Result(column = "author_id", property = "author", javaType = User.class, one = @One(select = "UserMapper.getUserById")),
-            @Result(column = "id", property = "tags", javaType = List.class, many = @Many(select = "TagMapper.getTagsByPostId")),
             @Result(column = "id", property = "commentsCount", javaType = Integer.class, one = @One(select = "CommentMapper.countCommentsByPostId")),
             @Result(column = "id", property = "images", javaType = List.class, many = @Many(select = "getImageUuidsByPostId"))
     })
-    List<PostVO> searchHotByTitle(String keyword, int offset, Integer size);
+    List<PostVO> searchHotByKeyword(String keyword, int offset, Integer size);
 
     @Select("SELECT " +
             "id,title," +
@@ -186,11 +186,11 @@ public interface PostMapper {
             @Result(column = "spoiler", property = "spoiler"),
             @Result(column = "likes", property = "likes"),
             @Result(column = "dislikes", property = "dislikes"),
+            @Result(column = "tags", property = "tags"),
             @Result(column = "ctime", property = "ctime"),
             @Result(column = "utime", property = "utime"),
             @Result(column = "community_id", property = "community", javaType = Community.class, one = @One(select = "CommunityMapper.getCommunityById")),
             @Result(column = "author_id", property = "author", javaType = User.class, one = @One(select = "UserMapper.getUserById")),
-            @Result(column = "id", property = "tags", javaType = List.class, many = @Many(select = "TagMapper.getTagsByPostId")),
             @Result(column = "id", property = "commentsCount", javaType = Integer.class, one = @One(select = "CommentMapper.countCommentsByPostId")),
             @Result(column = "id", property = "images", javaType = List.class, many = @Many(select = "getImageUuidsByPostId"))
     })
