@@ -1,8 +1,9 @@
 package usyd.elec5619.topicoservice.mapper;
 
 import org.apache.ibatis.annotations.*;
-import usyd.elec5619.topicoservice.model.*;
-import usyd.elec5619.topicoservice.type.SortBy;
+import usyd.elec5619.topicoservice.model.Community;
+import usyd.elec5619.topicoservice.model.Post;
+import usyd.elec5619.topicoservice.model.User;
 import usyd.elec5619.topicoservice.vo.PostVO;
 
 import java.util.List;
@@ -198,4 +199,10 @@ public interface PostMapper {
     @Insert("INSERT INTO t_post (community_id, author_id, title, content, spoiler) VALUES (#{communityId}, #{authorId}, #{title}, #{content}, #{spoiler})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     Long insertOne(Post post);
+
+    @Select("SELECT * FROM t_post WHERE id = #{postId} LIMIT 1")
+    Optional<Post> getPostById(Long postId);
+
+    @Delete("DELETE FROM t_post WHERE id = #{postId}")
+    void deleteOne(Long postId);
 }

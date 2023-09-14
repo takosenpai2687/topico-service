@@ -17,4 +17,6 @@ public interface PostService {
     PostVO getPostById(Long id);
 
     PostVO createPost(Long userId, CreatePostDto createPostDto);
+
+    void deletePost(Long userId, Long postId);
 }

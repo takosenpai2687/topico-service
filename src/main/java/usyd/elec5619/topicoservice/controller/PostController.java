@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import usyd.elec5619.topicoservice.dto.post.CreatePostDto;
-import usyd.elec5619.topicoservice.model.Post;
 import usyd.elec5619.topicoservice.pojo.CommonResponse;
 import usyd.elec5619.topicoservice.service.PostService;
 import usyd.elec5619.topicoservice.service.UserService;
@@ -30,5 +29,13 @@ public class PostController {
         final Long userId = userService.emailToId(email);
         PostVO post = postService.createPost(userId, createPostDto);
         return CommonResponse.success(post);
+    }
+
+    @DeleteMapping("/{id}")
+    public CommonResponse<Void> deletePost(Authentication authentication, @Valid @PathVariable("id") Long postId) {
+        final String email = authentication.getName();
+        final Long userId = userService.emailToId(email);
+        postService.deletePost(userId, postId);
+        return CommonResponse.success();
     }
 }

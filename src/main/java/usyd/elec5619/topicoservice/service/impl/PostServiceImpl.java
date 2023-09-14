@@ -9,7 +9,9 @@ import usyd.elec5619.topicoservice.exception.http.InternalException;
 import usyd.elec5619.topicoservice.exception.http.NotFoundException;
 import usyd.elec5619.topicoservice.mapper.PostMapper;
 import usyd.elec5619.topicoservice.model.Post;
-import usyd.elec5619.topicoservice.service.*;
+import usyd.elec5619.topicoservice.service.ImageService;
+import usyd.elec5619.topicoservice.service.PostService;
+import usyd.elec5619.topicoservice.service.TagService;
 import usyd.elec5619.topicoservice.type.SortBy;
 import usyd.elec5619.topicoservice.vo.Pager;
 import usyd.elec5619.topicoservice.vo.PostVO;
@@ -59,12 +61,12 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public PostVO createPost(Long userId, CreatePostDto createPostDto) {
         Post post = Post.builder()
-                        .communityId(createPostDto.getCommunityId())
-                        .authorId(userId)
-                        .title(createPostDto.getTitle())
-                        .content(createPostDto.getContent())
-                        .spoiler(createPostDto.getSpoiler())
-                        .build();
+                .communityId(createPostDto.getCommunityId())
+                .authorId(userId)
+                .title(createPostDto.getTitle())
+                .content(createPostDto.getContent())
+                .spoiler(createPostDto.getSpoiler())
+                .build();
         Long postId = postMapper.insertOne(post);
         // Add tags
         final List<String> tags = createPostDto.getTags();
@@ -77,6 +79,15 @@ public class PostServiceImpl implements PostService {
             imageService.addImagesToPost(post.getId(), images);
         }
         return postMapper.getPostVOById(postId).orElseThrow(() -> new InternalException("Failed to create post"));
+    }
+
+    @Override
+    public void deletePost(Long userId, Long postId) {
+        Post post = postMapper.getPostById(postId).orElseThrow(() -> new NotFoundException("Post not found"));
+        if (!post.getAuthorId().equals(userId)) {
+            throw new NotFoundException("not your post");
+        }
+        postMapper.deleteOne(postId);
     }
 
 }
