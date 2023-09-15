@@ -114,21 +114,23 @@ CREATE TABLE `t_user_community`
 
 CREATE TABLE `t_user_like_comment`
 (
-    `id`         int NOT NULL AUTO_INCREMENT,
-    `user_id`    int NOT NULL,
-    `comment_id` int NOT NULL,
-    `ctime`      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `utime`      TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `id`         int     NOT NULL AUTO_INCREMENT,
+    `user_id`    int     NOT NULL,
+    `comment_id` int     NOT NULL,
+    `liked`      TINYINT NOT NULL DEFAULT 1,
+    `ctime`      TIMESTAMP        DEFAULT CURRENT_TIMESTAMP,
+    `utime`      TIMESTAMP        DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `t_user_like_post`
 (
-    `id`      int NOT NULL AUTO_INCREMENT,
-    `user_id` int NOT NULL,
-    `post_id` int NOT NULL,
-    `ctime`   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `utime`   TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `id`      int     NOT NULL AUTO_INCREMENT,
+    `user_id` int     NOT NULL,
+    `post_id` int     NOT NULL,
+    `liked`   TINYINT NOT NULL DEFAULT 1,
+    `ctime`   TIMESTAMP        DEFAULT CURRENT_TIMESTAMP,
+    `utime`   TIMESTAMP        DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 );
 
