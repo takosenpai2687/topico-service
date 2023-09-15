@@ -18,8 +18,6 @@ public interface UserService {
 
     User updateUser(Long id, UpdateUserDto user);
 
-    void updatePassword(Long id, UpdatePasswordDto updatePasswordDto);
-
     User getUserByEmail(String email);
 
     UserDetailsService userDetailsService();

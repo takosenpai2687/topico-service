@@ -35,25 +35,6 @@ public class UserServiceImpl implements UserService {
         return userMapper.updateUser(id, updateUserDTO);
     }
 
-    @Override
-    public void updatePassword(Long id, UpdatePasswordDto updatePasswordDto) {
-//        // Check new password
-//        if (!passwordUtil.isValid(updatePasswordDto.getNewPassword())) {
-//            throw new BadRequestException("Password must be 6-16 characters");
-//        }
-//        // Check user exists
-//        final User dbUser = userMapper.getUserById(id);
-//        if (dbUser == null) {
-//            throw new ForbiddenException("User not found");
-//        }
-//        // Check old password
-//        if (passwordUtil.isCorrect(updatePasswordDto.getOldPassword(), dbUser.getPassword())) {
-//            throw new ForbiddenException("Old password is incorrect");
-//        }
-//        // Update password
-//        userMapper.updateUserPassword(id, passwordUtil.hashPassword(updatePasswordDto.getNewPassword()));
-    }
-
     public User getUserByEmail(String email) {
         return userMapper.getByEmail(email).orElseThrow(() -> new NotFoundException("user not found"));
     }
@@ -71,7 +52,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(Long id) {
-        return userMapper.getUserById(id);
+        return userMapper.getUserById(id).orElseThrow(() -> new NotFoundException("user not found"));
     }
 
 

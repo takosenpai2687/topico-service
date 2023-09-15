@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import usyd.elec5619.topicoservice.dto.auth.LoginDto;
 import usyd.elec5619.topicoservice.dto.auth.SignupDto;
+import usyd.elec5619.topicoservice.dto.user.UpdatePasswordDto;
 import usyd.elec5619.topicoservice.exception.http.BadRequestException;
 import usyd.elec5619.topicoservice.mapper.UserMapper;
 import usyd.elec5619.topicoservice.model.User;
@@ -75,5 +76,20 @@ public class AuthServiceImpl implements AuthService {
                       .nickName(user.getNickName())
                       .token(token)
                       .build();
+    }
+
+    @Override
+    public void updatePassword(Long id, UpdatePasswordDto updatePasswordDto) {
+        User user = userMapper.getUserById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user id"));
+        String oldPassword = updatePasswordDto.getOldPassword();
+        String newPassword = updatePasswordDto.getNewPassword();
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new BadRequestException("Old password is incorrect");
+        }
+        if (newPassword.length() < 6 || newPassword.length() > 16) {
+            throw new BadRequestException("Password must be 6-16 characters");
+        }
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userMapper.updatePassword(id, user.getPassword());
     }
 }

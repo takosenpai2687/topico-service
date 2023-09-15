@@ -37,9 +37,11 @@ public interface UserMapper {
     void insert(User user);
 
     @Select("SELECT * FROM t_user WHERE id = #{id}")
-    User getUserById(Long id);
+    Optional<User> getUserById(Long id);
 
     @Select("SELECT * FROM t_user")
     List<User> getAllUsers();
 
+    @Update("UPDATE t_user SET password = #{password} WHERE id = #{userId}")
+    void updatePassword(Long userId, String password);
 }

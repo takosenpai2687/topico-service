@@ -31,11 +31,6 @@ public class UserController {
         return CommonResponse.success(updatedUser);
     }
 
-    @PutMapping("/password/{id}")
-    public CommonResponse<?> updatePassword(@PathVariable @Valid Long id, @Valid @RequestBody UpdatePasswordDto updatePasswordDto) {
-        userService.updatePassword(id, updatePasswordDto);
-        return CommonResponse.success();
-    }
 
     @GetMapping("/test")
     public CommonResponse<Authentication> getCredential(Authentication authentication) {
