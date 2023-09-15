@@ -13,7 +13,8 @@ import usyd.elec5619.topicoservice.vo.PostVO;
 
 import java.util.List;
 
-@RestController("/api/v1/home")
+@RestController()
+@RequestMapping("/api/v1/home")
 public class HomeController {
 
     private UserService userService;

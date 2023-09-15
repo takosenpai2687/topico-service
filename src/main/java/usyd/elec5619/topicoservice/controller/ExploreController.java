@@ -2,6 +2,7 @@ package usyd.elec5619.topicoservice.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import usyd.elec5619.topicoservice.model.Community;
@@ -12,7 +13,8 @@ import usyd.elec5619.topicoservice.vo.SearchResultVO;
 
 import java.util.List;
 
-@RestController("/api/v1/explore")
+@RestController()
+@RequestMapping("/api/v1/explore")
 @RequiredArgsConstructor
 public class ExploreController {
 

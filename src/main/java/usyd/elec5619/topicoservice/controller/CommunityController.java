@@ -15,7 +15,8 @@ import usyd.elec5619.topicoservice.type.SortBy;
 import usyd.elec5619.topicoservice.vo.Pager;
 import usyd.elec5619.topicoservice.vo.PostVO;
 
-@RestController("/api/v1/communities")
+@RestController()
+@RequestMapping("/api/v1/communities")
 @RequiredArgsConstructor
 public class CommunityController {
 
@@ -41,12 +42,12 @@ public class CommunityController {
         return CommonResponse.success(userCommunity);
     }
 
-    @PostMapping("/unfollow/{communityId}")
-    public CommonResponse<UserCommunity> unfollow(Authentication authentication, @Valid @PathVariable Long communityId) {
+    @DeleteMapping("/follow/{communityId}")
+    public CommonResponse<Void> unfollow(Authentication authentication, @Valid @PathVariable Long communityId) {
         final String email = authentication.getName();
         final Long userId = userService.emailToId(email);
-        final UserCommunity userCommunity = communityService.unfollow(userId, communityId);
-        return CommonResponse.success(userCommunity);
+        communityService.unfollow(userId, communityId);
+        return CommonResponse.success();
     }
 
     @GetMapping("/community_posts/{communityId}")

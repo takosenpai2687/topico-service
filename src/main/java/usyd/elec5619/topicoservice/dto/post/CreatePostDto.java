@@ -13,5 +13,5 @@ public class CreatePostDto {
     private String content;
     private Boolean spoiler;
     private List<String> images;
-    private List<String> tags;
+    private String tags;
 }

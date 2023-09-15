@@ -56,11 +56,10 @@ public class CommunityServiceImpl implements CommunityService {
     }
 
     @Override
-    public UserCommunity unfollow(Long userId, Long communityId) {
+    public void unfollow(Long userId, Long communityId) {
         if (!communityMapper.isUserFollowingCommunity(userId, communityId)) {
             throw new BadRequestException("User has not followed this community");
         }
         communityMapper.unfollow(userId, communityId);
-        return communityMapper.getUserCommunity(userId, communityId);
     }
 }

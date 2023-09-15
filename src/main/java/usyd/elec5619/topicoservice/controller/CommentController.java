@@ -12,7 +12,8 @@ import usyd.elec5619.topicoservice.service.UserService;
 import usyd.elec5619.topicoservice.vo.CommentVO;
 import usyd.elec5619.topicoservice.vo.LikeVO;
 
-@RestController("/api/v1/comments")
+@RestController()
+@RequestMapping("/api/v1/comments")
 @RequiredArgsConstructor
 public class CommentController {
 

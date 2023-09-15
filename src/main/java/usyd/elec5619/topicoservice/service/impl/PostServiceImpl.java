@@ -11,7 +11,6 @@ import usyd.elec5619.topicoservice.mapper.PostMapper;
 import usyd.elec5619.topicoservice.model.Post;
 import usyd.elec5619.topicoservice.service.ImageService;
 import usyd.elec5619.topicoservice.service.PostService;
-import usyd.elec5619.topicoservice.service.TagService;
 import usyd.elec5619.topicoservice.type.SortBy;
 import usyd.elec5619.topicoservice.vo.Pager;
 import usyd.elec5619.topicoservice.vo.PostVO;
@@ -24,7 +23,6 @@ import java.util.List;
 public class PostServiceImpl implements PostService {
 
     private final PostMapper postMapper;
-    private final TagService tagService;
     private final ImageService imageService;
 
     @Override
@@ -61,18 +59,14 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public PostVO createPost(Long userId, CreatePostDto createPostDto) {
         Post post = Post.builder()
-                .communityId(createPostDto.getCommunityId())
-                .authorId(userId)
-                .title(createPostDto.getTitle())
-                .content(createPostDto.getContent())
-                .spoiler(createPostDto.getSpoiler())
-                .build();
+                        .communityId(createPostDto.getCommunityId())
+                        .authorId(userId)
+                        .title(createPostDto.getTitle())
+                        .content(createPostDto.getContent())
+                        .spoiler(createPostDto.getSpoiler())
+                        .tags(createPostDto.getTags())
+                        .build();
         Long postId = postMapper.insertOne(post);
-        // Add tags
-        final List<String> tags = createPostDto.getTags();
-        if (tags != null && !tags.isEmpty()) {
-            tagService.addTagsToPost(post.getId(), tags);
-        }
         // Add images
         final List<String> images = createPostDto.getImages();
         if (images != null && !images.isEmpty()) {
