@@ -1,6 +1,7 @@
 package usyd.elec5619.topicoservice.dto.post;
 
 import jakarta.annotation.Nonnull;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Data;
 
@@ -11,9 +12,9 @@ import java.util.List;
 public class CreatePostDto {
     @Nonnull
     private Long communityId;
-    @Nonnull
+    @NotBlank
     private String title;
-    @Nonnull
+    @NotBlank
     private String content;
     @Nonnull
     private Boolean spoiler;
