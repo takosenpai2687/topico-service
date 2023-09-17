@@ -62,4 +62,9 @@ public class CommunityServiceImpl implements CommunityService {
         }
         communityMapper.unfollow(userId, communityId);
     }
+ 
+    @Override
+    public List<Community> getTopCommunities() {
+        return communityMapper.getTopCommunities();
+    }
 }

@@ -49,4 +49,10 @@ public interface CommunityMapper {
             "</script>"
     })
     void unfollow(Long userId, Long communityId);
+
+    @Select("SELECT * FROM t_community")
+    List<Community> getAllCommunities();
+
+    @Select("SELECT * FROM t_community ORDER BY followers DESC LIMIT 10")
+    List<Community> getTopCommunities();
 }

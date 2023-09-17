@@ -23,4 +23,6 @@ public interface CommunityService {
     UserCommunity follow(Long userId, Long communityId);
 
     void unfollow(Long userId, Long communityId);
+
+    List<Community> getTopCommunities();
 }

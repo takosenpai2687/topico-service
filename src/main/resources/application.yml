@@ -12,6 +12,7 @@ spring:
       host: localhost
       port: 6379
       password: 123456
+      top-search-key: top-search
 
 mybatis:
   configuration:
@@ -31,4 +32,8 @@ logging:
 jwt:
   secret: elec5619elec5619elec5619elec5619elec5619elec5619elec5619elec5619elec5619elec5619elec5619elec5619
   # 7 days
+
+scheduled:
+  updateTopSearch: 60_000  # 1 minute
+  updateTopCommunities: 60_000 # 1 minute
 
