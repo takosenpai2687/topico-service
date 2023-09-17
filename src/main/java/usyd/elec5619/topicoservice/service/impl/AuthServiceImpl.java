@@ -43,7 +43,12 @@ public class AuthServiceImpl implements AuthService {
         if (userMapper.getByNickName(nickName) != null) {
             throw new BadRequestException("NickName already exists");
         }
-        // Check password
+        // Check password match
+        final String confirmPassword = signupDto.getConfirmPassword();
+        if (confirmPassword == null || !confirmPassword.equals(signupDto.getPassword())) {
+            throw new BadRequestException("Password not match");
+        }
+        // Check password valid
         final String password = signupDto.getPassword();
         if (password.length() < 6 || password.length() > 16) {
             throw new BadRequestException("Password must be 6-16 characters");

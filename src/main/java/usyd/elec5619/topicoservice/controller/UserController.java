@@ -25,6 +25,12 @@ public class UserController {
         return CommonResponse.success(allUsers);
     }
 
+    @GetMapping("/{email}")
+    public CommonResponse<User> getUserById(@PathVariable @Valid String email) {
+        User user = userService.getUserByEmail(email);
+        return CommonResponse.success(user);
+    }
+
     @PutMapping("/{id}")
     public CommonResponse<User> updateUser(@PathVariable @Valid Long id, @Valid @RequestBody UpdateUserDto updateUserDTO) {
         User updatedUser = userService.updateUser(id, updateUserDTO);
