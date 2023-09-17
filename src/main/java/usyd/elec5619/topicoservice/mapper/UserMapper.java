@@ -33,9 +33,6 @@ public interface UserMapper {
     @Update("UPDATE t_user SET password = #{password} WHERE id = #{id}")
     void updateUserPassword(@Param("id") Long id, @Param("password") String password);
 
-    @Insert("INSERT INTO t_user (email, nick_name, password) " + "VALUES (#{email}, #{nickName}, #{password})")
-    void insert(User user);
-
     @Select("SELECT * FROM t_user WHERE id = #{id}")
     Optional<User> getUserById(Long id);
 

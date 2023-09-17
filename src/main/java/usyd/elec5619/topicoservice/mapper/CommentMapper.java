@@ -15,6 +15,9 @@ public interface CommentMapper {
     @Select("SELECT COUNT(id) FROM t_comment WHERE post_id = #{postId} AND parent_id IS NULL")
     Integer countCommentsByPostId(Long postId);
 
+    @Select("SELECT COUNT(id) FROM t_comment WHERE parent_id = #{commentId}")
+    Integer countRepliesByCommentId(Long commentId);
+
     @Select("SELECT " +
             "id," +
             "post_id," +

@@ -44,14 +44,17 @@ CREATE TABLE `t_image`
 
 CREATE TABLE `t_notification`
 (
-    `id`          int     NOT NULL AUTO_INCREMENT,
-    `type`        tinyint NOT NULL DEFAULT 0,
-    `sender_id`   int     NOT NULL,
-    `receiver_id` int     NOT NULL,
-    `content`     text    NULL,
-    `unread`      tinyint NOT NULL DEFAULT 1,
-    `ctime`       TIMESTAMP        DEFAULT CURRENT_TIMESTAMP,
-    `utime`       TIMESTAMP        DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `id`                  int     NOT NULL AUTO_INCREMENT,
+    `type`                tinyint NOT NULL DEFAULT 0,
+    `sender_id`           int     NOT NULL,
+    `receiver_id`         int     NOT NULL,
+    `post_id`             int     NULL,
+    `comment_id`          int     NULL,
+    `reply_to_comment_id` int     NULL,
+    `content`             text    NULL,
+    `unread`              tinyint NOT NULL DEFAULT 1,
+    `ctime`               TIMESTAMP        DEFAULT CURRENT_TIMESTAMP,
+    `utime`               TIMESTAMP        DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 );
 

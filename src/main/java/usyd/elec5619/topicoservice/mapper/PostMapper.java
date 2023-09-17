@@ -205,4 +205,5 @@ public interface PostMapper {
 
     @Delete("DELETE FROM t_post WHERE id = #{postId}")
     void deleteOne(Long postId);
+
 }
