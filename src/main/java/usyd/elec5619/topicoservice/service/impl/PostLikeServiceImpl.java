@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import usyd.elec5619.topicoservice.exception.http.BadRequestException;
 import usyd.elec5619.topicoservice.mapper.PostLikeMapper;
+import usyd.elec5619.topicoservice.service.NotificationService;
 import usyd.elec5619.topicoservice.service.PostLikeService;
 import usyd.elec5619.topicoservice.vo.LikeVO;
 
@@ -13,6 +14,7 @@ import usyd.elec5619.topicoservice.vo.LikeVO;
 public class PostLikeServiceImpl implements PostLikeService {
 
     private final PostLikeMapper postLikeMapper;
+    private final NotificationService notificationService;
 
     @Override
     @Transactional
@@ -29,6 +31,8 @@ public class PostLikeServiceImpl implements PostLikeService {
         postLikeMapper.likePost(userId, postId);
         // Build result
         Boolean likedStatus = postLikeMapper.getPostLikedStatus(userId, postId);
+        // Send notification
+        notificationService.sendLikePostNotification(userId, postId, true);
         return LikeVO.builder()
                      .liked(likedStatus != null && likedStatus)
                      .disliked(likedStatus != null && !likedStatus)
@@ -49,6 +53,8 @@ public class PostLikeServiceImpl implements PostLikeService {
         postLikeMapper.unlikePost(userId, postId);
         // Build result
         Boolean likedStatus = postLikeMapper.getPostLikedStatus(userId, postId);
+        // Send notification
+        notificationService.sendLikePostNotification(userId, postId, false);
         return LikeVO.builder()
                      .liked(likedStatus != null && likedStatus)
                      .disliked(likedStatus != null && !likedStatus)
@@ -68,6 +74,8 @@ public class PostLikeServiceImpl implements PostLikeService {
         // Already liked before: remove like first
         if (postLikedStatus != null) {
             postLikeMapper.unlikePost(userId, postId);
+            // Send unlike notification
+            notificationService.sendLikePostNotification(userId, postId, false);
         }
         postLikeMapper.dislikePost(userId, postId);
         // Build result

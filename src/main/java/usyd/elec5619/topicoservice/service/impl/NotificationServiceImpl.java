@@ -23,7 +23,7 @@ public class NotificationServiceImpl implements NotificationService {
     private final NotificationMapper notificationMapper;
 
     @Override
-    public List<NotificationVO> getALlNotifications(Long receiverId) {
+    public List<NotificationVO> getAllNotifications(Long receiverId) {
         // Get all notifications
         List<NotificationVO> likePostNotifications = notificationMapper.getLikePostNotifications(receiverId);
         List<NotificationVO> likeCommentNotifications = notificationMapper.getLikeCommentNotifications(receiverId);
@@ -60,7 +60,8 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public void sendLikePostNotification(Long receiverId, Long senderId, Long postId, Boolean liked) {
+    public void sendLikePostNotification(Long senderId, Long postId, Boolean liked) {
+        Long receiverId = notificationMapper.getPostAuthorId(postId);
         if (!liked) {
             notificationMapper.deleteLikePost(senderId, receiverId, postId);
             return;
@@ -77,7 +78,8 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public void sendLikeCommentNotification(Long receiverId, Long senderId, Long commentId, Boolean liked) {
+    public void sendLikeCommentNotification(Long senderId, Long commentId, Boolean liked) {
+        Long receiverId = notificationMapper.getCommentAuthorId(commentId);
         if (!liked) {
             notificationMapper.deleteLikeComment(senderId, receiverId, commentId);
             return;
@@ -94,7 +96,8 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public void sendCommentPostNotification(Long receiverId, Long senderId, Long postId, Long commentId) {
+    public void sendCommentPostNotification(Long senderId, Long postId, Long commentId) {
+        Long receiverId = notificationMapper.getPostAuthorId(postId);
         Notification notification = Notification.builder()
                                                 .type(NotificationType.COMMENT_POST)
                                                 .senderId(senderId)
@@ -107,7 +110,8 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public void sendCommentReplyNotification(Long receiverId, Long senderId, Long postId, Long commentId, Long replyToCommentId) {
+    public void sendCommentReplyNotification(Long senderId, Long postId, Long commentId, Long replyToCommentId) {
+        Long receiverId = notificationMapper.getCommentAuthorId(replyToCommentId);
         Notification notification = Notification.builder()
                                                 .type(NotificationType.COMMENT_REPLY)
                                                 .senderId(senderId)

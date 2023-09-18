@@ -10,6 +10,7 @@ import usyd.elec5619.topicoservice.exception.http.NotFoundException;
 import usyd.elec5619.topicoservice.mapper.CommentMapper;
 import usyd.elec5619.topicoservice.model.Comment;
 import usyd.elec5619.topicoservice.service.CommentService;
+import usyd.elec5619.topicoservice.service.NotificationService;
 import usyd.elec5619.topicoservice.type.SortBy;
 import usyd.elec5619.topicoservice.vo.CommentVO;
 import usyd.elec5619.topicoservice.vo.Pager;
@@ -22,6 +23,7 @@ import java.util.List;
 public class CommentServiceImpl implements CommentService {
 
     private final CommentMapper commentMapper;
+    private final NotificationService notificationService;
 
     @Override
     public Pager<CommentVO> getCommentsByUserId(Long userId, Integer page, Integer size) {
@@ -29,11 +31,11 @@ public class CommentServiceImpl implements CommentService {
         List<CommentVO> commentVOList = commentMapper.getCommentsByUserId(userId, offset, size);
         Integer total = commentMapper.countCommentsByUserId(userId);
         return Pager.<CommentVO>builder()
-                .data(commentVOList)
-                .page(page)
-                .size(size)
-                .total(total)
-                .build();
+                    .data(commentVOList)
+                    .page(page)
+                    .size(size)
+                    .total(total)
+                    .build();
     }
 
     @Override
@@ -44,23 +46,30 @@ public class CommentServiceImpl implements CommentService {
                 : commentMapper.getNewCommentsByPostId(postId, offset, size);
         Integer total = commentMapper.countCommentsByPostId(postId);
         return Pager.<CommentVO>builder()
-                .data(commentVOList)
-                .page(page)
-                .size(size)
-                .total(total)
-                .build();
+                    .data(commentVOList)
+                    .page(page)
+                    .size(size)
+                    .total(total)
+                    .build();
     }
 
     @Override
     public CommentVO createComment(Long userId, CreateCommentDto createCommentDto) {
         Comment comment = Comment.builder()
-                .postId(createCommentDto.getPostId())
-                .authorId(userId)
-                .parentId(createCommentDto.getParentId())
-                .replyToUserId(createCommentDto.getReplyToUserId())
-                .content(createCommentDto.getContent())
-                .build();
+                                 .postId(createCommentDto.getPostId())
+                                 .authorId(userId)
+                                 .parentId(createCommentDto.getParentId())
+                                 .replyToUserId(createCommentDto.getReplyToUserId())
+                                 .content(createCommentDto.getContent())
+                                 .build();
         Long id = commentMapper.insertOne(comment);
+        // Is reply
+        boolean isReply = comment.getParentId() != null;
+        if (isReply) {
+            notificationService.sendCommentReplyNotification(userId, comment.getReplyToUserId(), comment.getPostId(), id);
+        } else {
+            notificationService.sendCommentPostNotification(userId, comment.getPostId(), id);
+        }
         return commentMapper.getCommentVOById(id).orElseThrow(() -> new InternalException("Failed to create comment"));
     }
 

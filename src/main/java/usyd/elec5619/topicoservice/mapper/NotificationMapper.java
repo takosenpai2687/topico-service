@@ -149,4 +149,10 @@ public interface NotificationMapper {
             @Result(column = "utime", property = "utime")
     })
     List<NotificationVO> getCommentReplyNotifications(Long receiverId);
+
+    @Select("SELECT id FROM t_post WHERE id = #{postId}")
+    Long getPostAuthorId(Long postId);
+
+    @Select("SELECT id FROM t_comment WHERE id = #{commentId}")
+    Long getCommentAuthorId(Long commentId);
 }

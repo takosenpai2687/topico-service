@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import usyd.elec5619.topicoservice.exception.http.BadRequestException;
 import usyd.elec5619.topicoservice.mapper.CommentLikeMapper;
 import usyd.elec5619.topicoservice.service.CommentLikeService;
+import usyd.elec5619.topicoservice.service.NotificationService;
 import usyd.elec5619.topicoservice.vo.LikeVO;
 
 @Service
@@ -15,7 +16,7 @@ import usyd.elec5619.topicoservice.vo.LikeVO;
 public class CommentLikeServiceImpl implements CommentLikeService {
 
     private final CommentLikeMapper commentLikeMapper;
-
+    private final NotificationService notificationService;
 
     @Override
     @Transactional
@@ -30,6 +31,8 @@ public class CommentLikeServiceImpl implements CommentLikeService {
             commentLikeMapper.unDislikeComment(userId, commentId);
         }
         commentLikeMapper.likeComment(userId, commentId);
+        // Send notification
+        notificationService.sendLikeCommentNotification(userId, commentId, true);
         // Build result
         Boolean likedStatus = commentLikeMapper.getCommentLikedStatus(userId, commentId);
         return LikeVO.builder()
@@ -50,6 +53,8 @@ public class CommentLikeServiceImpl implements CommentLikeService {
         }
         // Liked before: unlike it
         commentLikeMapper.unlikeComment(userId, commentId);
+        // Send unlike notification
+        notificationService.sendLikeCommentNotification(userId, commentId, false);
         // Build result
         Boolean likedStatus = commentLikeMapper.getCommentLikedStatus(userId, commentId);
         return LikeVO.builder()
@@ -71,6 +76,8 @@ public class CommentLikeServiceImpl implements CommentLikeService {
         // Already liked before: remove like first
         if (commentLikedStatus != null) {
             commentLikeMapper.unlikeComment(userId, commentId);
+            // Send unlike notification
+            notificationService.sendLikeCommentNotification(userId, commentId, false);
         }
         commentLikeMapper.dislikeComment(userId, commentId);
         // Build result
