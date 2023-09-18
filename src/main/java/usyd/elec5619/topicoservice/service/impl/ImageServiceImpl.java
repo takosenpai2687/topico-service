@@ -3,6 +3,7 @@ package usyd.elec5619.topicoservice.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import usyd.elec5619.topicoservice.mapper.ImageMapper;
+import usyd.elec5619.topicoservice.model.Image;
 import usyd.elec5619.topicoservice.service.ImageService;
 
 import java.util.List;
@@ -14,9 +15,9 @@ public class ImageServiceImpl implements ImageService {
     private final ImageMapper imageMapper;
 
     @Override
-    public String uploadImage(String imageBase64) {
-        // returns the generated uuid
-        return null;
+    public Image uploadImage(String imageBase64) {
+        final String uuid = imageMapper.insertImage(imageBase64);
+        return imageMapper.getImageByUuid(uuid);
     }
 
     @Override
