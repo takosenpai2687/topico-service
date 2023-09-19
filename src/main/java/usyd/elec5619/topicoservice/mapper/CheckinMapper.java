@@ -21,7 +21,7 @@ public interface CheckinMapper {
     @Update({
             "<script>",
             "<foreach collection='list' item='userCommunity' separator=';'>",
-            "UPDATE t_user_community",
+            "UPDATE t_user_community ",
             "SET checkin = #{userCommunity.checkin}, exp = #{userCommunity.exp}",
             "WHERE user_id = #{userCommunity.userId}",
             "AND community_id = #{userCommunity.communityId}",
