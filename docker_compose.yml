@@ -1,4 +1,6 @@
 version: '3.7'
+# docker compose -f docker_compose.yml up -d
+# docker compose -f docker_compose.yml down -v
 
 services:
   mysql:
@@ -15,26 +17,5 @@ services:
   redis:
     image: redis:latest
     container_name: redis-container
-    environment:
-      REDIS_PASSWORD: 123456  # <-- Set your desired Redis password here
-    command: [ "redis-server", "--requirepass", "123456" ]  # <-- Start Redis with password
     ports:
       - "6379:6379"
-
-#  springboot-app:
-#    image: your-springboot-image-name
-#    container_name: springboot-container
-#    ports:
-#      - "8080:8080"
-#    environment:
-#      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/springbootdb
-#      SPRING_DATASOURCE_USERNAME: root
-#      SPRING_DATASOURCE_PASSWORD: 123456
-#      SPRING_REDIS_HOST: redis
-#      SPRING_REDIS_PASSWORD: 123456  # <-- Ensure your Spring Boot app knows the Redis password
-#    depends_on:
-#      - mysql
-#      - redis
-
-volumes:
-  mysql-data:
