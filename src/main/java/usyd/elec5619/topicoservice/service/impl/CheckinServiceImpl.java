@@ -38,7 +38,9 @@ public class CheckinServiceImpl implements CheckinService {
         // Set today bit
         checkinBitMap = BitUtil.setBit(checkinBitMap, todayIdx);
         userCommunity.setCheckin(checkinBitMap);
-        userCommunity.setExp(userCommunity.getExp() + LevelUtil.CHECKIN_EXP);
+        final int exp = userCommunity.getExp() + LevelUtil.CHECKIN_EXP;
+        userCommunity.setExp(exp);
+        userCommunity.setLevel(LevelUtil.expToLevel(exp));
         // Update checkin bit map
         checkinMapper.checkin(userCommunity);
     }

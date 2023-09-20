@@ -25,6 +25,14 @@ public class CommunityController {
     private final CommunityService communityService;
     private final PostService postService;
 
+    @GetMapping("/{communityId}")
+    public CommonResponse<UserCommunity> getCommunity(Authentication authentication, @Valid @PathVariable Long communityId) {
+        final String email = authentication.getName();
+        final Long userId = userService.emailToId(email);
+        UserCommunity userCommunity = communityService.getUserCommunity(userId, communityId);
+        return CommonResponse.success(userCommunity);
+    }
+
     @PostMapping("/checkin/{communityId}")
     public CommonResponse<UserCommunity> checkin(Authentication authentication, @Valid @PathVariable Long communityId) {
         final String email = authentication.getName();
