@@ -66,8 +66,9 @@ public class CheckinServiceImpl implements CheckinService {
         userCommunities.parallelStream()
                        .filter(userCommunity -> !BitUtil.isBitSet(userCommunity.getCheckin(), todayIdx))
                        .forEach(userCommunity -> {
-                           userCommunity.setLevel(LevelUtil.expToLevel(userCommunity.getExp()));
-                           userCommunity.setExp(userCommunity.getExp() + LevelUtil.CHECKIN_EXP);
+                           final int newExp = userCommunity.getExp() + LevelUtil.CHECKIN_EXP;
+                           userCommunity.setExp(newExp);
+                           userCommunity.setLevel(LevelUtil.expToLevel(newExp));
                            userCommunity.setCheckin(BitUtil.setBit(userCommunity.getCheckin(), todayIdx));
                            checkinQueue.offer(userCommunity);
                        });
