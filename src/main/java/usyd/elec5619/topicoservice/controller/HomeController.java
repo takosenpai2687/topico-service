@@ -1,6 +1,7 @@
 package usyd.elec5619.topicoservice.controller;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import usyd.elec5619.topicoservice.model.Community;
@@ -14,14 +15,15 @@ import usyd.elec5619.topicoservice.vo.PostVO;
 import java.util.List;
 
 @RestController()
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/home")
 public class HomeController {
 
-    private UserService userService;
-    private PostService postService;
-    private CommunityService communityService;
-    private CheckinService checkinService;
-    private CommentService commentService;
+    private final UserService userService;
+    private final PostService postService;
+    private final CommunityService communityService;
+    private final CheckinService checkinService;
+    private final CommentService commentService;
 
     @GetMapping("/communities_following")
     public CommonResponse<List<Community>> getCommunitiesFollowing(Authentication authentication) {

@@ -3,6 +3,7 @@ package usyd.elec5619.topicoservice.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import usyd.elec5619.topicoservice.exception.http.BadRequestException;
 import usyd.elec5619.topicoservice.mapper.CheckinMapper;
 import usyd.elec5619.topicoservice.model.UserCommunity;
@@ -12,6 +13,7 @@ import usyd.elec5619.topicoservice.util.LevelUtil;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
@@ -45,7 +47,12 @@ public class CheckinServiceImpl implements CheckinService {
         checkinMapper.checkin(userCommunity);
     }
 
+    private boolean isCheckedInAtDay(Integer checkinBitMap, int dayIdx) {
+        return BitUtil.isBitSet(checkinBitMap, dayIdx);
+    }
+
     @Override
+    @Transactional
     public void checkinForAll(Long userId) {
         // Get checkin bit maps
         List<UserCommunity> userCommunities = checkinMapper.getUserCommunities(userId);
@@ -54,35 +61,24 @@ public class CheckinServiceImpl implements CheckinService {
         }
         // Get today idx
         int todayIdx = LocalDate.now().getDayOfMonth() - 1;
-        // Update checkin bit maps
-        AtomicBoolean updated = new AtomicBoolean(false);
-        userCommunities.parallelStream().forEach(userCommunity -> {
-            Integer checkinBitMap = userCommunity.getCheckin();
-            if (BitUtil.isBitSet(checkinBitMap, todayIdx)) {
-                return;
-            }
-            updated.set(true);
-            int newCheckinBitMap = BitUtil.setBit(checkinBitMap, todayIdx);
-            userCommunity.setCheckin(newCheckinBitMap);
-            userCommunity.setExp(userCommunity.getExp() + LevelUtil.CHECKIN_EXP);
-        });
-        if (!updated.get()) {
+        // Update checkin bit maps and exp
+        ConcurrentLinkedQueue<UserCommunity> checkinQueue = new ConcurrentLinkedQueue<>();
+        userCommunities.parallelStream()
+                       .filter(userCommunity -> !BitUtil.isBitSet(userCommunity.getCheckin(), todayIdx))
+                       .forEach(userCommunity -> {
+                           userCommunity.setLevel(LevelUtil.expToLevel(userCommunity.getExp()));
+                           userCommunity.setExp(userCommunity.getExp() + LevelUtil.CHECKIN_EXP);
+                           userCommunity.setCheckin(BitUtil.setBit(userCommunity.getCheckin(), todayIdx));
+                           checkinQueue.offer(userCommunity);
+                       });
+        // No need to update
+        if (checkinQueue.isEmpty()) {
             throw new BadRequestException("You have already checked in today");
         }
-        checkinMapper.checkinForAll(userCommunities);
+        // Update checkin bit maps
+        checkinMapper.checkinForAll(checkinQueue.parallelStream().toList());
     }
 
-    @Override
-    public Boolean isCheckedInToday(Long userId, Long communityId) {
-        // Get checkin bit map
-        UserCommunity userCommunity = checkinMapper.getUserCommunity(userId, communityId);
-        Integer checkinBitMap = userCommunity.getCheckin();
-        if (checkinBitMap == null) {
-            throw new BadRequestException("You are not a member of this community");
-        }
-        int idx = LocalDate.now().getDayOfMonth() - 1;
-        return BitUtil.isBitSet(checkinBitMap, idx);
-    }
 
     @Override
     public List<Boolean> getCheckinRecordsThisMonth(Long userId, Long communityId) {
