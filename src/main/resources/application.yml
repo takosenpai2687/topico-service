@@ -31,6 +31,7 @@ logging:
 jwt:
   secret: elec5619elec5619elec5619elec5619elec5619elec5619elec5619elec5619elec5619elec5619elec5619elec5619
   # 7 days
+  expire-ms: 604800_000
 
 scheduled:
   updateTopSearch: 60_000  # 1 minute

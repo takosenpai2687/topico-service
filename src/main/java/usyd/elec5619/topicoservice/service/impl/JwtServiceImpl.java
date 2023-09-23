@@ -22,6 +22,9 @@ public class JwtServiceImpl implements JwtService {
     @Value("${jwt.secret}")
     private String jwtSigningKey;
 
+    @Value("${jwt.expiration}")
+    private Long jwtExpiration;
+
     @Override
     public String extractUserName(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -44,7 +47,13 @@ public class JwtServiceImpl implements JwtService {
     }
 
     private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        return Jwts.builder().setClaims(extraClaims).setSubject(userDetails.getUsername()).setIssuedAt(new Date(System.currentTimeMillis())).setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24)).signWith(getSigningKey(), SignatureAlgorithm.HS256).compact();
+        return Jwts.builder()
+                   .setClaims(extraClaims)
+                   .setSubject(userDetails.getUsername())
+                   .setIssuedAt(new Date(System.currentTimeMillis()))
+                   .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
+                   .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                   .compact();
     }
 
     private boolean isTokenExpired(String token) {
