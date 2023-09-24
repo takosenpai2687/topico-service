@@ -1,5 +1,5 @@
 DROP DATABASE `topico`;
-CREATE DATABASE `topico`;
+CREATE DATABASE IF NOT EXISTS `topico`;
 USE `topico`;
 
 CREATE TABLE `t_comment`

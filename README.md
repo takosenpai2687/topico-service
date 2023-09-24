@@ -9,17 +9,31 @@
 - Redis 6
 - Docker
 
-## Setup
+## Preparation
 
 - Make sure you have **JDK20**, **Intellij Idea** and **Docker** installed.
 - Open the project in IntelliJ Idea.
 - Open `pom.xml` and install the maven packages.
+- Make sure you have Docker desktop app or Docker service up and running.
+
+## Run in Development mode
+
 - Note: Make sure to stop __MySQL__ and __Redis__ service from your local machine
   i.e., no port bind on __3306__ and __6379__.
+
 - Run: __MySQL__ and __Redis__ services from the `docker-compose.yml` file in the __root__ directory.
 - Run: `CREATE_DB.sql` from the `/src/resources` directory. Configure the datasource if prompted. The default username
   is `root` and password is `123456`.
 - Run the `main` method in `TopicoServiceApplication.java`.
+
+## Run in Production mode
+
+- _Optional: In the maven tools window, run `mvn clean` to clean the target directory between each build._
+- In the maven tools window, run `package` under `Lifecycle` to generate the jar file.
+- Run `docker-compose.yml` from the __root__ directory.
+- First time: Run `CREATE_DB.sql` from the `/src/resources` directory. Configure the datasource if prompted. The default
+  username
+  is `root` and password is `123456`.
 
 ## Terms
 

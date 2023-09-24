@@ -13,6 +13,7 @@ services:
       - "3306:3306"
     volumes:
       - mysql-data:/var/lib/mysql
+  #      - ./src/main/sql/CREATE_DB.sql:/docker-entrypoint-initdb.d/CREATE_DB.sql
 
   redis:
     image: redis:latest
@@ -20,7 +21,7 @@ services:
     ports:
       - "6379:6379"
 
-  # my spring boot app here
+  # topico spring boot application
   topico-service:
     build:
       context: .
