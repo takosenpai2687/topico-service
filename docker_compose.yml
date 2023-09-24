@@ -23,16 +23,23 @@ services:
   # my spring boot app here
   topico-service:
     build:
-        context: .
-        dockerfile: Dockerfile
+      context: .
+      dockerfile: Dockerfile
     container_name: topico-service
     depends_on:
       - mysql
       - redis
     ports:
-        - "8080:8080"
+      - "8080:8080"
     volumes:
       - /tmp:/tmp
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/topico?serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=123456
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=com.mysql.cj.jdbc.Driver
+      - SPRING_REDIS_HOST=redis
+      - SPRING_REDIS_PORT=6379
 
 volumes:
   mysql-data:
