@@ -35,6 +35,10 @@
   username
   is `root` and password is `123456`.
 
+## API Documentation powered by Swagger
+
+- http://localhost:8080/swagger-ui.html
+
 ## Terms
 
 ### Dto
