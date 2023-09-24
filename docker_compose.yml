@@ -20,5 +20,18 @@ services:
     ports:
       - "6379:6379"
 
+  # my spring boot app here
+  topico-service:
+    build:
+        context: .
+        dockerfile: Dockerfile
+    container_name: topico-service
+    depends_on:
+      - mysql
+      - redis
+    ports:
+        - "8080:8080"
+    volumes:
+      - /tmp:/tmp
 volumes:
   mysql-data:
