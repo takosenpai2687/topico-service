@@ -33,5 +33,6 @@ services:
         - "8080:8080"
     volumes:
       - /tmp:/tmp
+
 volumes:
   mysql-data:
