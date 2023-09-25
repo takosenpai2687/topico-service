@@ -2,6 +2,8 @@ package usyd.elec5619.topicoservice.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import usyd.elec5619.topicoservice.dto.community.CreateCommunityDto;
+import usyd.elec5619.topicoservice.dto.community.UpdateCommunityDto;
 import usyd.elec5619.topicoservice.exception.http.BadRequestException;
 import usyd.elec5619.topicoservice.mapper.CommunityMapper;
 import usyd.elec5619.topicoservice.model.Community;
@@ -66,5 +68,22 @@ public class CommunityServiceImpl implements CommunityService {
     @Override
     public List<Community> getTopCommunities() {
         return communityMapper.getTopCommunities();
+    }
+
+    @Override
+    public Community createCommunity(CreateCommunityDto createCommunityDto) {
+        // TODO: create community
+        return null;
+    }
+
+    @Override
+    public Community updateCommunity(Long communityId, UpdateCommunityDto updateCommunityDto) {
+        // TODO: update community
+        return null;
+    }
+
+    @Override
+    public void deleteCommunity(Long communityId) {
+        // TODO: delete community
     }
 }

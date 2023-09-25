@@ -1,6 +1,8 @@
 package usyd.elec5619.topicoservice.service;
 
 import org.springframework.stereotype.Service;
+import usyd.elec5619.topicoservice.dto.community.CreateCommunityDto;
+import usyd.elec5619.topicoservice.dto.community.UpdateCommunityDto;
 import usyd.elec5619.topicoservice.model.Community;
 import usyd.elec5619.topicoservice.model.UserCommunity;
 
@@ -25,4 +27,10 @@ public interface CommunityService {
     void unfollow(Long userId, Long communityId);
 
     List<Community> getTopCommunities();
+
+    Community createCommunity(CreateCommunityDto createCommunityDto);
+
+    Community updateCommunity(Long communityId, UpdateCommunityDto updateCommunityDto);
+
+    void deleteCommunity(Long communityId);
 }

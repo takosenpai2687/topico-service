@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import usyd.elec5619.topicoservice.mapper.UserMapper;
+import usyd.elec5619.topicoservice.model.Community;
 import usyd.elec5619.topicoservice.model.UserCommunity;
 import usyd.elec5619.topicoservice.pojo.CommonResponse;
 import usyd.elec5619.topicoservice.service.CheckinService;
@@ -24,7 +25,7 @@ public class CommunityController {
     private final CheckinService checkinService;
     private final CommunityService communityService;
     private final PostService postService;
-
+ 
     @GetMapping("/{communityId}")
     public CommonResponse<UserCommunity> getCommunity(Authentication authentication, @Valid @PathVariable Long communityId) {
         final String email = authentication.getName();
