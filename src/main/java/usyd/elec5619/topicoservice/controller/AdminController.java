@@ -2,15 +2,12 @@ package usyd.elec5619.topicoservice.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.ibatis.annotations.Delete;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import usyd.elec5619.topicoservice.dto.community.CreateCommunityDto;
 import usyd.elec5619.topicoservice.dto.community.UpdateCommunityDto;
 import usyd.elec5619.topicoservice.model.Community;
 import usyd.elec5619.topicoservice.pojo.CommonResponse;
-import usyd.elec5619.topicoservice.service.AdminService;
 import usyd.elec5619.topicoservice.service.CommunityService;
 
 @RestController
