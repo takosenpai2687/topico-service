@@ -23,7 +23,7 @@ public class User implements UserDetails {
     private String password;
     private Gender gender;
     private String location;
-    private String avatar;
+    private Long avatar;
     private String description;
     private Role role;
     @JsonIgnore

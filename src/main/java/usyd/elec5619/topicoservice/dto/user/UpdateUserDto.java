@@ -17,7 +17,7 @@ public class UpdateUserDto {
     String location;
 
     @Nullable
-    String avatar;
+    Long avatar;
 
     @Nullable
     String description;

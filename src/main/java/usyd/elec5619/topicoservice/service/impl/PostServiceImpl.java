@@ -68,7 +68,7 @@ public class PostServiceImpl implements PostService {
                         .build();
         Long postId = postMapper.insertOne(post);
         // Add images
-        final List<String> images = createPostDto.getImages();
+        final List<Long> images = createPostDto.getImages();
         if (images != null && !images.isEmpty()) {
             imageService.addImagesToPost(post.getId(), images);
         }

@@ -2,11 +2,8 @@ package usyd.elec5619.topicoservice.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import usyd.elec5619.topicoservice.dto.image.UploadImageDto;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import usyd.elec5619.topicoservice.model.Image;
 import usyd.elec5619.topicoservice.pojo.CommonResponse;
 import usyd.elec5619.topicoservice.service.ImageService;
@@ -18,11 +15,15 @@ public class ImageController {
 
     private final ImageService imageService;
 
-    @PostMapping("/")
-    public CommonResponse<Image> uploadImage(@RequestBody @Valid UploadImageDto uploadImageDto) {
-        final String imageBase64 = uploadImageDto.getImageBase64();
-        final Image img = imageService.uploadImage(imageBase64);
+    @PostMapping
+    public CommonResponse<?> uploadImage(@RequestParam("image") MultipartFile file) {
+        final Image img = imageService.uploadImage(file);
         return CommonResponse.success(img);
+    }
+
+    @GetMapping("/{id}")
+    public byte[] getImageById(@PathVariable("id") Long id) {
+        return imageService.getImageById(id);
     }
 
 }

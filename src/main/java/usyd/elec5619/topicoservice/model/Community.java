@@ -12,7 +12,7 @@ public class Community {
     private String name;
     private String description;
     private Integer followers;
-    private String avatar;
+    private Long avatar;
     private String banner;
     private String tags;
     private LocalDateTime ctime;

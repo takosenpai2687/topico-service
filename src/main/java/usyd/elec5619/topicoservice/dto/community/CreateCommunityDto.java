@@ -17,8 +17,8 @@ public class CreateCommunityDto {
     @NotNull
     @Min(0)
     private int followers;
-    @NotBlank
-    private String avatar;
+
+    private Long avatar;
     @NotBlank
     private String banner;
 }

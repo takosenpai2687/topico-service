@@ -1,6 +1,7 @@
 package usyd.elec5619.topicoservice.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import usyd.elec5619.topicoservice.model.Image;
 
 import java.util.List;
@@ -8,7 +9,9 @@ import java.util.List;
 @Service
 public interface ImageService {
 
-    Image uploadImage(String imageBase64);
+    byte[] getImageById(Long id);
 
-    void addImagesToPost(Long postId, List<String> imgUuids);
+    Image uploadImage(MultipartFile imageFile);
+
+    void addImagesToPost(Long postId, List<Long> imageIds);
 }

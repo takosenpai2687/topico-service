@@ -18,6 +18,6 @@ public class CreatePostDto {
     private String content;
     @Nonnull
     private Boolean spoiler;
-    private List<String> images;
+    private List<Long> images;
     private String tags;
 }

@@ -24,7 +24,7 @@ CREATE TABLE `t_community`
     `name`        varchar(255) NOT NULL,
     `description` text         NULL,
     `followers`   int          NOT NULL DEFAULT 0,
-    `avatar`      varchar(255) NULL     DEFAULT '',
+    `avatar`      int          NULL,
     `banner`      varchar(255) NULL     DEFAULT '',
     `tags`        text,
     `ctime`       TIMESTAMP             DEFAULT CURRENT_TIMESTAMP,
@@ -35,11 +35,11 @@ CREATE TABLE `t_community`
 
 CREATE TABLE `t_image`
 (
-    `uuid`   varchar(255) NOT NULL,
-    `base64` text         NOT NULL,
-    `ctime`  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `utime`  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`uuid`)
+    `id`    int  NOT NULL AUTO_INCREMENT,
+    `data`  blob NOT NULL,
+    `ctime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `utime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `t_notification`
@@ -77,11 +77,11 @@ CREATE TABLE `t_post`
 
 CREATE TABLE `t_post_image`
 (
-    `id`         int          NOT NULL AUTO_INCREMENT,
-    `post_id`    int          NOT NULL,
-    `image_uuid` varchar(255) NOT NULL,
-    `ctime`      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `utime`      TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `id`       int NOT NULL AUTO_INCREMENT,
+    `post_id`  int NOT NULL,
+    `image_id` int NOT NULL,
+    `ctime`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `utime`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 );
 
@@ -94,7 +94,7 @@ CREATE TABLE `t_user`
     `password`    varchar(255) NOT NULL,
     `gender`      varchar(20)  NOT NULL COMMENT ' ISO/IEC 5218 ',
     `location`    varchar(255) NULL DEFAULT '',
-    `avatar`      varchar(255) NULL DEFAULT '',
+    `avatar`      int          NULL,
     `description` text         NULL DEFAULT NULL,
     `role`        varchar(255) NULL DEFAULT ' user ',
     `ctime`       TIMESTAMP         DEFAULT CURRENT_TIMESTAMP,
@@ -153,7 +153,11 @@ ALTER TABLE `t_post`
 ALTER TABLE `t_post_image`
     ADD CONSTRAINT `t_post_image_post_id` FOREIGN KEY (`post_id`) REFERENCES `t_post` (`id`);
 ALTER TABLE `t_post_image`
-    ADD CONSTRAINT `t_post_image_image_uuid` FOREIGN KEY (`image_uuid`) REFERENCES `t_image` (`uuid`);
+    ADD CONSTRAINT `t_post_image_image_id` FOREIGN KEY (`image_id`) REFERENCES `t_image` (`id`);
+ALTER TABLE `t_community`
+    ADD CONSTRAINT `t_community_image_id` FOREIGN KEY (`avatar`) REFERENCES `t_image` (`id`);
+ALTER TABLE `t_user`
+    ADD CONSTRAINT `t_user_image_id` FOREIGN KEY (`avatar`) REFERENCES `t_image` (`id`);
 ALTER TABLE `t_user_community`
     ADD CONSTRAINT `t_user_community_user_id` FOREIGN KEY (`user_id`) REFERENCES `t_user` (`id`);
 ALTER TABLE `t_user_community`

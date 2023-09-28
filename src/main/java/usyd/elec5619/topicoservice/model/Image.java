@@ -8,8 +8,8 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 public class Image {
-    private String uuid;
-    private String base64;
+    private Long id;
+    private byte[] data;
     private LocalDateTime ctime;
     private LocalDateTime utime;
 }
