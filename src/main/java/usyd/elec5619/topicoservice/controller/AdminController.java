@@ -14,7 +14,7 @@ import usyd.elec5619.topicoservice.service.CommunityService;
 @RequestMapping("/api/v1/admin")
 @RequiredArgsConstructor
 public class AdminController {
-    CommunityService communityService;
+    private final CommunityService communityService;
 
     @PostMapping("/communities")
     @PreAuthorize("hasRole('ROLE_ADMIN')")

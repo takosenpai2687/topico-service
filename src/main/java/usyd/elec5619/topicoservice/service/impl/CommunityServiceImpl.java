@@ -73,7 +73,16 @@ public class CommunityServiceImpl implements CommunityService {
     @Override
     public Community createCommunity(CreateCommunityDto createCommunityDto) {
         // TODO: create community
-        return null;
+        Community community = Community.builder()
+                .name(createCommunityDto.getName())
+                .description(createCommunityDto.getDescription())
+                .followers(createCommunityDto.getFollowers())
+                .avatar(createCommunityDto.getAvatar())
+                .banner(createCommunityDto.getBanner())
+                .build();
+        Long id = communityMapper.insertOne(community);
+        return communityMapper.getCommunityById(id);
+
     }
 
     @Override

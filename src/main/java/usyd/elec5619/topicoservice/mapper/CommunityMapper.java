@@ -1,9 +1,6 @@
 package usyd.elec5619.topicoservice.mapper;
 
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import usyd.elec5619.topicoservice.model.Community;
 import usyd.elec5619.topicoservice.model.UserCommunity;
 
@@ -55,4 +52,9 @@ public interface CommunityMapper {
 
     @Select("SELECT * FROM t_community ORDER BY followers DESC LIMIT 10")
     List<Community> getTopCommunities();
+
+    @Insert("INSERT INTO t_community(name, description, followers, avatar, banner) " +
+            "VALUES (#{name}, #{description}, #{followers}, #{avatar}, #{banner})")
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
+    Long insertOne(Community community);
 }
