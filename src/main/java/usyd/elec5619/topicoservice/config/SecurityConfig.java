@@ -3,6 +3,7 @@ package usyd.elec5619.topicoservice.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -47,6 +48,9 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
+                        // Permit these GET methods
+                        .requestMatchers(HttpMethod.GET, "/api/v1/images/**").permitAll()
+                        // Permit these method with any type of request
                         .requestMatchers(
                                 "/error",
                                 "/swagger-resources",
@@ -63,11 +67,12 @@ public class SecurityConfig {
                                 "/api/v1/auth/**",
                                 "/api/v1/public/**",
                                 "/swagger-ui/**",
-                                "/v3/api-docs/**"
-                        )
-                        .permitAll()
+                                "/v3/api-docs/**",
+                                "/ap1/v1/images"
+                        ).permitAll()
                         .anyRequest()
-                        .authenticated())
+                        .authenticated()
+                )
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
