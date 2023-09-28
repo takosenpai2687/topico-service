@@ -35,8 +35,9 @@ CREATE TABLE `t_community`
 
 CREATE TABLE `t_image`
 (
-    `id`    int  NOT NULL AUTO_INCREMENT,
-    `data`  blob NOT NULL,
+    `id`    int          NOT NULL AUTO_INCREMENT,
+    `data`  blob         NOT NULL,
+    `md5`   varchar(255) NOT NULL,
     `ctime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `utime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)

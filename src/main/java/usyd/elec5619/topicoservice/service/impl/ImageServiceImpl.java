@@ -9,9 +9,11 @@ import usyd.elec5619.topicoservice.exception.http.NotFoundException;
 import usyd.elec5619.topicoservice.mapper.ImageMapper;
 import usyd.elec5619.topicoservice.model.Image;
 import usyd.elec5619.topicoservice.service.ImageService;
+import usyd.elec5619.topicoservice.util.Md5Util;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +30,10 @@ public class ImageServiceImpl implements ImageService {
     public Image uploadImage(MultipartFile imageFile) {
         try {
             final byte[] data = imageFile.getBytes();
-            final Image image = Image.builder().data(data).build();
+            final String md5 = Md5Util.calculateMD5(data);
+            final Optional<Image> dbImage = imageMapper.getByMd5(md5);
+            if (dbImage.isPresent()) return dbImage.get();
+            final Image image = Image.builder().data(data).md5(md5).build();
             Long imageId = imageMapper.insert(image);
             return imageMapper.getById(imageId).orElseThrow(() -> new InternalException("Failed to upload image"));
         } catch (IOException e) {

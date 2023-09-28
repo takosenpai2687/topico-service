@@ -7,12 +7,15 @@ import java.util.Optional;
 
 @Mapper
 public interface ImageMapper {
-    @Insert("INSERT INTO t_image (data) VALUES(#{data})")
+    @Insert("INSERT INTO t_image (data, md5) VALUES(#{data}, #{md5})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     Long insert(Image image);
 
     @Select("SELECT * FROM t_image WHERE `id` = #{id}")
     Optional<Image> getById(Long id);
+
+    @Select("SELECT * FROM t_image WHERE `md5` = #{md5}")
+    Optional<Image> getByMd5(String md5);
 
     @Select("SELECT EXISTS(SELECT 1 FROM t_image WHERE `id` = #{id})")
     Boolean isImageExist(Long id);
