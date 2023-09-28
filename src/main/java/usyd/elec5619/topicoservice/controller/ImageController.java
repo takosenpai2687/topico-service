@@ -2,6 +2,9 @@ package usyd.elec5619.topicoservice.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import usyd.elec5619.topicoservice.model.Image;
@@ -22,8 +25,11 @@ public class ImageController {
     }
 
     @GetMapping("/{id}")
-    public byte[] getImageById(@PathVariable("id") Long id) {
-        return imageService.getImageById(id);
+    public ResponseEntity<byte[]> getImageById(@PathVariable("id") Long id) {
+        final byte[] image = imageService.getImageById(id);
+        return ResponseEntity.ok()
+                             .header(HttpHeaders.CONTENT_TYPE, MediaType.IMAGE_JPEG_VALUE)
+                             .body(image);
     }
 
 }
