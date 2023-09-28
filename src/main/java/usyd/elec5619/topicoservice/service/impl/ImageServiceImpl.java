@@ -27,7 +27,8 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public Image uploadImage(MultipartFile imageFile) {
         try {
-            final Image image = Image.builder().data(imageFile.getBytes()).build();
+            final byte[] data = imageFile.getBytes();
+            final Image image = Image.builder().data(data).build();
             Long imageId = imageMapper.insert(image);
             return imageMapper.getById(imageId).orElseThrow(() -> new InternalException("Failed to upload image"));
         } catch (IOException e) {

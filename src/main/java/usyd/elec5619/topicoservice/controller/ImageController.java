@@ -15,7 +15,7 @@ public class ImageController {
 
     private final ImageService imageService;
 
-    @PostMapping
+    @PostMapping(headers = {"content-type=multipart/form-data"})
     public CommonResponse<?> uploadImage(@RequestParam("image") MultipartFile file) {
         final Image img = imageService.uploadImage(file);
         return CommonResponse.success(img);

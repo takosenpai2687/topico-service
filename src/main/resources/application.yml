@@ -12,6 +12,11 @@ spring:
       top-search-key: top-search
       port: ${SPRING_REDIS_PORT:6379}
       host: ${SPRING_REDIS_HOST:127.0.0.1}
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
 
 mybatis:
   configuration:
