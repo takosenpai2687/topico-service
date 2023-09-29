@@ -7,7 +7,7 @@ import java.util.Optional;
 
 @Mapper
 public interface ImageMapper {
-    @Insert("INSERT INTO t_image (data, md5) VALUES(#{data}, #{md5})")
+    @Insert("INSERT INTO t_image (data, md5, ext) VALUES(#{data}, #{md5}, #{ext})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     Long insert(Image image);
 

@@ -16,6 +16,8 @@ public class Image {
     private byte[] data;
     @NotBlank
     private String md5;
+    @NotBlank
+    private String ext;
     private LocalDateTime ctime;
     private LocalDateTime utime;
 }

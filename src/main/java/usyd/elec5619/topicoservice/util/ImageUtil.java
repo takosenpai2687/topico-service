@@ -1,11 +1,22 @@
 package usyd.elec5619.topicoservice.util;
 
+import org.springframework.web.multipart.MultipartFile;
+import usyd.elec5619.topicoservice.exception.http.BadRequestException;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class Md5Util {
+public class ImageUtil {
 
-    public static String calculateMD5(byte[] input) {
+
+    public static String getExt(MultipartFile imageFile) {
+        String contentType = imageFile.getContentType();
+        if (contentType == null || !contentType.startsWith("image/"))
+            throw new BadRequestException("Invalid image type, content type must be image/*, got " + contentType);
+        return contentType.split("/")[1];
+    }
+
+    public static String md5(byte[] input) {
         try {
             // Create MessageDigest instance for MD5
             MessageDigest md = MessageDigest.getInstance("MD5");

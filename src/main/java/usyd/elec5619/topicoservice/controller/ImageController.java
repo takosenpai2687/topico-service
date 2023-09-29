@@ -26,10 +26,7 @@ public class ImageController {
 
     @GetMapping("/{id}")
     public ResponseEntity<byte[]> getImageById(@PathVariable("id") Long id) {
-        final byte[] image = imageService.getImageById(id);
-        return ResponseEntity.ok()
-                             .header(HttpHeaders.CONTENT_TYPE, MediaType.IMAGE_JPEG_VALUE)
-                             .body(image);
+        return imageService.getImageById(id);
     }
 
 }
