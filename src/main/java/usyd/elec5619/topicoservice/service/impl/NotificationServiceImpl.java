@@ -123,4 +123,14 @@ public class NotificationServiceImpl implements NotificationService {
                                                 .build();
         notificationMapper.insertOne(notification);
     }
+
+    @Override
+    public void deleteAllNotificationsByPostId(Long id) {
+        notificationMapper.deleteAllNotificationsByPostId(id);
+    }
+
+    @Override
+    public void deleteAllNotificationsByCommentId(Long id) {
+        notificationMapper.deleteAllNotificationsByCommentId(id);
+    }
 }

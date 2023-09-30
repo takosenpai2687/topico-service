@@ -155,4 +155,10 @@ public interface NotificationMapper {
 
     @Select("SELECT id FROM t_comment WHERE id = #{commentId}")
     Long getCommentAuthorId(Long commentId);
+
+    @Delete("DELETE FROM t_notification WHERE post_id = #{id}")
+    void deleteAllNotificationsByPostId(Long id);
+
+    @Delete("DELETE FROM t_notification WHERE comment_id = #{id}")
+    void deleteAllNotificationsByCommentId(Long id);
 }

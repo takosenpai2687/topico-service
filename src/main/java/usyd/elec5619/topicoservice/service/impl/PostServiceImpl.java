@@ -9,7 +9,9 @@ import usyd.elec5619.topicoservice.exception.http.InternalException;
 import usyd.elec5619.topicoservice.exception.http.NotFoundException;
 import usyd.elec5619.topicoservice.mapper.PostMapper;
 import usyd.elec5619.topicoservice.model.Post;
+import usyd.elec5619.topicoservice.service.CommentService;
 import usyd.elec5619.topicoservice.service.ImageService;
+import usyd.elec5619.topicoservice.service.NotificationService;
 import usyd.elec5619.topicoservice.service.PostService;
 import usyd.elec5619.topicoservice.type.SortBy;
 import usyd.elec5619.topicoservice.vo.Pager;
@@ -24,6 +26,8 @@ public class PostServiceImpl implements PostService {
 
     private final PostMapper postMapper;
     private final ImageService imageService;
+    private CommentService commentService;
+    private NotificationService notificationService;
 
     @Override
     public Pager<PostVO> getPostsByUserId(Long userId, Integer page, Integer size) {
@@ -82,6 +86,23 @@ public class PostServiceImpl implements PostService {
             throw new NotFoundException("not your post");
         }
         postMapper.deleteOne(postId);
+    }
+
+    @Override
+    @Transactional
+    public void deletePostsByCommunityId(Long communityId) {
+        List<Post> posts = postMapper.getPostsByCommunityId(communityId);
+        posts.parallelStream().forEach(post -> {
+            // delete post images
+            imageService.deleteImagesByPostId(post.getId());
+            // delete post like notifications
+            notificationService.deleteAllNotificationsByPostId(post.getId());
+            // delete post likes
+            postMapper.deleteAllLikesByPostId(post.getId());
+            // delete comments
+            commentService.deleteAllCommentsByPostId(post.getId());
+            postMapper.deleteOne(post.getId());
+        });
     }
 
 }

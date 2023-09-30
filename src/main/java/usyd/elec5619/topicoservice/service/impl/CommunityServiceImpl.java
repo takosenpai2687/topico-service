@@ -2,6 +2,7 @@ package usyd.elec5619.topicoservice.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import usyd.elec5619.topicoservice.dto.community.CreateCommunityDto;
 import usyd.elec5619.topicoservice.dto.community.UpdateCommunityDto;
 import usyd.elec5619.topicoservice.exception.http.BadRequestException;
@@ -10,6 +11,7 @@ import usyd.elec5619.topicoservice.mapper.CommunityMapper;
 import usyd.elec5619.topicoservice.model.Community;
 import usyd.elec5619.topicoservice.model.UserCommunity;
 import usyd.elec5619.topicoservice.service.CommunityService;
+import usyd.elec5619.topicoservice.service.PostService;
 
 import java.util.List;
 
@@ -18,6 +20,8 @@ import java.util.List;
 public class CommunityServiceImpl implements CommunityService {
 
     private final CommunityMapper communityMapper;
+
+    private final PostService postService;
 
     @Override
     public Community getCommunityById(Long communityId) {
@@ -75,12 +79,12 @@ public class CommunityServiceImpl implements CommunityService {
     public Community createCommunity(CreateCommunityDto createCommunityDto) {
         // TODO: create community
         Community community = Community.builder()
-                .name(createCommunityDto.getName())
-                .description(createCommunityDto.getDescription())
-                .followers(createCommunityDto.getFollowers())
-                .avatar(createCommunityDto.getAvatar())
-                .banner(createCommunityDto.getBanner())
-                .build();
+                                       .name(createCommunityDto.getName())
+                                       .description(createCommunityDto.getDescription())
+                                       .followers(createCommunityDto.getFollowers())
+                                       .avatar(createCommunityDto.getAvatar())
+                                       .banner(createCommunityDto.getBanner())
+                                       .build();
         Long id = communityMapper.insertOne(community);
         return communityMapper.getCommunityById(id);
 
@@ -94,7 +98,8 @@ public class CommunityServiceImpl implements CommunityService {
             throw new NotFoundException("Community not found");
         }
         if (updateCommunityDto.getName() != null) existingCommunity.setName(updateCommunityDto.getName());
-        if (updateCommunityDto.getDescription() != null) existingCommunity.setDescription(updateCommunityDto.getDescription());
+        if (updateCommunityDto.getDescription() != null)
+            existingCommunity.setDescription(updateCommunityDto.getDescription());
         if (updateCommunityDto.getAvatar() != null) existingCommunity.setAvatar(updateCommunityDto.getAvatar());
         if (updateCommunityDto.getBanner() != null) existingCommunity.setBanner(updateCommunityDto.getBanner());
 
@@ -104,7 +109,9 @@ public class CommunityServiceImpl implements CommunityService {
     }
 
     @Override
+    @Transactional
     public void deleteCommunity(Long communityId) {
-        // TODO: delete community
+        postService.deletePostsByCommunityId(communityId);
+        communityMapper.unfollowCommunityForAllUsers(communityId);
     }
 }

@@ -15,4 +15,6 @@ public interface CommentService {
     CommentVO createComment(Long userId, CreateCommentDto createCommentDto);
 
     void deleteComment(Long userId, Long commentId);
+
+    void deleteAllCommentsByPostId(Long id);
 }

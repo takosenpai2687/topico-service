@@ -30,38 +30,20 @@ public class CommentServiceImpl implements CommentService {
         final Integer offset = page * size;
         List<CommentVO> commentVOList = commentMapper.getCommentsByUserId(userId, offset, size);
         Integer total = commentMapper.countCommentsByUserId(userId);
-        return Pager.<CommentVO>builder()
-                    .data(commentVOList)
-                    .page(page)
-                    .size(size)
-                    .total(total)
-                    .build();
+        return Pager.<CommentVO>builder().data(commentVOList).page(page).size(size).total(total).build();
     }
 
     @Override
     public Pager<CommentVO> getCommentsByPostId(Long postId, Integer page, Integer size, SortBy sortBy) {
         final Integer offset = page * size;
-        List<CommentVO> commentVOList = sortBy.equals(SortBy.MOST_LIKES)
-                ? commentMapper.getHotCommentsByPostId(postId, offset, size)
-                : commentMapper.getNewCommentsByPostId(postId, offset, size);
+        List<CommentVO> commentVOList = sortBy.equals(SortBy.MOST_LIKES) ? commentMapper.getHotCommentsByPostId(postId, offset, size) : commentMapper.getNewCommentsByPostId(postId, offset, size);
         Integer total = commentMapper.countCommentsByPostId(postId);
-        return Pager.<CommentVO>builder()
-                    .data(commentVOList)
-                    .page(page)
-                    .size(size)
-                    .total(total)
-                    .build();
+        return Pager.<CommentVO>builder().data(commentVOList).page(page).size(size).total(total).build();
     }
 
     @Override
     public CommentVO createComment(Long userId, CreateCommentDto createCommentDto) {
-        Comment comment = Comment.builder()
-                                 .postId(createCommentDto.getPostId())
-                                 .authorId(userId)
-                                 .parentId(createCommentDto.getParentId())
-                                 .replyToUserId(createCommentDto.getReplyToUserId())
-                                 .content(createCommentDto.getContent())
-                                 .build();
+        Comment comment = Comment.builder().postId(createCommentDto.getPostId()).authorId(userId).parentId(createCommentDto.getParentId()).replyToUserId(createCommentDto.getReplyToUserId()).content(createCommentDto.getContent()).build();
         Long id = commentMapper.insertOne(comment);
         // Is reply
         boolean isReply = comment.getParentId() != null;
@@ -79,8 +61,16 @@ public class CommentServiceImpl implements CommentService {
         if (!comment.getAuthorId().equals(userId)) {
             throw new BadRequestException("not your comment");
         }
+        // Delete all replies
+        if (comment.getParentId() == null) {
+            commentMapper.getRepliesByCommentId(commentId).parallelStream().forEach(reply -> deleteComment(userId, reply.getId()));
+        }
         commentMapper.deleteOne(commentId);
     }
 
-
+    @Override
+    public void deleteAllCommentsByPostId(Long id) {
+        List<Comment> comments = commentMapper.getCommentsByPostId(id);
+        comments.parallelStream().forEach(comment -> deleteComment(comment.getAuthorId(), comment.getId()));
+    }
 }

@@ -173,4 +173,10 @@ public interface CommentMapper {
 
     @Delete("DELETE FROM t_comment WHERE id = #{commentId}")
     void deleteOne(Long commentId);
+
+    @Select("SELECT * FROM t_comment WHERE post_id = #{id}")
+    List<Comment> getCommentsByPostId(Long id);
+
+    @Delete("DELETE FROM t_user_like_comment WHERE comment_id = #{id}")
+    void deleteAllLikesByCommentId(Long id);
 }

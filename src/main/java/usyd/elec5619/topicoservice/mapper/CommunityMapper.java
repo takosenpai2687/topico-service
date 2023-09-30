@@ -64,5 +64,6 @@ public interface CommunityMapper {
     void updateCommunity(@Param("communityId") Long id, @Param("updateDto") UpdateCommunityDto updateCommunityDto);
 
 
-
+    @Delete("DELETE FROM t_user_community WHERE community_id = #{communityId}")
+    void unfollowCommunityForAllUsers(Long communityId);
 }

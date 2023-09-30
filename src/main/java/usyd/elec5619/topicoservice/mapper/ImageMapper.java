@@ -27,4 +27,7 @@ public interface ImageMapper {
     @Select("SELECT EXISTS(SELECT 1 FROM t_post_image WHERE image_id = #{imageId} AND post_id = #{postId})")
     Boolean isImageInPost(Long imageId, Long postId);
 
+
+    @Delete("DELETE FROM t_post_image WHERE post_id = #{id}")
+    void deleteImagesByPostId(Long id);
 }

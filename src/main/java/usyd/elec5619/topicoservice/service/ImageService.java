@@ -15,4 +15,6 @@ public interface ImageService {
     Image uploadImage(MultipartFile imageFile);
 
     void addImagesToPost(Long postId, List<Long> imageIds);
+
+    void deleteImagesByPostId(Long id);
 }

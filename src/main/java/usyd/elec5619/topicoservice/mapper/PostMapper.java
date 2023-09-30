@@ -206,4 +206,9 @@ public interface PostMapper {
     @Delete("DELETE FROM t_post WHERE id = #{postId}")
     void deleteOne(Long postId);
 
+    @Select("SELECT * FROM t_post WHERE community_id = #{communityId}")
+    List<Post> getPostsByCommunityId(Long communityId);
+
+    @Delete("DELETE FROM t_user_like_post WHERE post_id = #{id}")
+    void deleteAllLikesByPostId(Long id);
 }

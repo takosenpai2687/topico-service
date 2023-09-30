@@ -19,4 +19,8 @@ public interface NotificationService {
     void sendCommentPostNotification(Long senderId, Long postId, Long commentId);
 
     void sendCommentReplyNotification(Long senderId, Long postId, Long commentId, Long replyToCommentId);
+
+    void deleteAllNotificationsByPostId(Long id);
+
+    void deleteAllNotificationsByCommentId(Long id);
 }

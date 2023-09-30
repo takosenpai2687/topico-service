@@ -63,4 +63,9 @@ public class ImageServiceImpl implements ImageService {
             imageMapper.addImageToPost(postId, imageId);
         }
     }
+
+    @Override
+    public void deleteImagesByPostId(Long id) {
+        imageMapper.deleteImagesByPostId(id);
+    }
 }
