@@ -1,6 +1,7 @@
 package usyd.elec5619.topicoservice.mapper;
 
 import org.apache.ibatis.annotations.*;
+import usyd.elec5619.topicoservice.dto.community.UpdateCommunityDto;
 import usyd.elec5619.topicoservice.model.Community;
 import usyd.elec5619.topicoservice.model.UserCommunity;
 
@@ -57,4 +58,11 @@ public interface CommunityMapper {
             "VALUES (#{name}, #{description}, #{followers}, #{avatar}, #{banner})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     Long insertOne(Community community);
+
+    @Update("UPDATE t_community SET name = #{updateDto.name}, description = #{updateDto.description}," +
+            " avatar = #{updateDto.avatar}, banner = #{updateDto.banner} WHERE id = #{communityId}")
+    void updateCommunity(@Param("communityId") Long id, @Param("updateDto") UpdateCommunityDto updateCommunityDto);
+
+
+
 }

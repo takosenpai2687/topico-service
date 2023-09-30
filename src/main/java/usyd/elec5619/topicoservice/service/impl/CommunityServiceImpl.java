@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import usyd.elec5619.topicoservice.dto.community.CreateCommunityDto;
 import usyd.elec5619.topicoservice.dto.community.UpdateCommunityDto;
 import usyd.elec5619.topicoservice.exception.http.BadRequestException;
+import usyd.elec5619.topicoservice.exception.http.NotFoundException;
 import usyd.elec5619.topicoservice.mapper.CommunityMapper;
 import usyd.elec5619.topicoservice.model.Community;
 import usyd.elec5619.topicoservice.model.UserCommunity;
@@ -88,7 +89,18 @@ public class CommunityServiceImpl implements CommunityService {
     @Override
     public Community updateCommunity(Long communityId, UpdateCommunityDto updateCommunityDto) {
         // TODO: update community
-        return null;
+        Community existingCommunity = communityMapper.getCommunityById(communityId);
+        if (existingCommunity == null) {
+            throw new NotFoundException("Community not found");
+        }
+        if (updateCommunityDto.getName() != null) existingCommunity.setName(updateCommunityDto.getName());
+        if (updateCommunityDto.getDescription() != null) existingCommunity.setDescription(updateCommunityDto.getDescription());
+        if (updateCommunityDto.getAvatar() != null) existingCommunity.setAvatar(updateCommunityDto.getAvatar());
+        if (updateCommunityDto.getBanner() != null) existingCommunity.setBanner(updateCommunityDto.getBanner());
+
+        communityMapper.updateCommunity(communityId, updateCommunityDto);
+
+        return communityMapper.getCommunityById(communityId);
     }
 
     @Override
