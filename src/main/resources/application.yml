@@ -32,6 +32,11 @@ logging:
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
 
+admin:
+    nickName: admin
+    email: admin@qq.com
+    password: 123456
+
 
 jwt:
   secret: elec5619elec5619elec5619elec5619elec5619elec5619elec5619elec5619elec5619elec5619elec5619elec5619
