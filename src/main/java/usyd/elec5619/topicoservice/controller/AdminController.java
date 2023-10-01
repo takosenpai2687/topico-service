@@ -8,6 +8,7 @@ import usyd.elec5619.topicoservice.dto.community.CreateCommunityDto;
 import usyd.elec5619.topicoservice.dto.community.UpdateCommunityDto;
 import usyd.elec5619.topicoservice.model.Community;
 import usyd.elec5619.topicoservice.pojo.CommonResponse;
+import usyd.elec5619.topicoservice.service.AdminService;
 import usyd.elec5619.topicoservice.service.CommunityService;
 
 @RestController
@@ -15,6 +16,7 @@ import usyd.elec5619.topicoservice.service.CommunityService;
 @RequiredArgsConstructor
 public class AdminController {
     private final CommunityService communityService;
+    private final AdminService adminService;
 
     @PostMapping("/communities")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -35,6 +37,13 @@ public class AdminController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public CommonResponse<Void> deleteCommunity(@PathVariable @Valid Long communityId) {
         communityService.deleteCommunity(communityId);
+        return CommonResponse.success();
+    }
+
+    @PutMapping("/assign/{userId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public CommonResponse<Void> assignAdmin(@PathVariable @Valid Long userId) {
+        adminService.assignAdmin(userId);
         return CommonResponse.success();
     }
 }

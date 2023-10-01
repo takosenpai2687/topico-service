@@ -65,6 +65,7 @@ public class AuthServiceImpl implements AuthService {
         // JWT
         String token = jwtService.generateToken(user);
         return LoginVO.builder()
+                      .id(user.getId())
                       .email(email)
                       .nickName(nickName)
                       .token(token)
@@ -77,6 +78,7 @@ public class AuthServiceImpl implements AuthService {
         var user = userMapper.getByEmail(loginDto.getEmail()).orElseThrow(() -> new IllegalArgumentException("Invalid email"));
         String token = jwtService.generateToken(user);
         return LoginVO.builder()
+                      .id(user.getId())
                       .email(user.getEmail())
                       .nickName(user.getNickName())
                       .token(token)

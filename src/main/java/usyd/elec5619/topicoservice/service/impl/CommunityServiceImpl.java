@@ -82,7 +82,10 @@ public class CommunityServiceImpl implements CommunityService {
 
     @Override
     public Community createCommunity(CreateCommunityDto createCommunityDto) {
-        // TODO: create community
+        final String communityName = createCommunityDto.getName();
+        if (communityMapper.getCommunityByName(communityName).isPresent()) {
+            throw new BadRequestException("Community name already exists");
+        }
         Community community = Community.builder()
                                        .name(createCommunityDto.getName())
                                        .description(createCommunityDto.getDescription())

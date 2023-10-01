@@ -15,6 +15,5 @@ public class UpdateCommunityDto {
     private String description;
 
     private Long avatar;
-    @NotBlank
-    private String banner;
+    private Long banner;
 }

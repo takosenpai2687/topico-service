@@ -6,6 +6,7 @@ import usyd.elec5619.topicoservice.model.Community;
 import usyd.elec5619.topicoservice.model.UserCommunity;
 
 import java.util.List;
+import java.util.Optional;
 
 @Mapper
 public interface CommunityMapper {
@@ -80,6 +81,11 @@ public interface CommunityMapper {
     @Delete("DELETE FROM t_user_community WHERE community_id = #{communityId}")
     void unfollowCommunityForAllUsers(Long communityId);
 
+
     @Delete("DELETE FROM t_community WHERE id = #{communityId}")
     void deleteOne(Long communityId);
+
+    @Select("SELECT * FROM t_community WHERE name = #{communityName}")
+    Optional<Community> getCommunityByName(String communityName);
+
 }

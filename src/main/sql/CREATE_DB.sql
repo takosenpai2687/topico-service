@@ -25,7 +25,7 @@ CREATE TABLE `t_community`
     `description` text         NULL,
     `followers`   int          NOT NULL DEFAULT 0,
     `avatar`      int          NULL,
-    `banner`      varchar(255) NULL     DEFAULT '',
+    `banner`      int          NULL,
     `tags`        text,
     `ctime`       TIMESTAMP             DEFAULT CURRENT_TIMESTAMP,
     `utime`       TIMESTAMP             DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -151,13 +151,11 @@ ALTER TABLE `t_notification`
 ALTER TABLE `t_post`
     ADD CONSTRAINT `t_post_author_id` FOREIGN KEY (`author_id`) REFERENCES `t_user` (`id`);
 ALTER TABLE `t_post`
-    ADD CONSTRAINT `community_id_copy_2` FOREIGN KEY (`community_id`) REFERENCES `t_community` (`id`);
+    ADD CONSTRAINT `t_post_community_id` FOREIGN KEY (`community_id`) REFERENCES `t_community` (`id`);
 ALTER TABLE `t_post_image`
     ADD CONSTRAINT `t_post_image_post_id` FOREIGN KEY (`post_id`) REFERENCES `t_post` (`id`);
 ALTER TABLE `t_post_image`
     ADD CONSTRAINT `t_post_image_image_id` FOREIGN KEY (`image_id`) REFERENCES `t_image` (`id`);
-ALTER TABLE `t_community`
-    ADD CONSTRAINT `t_community_image_id` FOREIGN KEY (`avatar`) REFERENCES `t_image` (`id`);
 ALTER TABLE `t_user`
     ADD CONSTRAINT `t_user_image_id` FOREIGN KEY (`avatar`) REFERENCES `t_image` (`id`);
 ALTER TABLE `t_user_community`

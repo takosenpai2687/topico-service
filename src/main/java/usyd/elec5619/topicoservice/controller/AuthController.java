@@ -37,4 +37,5 @@ public class AuthController {
         authService.updatePassword(id, updatePasswordDto);
         return CommonResponse.success();
     }
+
 }
