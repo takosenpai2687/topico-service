@@ -33,21 +33,34 @@ public interface CommunityMapper {
     @Select("SELECT EXISTS(SELECT * FROM t_user_community WHERE user_id = #{userId} AND community_id = #{communityId})")
     Boolean isUserFollowingCommunity(Long userId, Long communityId);
 
-    @Insert({
-            "<script>",
-            "INSERT INTO t_user_community (user_id, community_id) VALUES (#{userId}, #{communityId});",
-            "UPDATE t_community SET followers = followers + 1 WHERE id = #{communityId};",
-            "</script>"
-    })
-    void follow(Long userId, Long communityId);
+//    @Insert({
+//            "<script>",
+//            "INSERT INTO t_user_community (user_id, community_id) VALUES (#{userId}, #{communityId});",
+//            "UPDATE t_community SET followers = followers + 1 WHERE id = #{communityId};",
+//            "</script>"
+//    })
+//    void follow(Long userId, Long communityId);
 
-    @Delete({
-            "<script>",
-            "DELETE FROM t_user_community WHERE user_id = #{userId} AND community_id = #{communityId};",
-            "UPDATE t_community SET followers = followers - 1 WHERE id = #{communityId};",
-            "</script>"
-    })
-    void unfollow(Long userId, Long communityId);
+    @Insert("INSERT INTO t_user_community (user_id, community_id) VALUES (#{userId}, #{communityId})")
+    void insertToUserCommunity(Long userId, Long communityId);
+
+    @Update("UPDATE t_community SET followers = followers + 1 WHERE id = #{communityId}")
+    void incrementCommunityFollowers(Long communityId);
+
+
+//    @Delete({
+//            "<script>",
+//            "DELETE FROM t_user_community WHERE user_id = #{userId} AND community_id = #{communityId};",
+//            "UPDATE t_community SET followers = followers - 1 WHERE id = #{communityId};",
+//            "</script>"
+//    })
+//    void unfollow(Long userId, Long communityId);
+    @Delete("DELETE FROM t_user_community WHERE user_id = #{userId} AND community_id = #{communityId}")
+    void deleteFromUserCommunity(Long userId, Long communityId);
+
+    @Update("UPDATE t_community SET followers = followers - 1 WHERE id = #{communityId}")
+    void decrementCommunityFollowers(Long communityId);
+
 
     @Select("SELECT * FROM t_community")
     List<Community> getAllCommunities();
@@ -68,6 +81,11 @@ public interface CommunityMapper {
     @Delete("DELETE FROM t_user_community WHERE community_id = #{communityId}")
     void unfollowCommunityForAllUsers(Long communityId);
 
+
+    @Delete("DELETE FROM t_community WHERE id = #{communityId}")
+    void deleteOne(Long communityId);
+
     @Select("SELECT * FROM t_community WHERE name = #{communityName}")
     Optional<Community> getCommunityByName(String communityName);
+
 }

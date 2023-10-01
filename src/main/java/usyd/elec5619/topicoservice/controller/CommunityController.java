@@ -32,6 +32,7 @@ public class CommunityController {
         final Long userId = userService.emailToId(email);
         UserCommunity userCommunity = communityService.getUserCommunity(userId, communityId);
         return CommonResponse.success(userCommunity);
+        //TODO ??
     }
 
     @PostMapping("/checkin/{communityId}")
