@@ -56,3 +56,33 @@ VOs are data sent from backend to frontend.
 ### Pojo
 
 Pojos are plain old java objects.
+
+## Team Responsibilities
+
+### Taohan Kang
+
+- Checkin
+- Notification
+- Top Search
+- Top Communities
+
+### Yiyuan Lu
+
+- Post
+- Post likes
+- Comments
+
+### Paddy Zong
+
+- Login
+- Signup
+- Auth
+
+### Ao Xiao
+
+- Community
+- Community Follow
+
+### Mengting Nian
+
+- Admin Operations
