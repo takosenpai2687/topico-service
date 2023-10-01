@@ -19,6 +19,5 @@ public class CreateCommunityDto {
     private int followers;
 
     private Long avatar;
-    @NotBlank
-    private String banner;
+    private Long banner;
 }

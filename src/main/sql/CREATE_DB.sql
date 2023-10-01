@@ -25,7 +25,7 @@ CREATE TABLE `t_community`
     `description` text         NULL,
     `followers`   int          NOT NULL DEFAULT 0,
     `avatar`      int          NULL,
-    `banner`      varchar(255) NULL     DEFAULT '',
+    `banner`      int          NULL,
     `tags`        text,
     `ctime`       TIMESTAMP             DEFAULT CURRENT_TIMESTAMP,
     `utime`       TIMESTAMP             DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
