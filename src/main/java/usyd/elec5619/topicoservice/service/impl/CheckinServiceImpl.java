@@ -24,6 +24,7 @@ public class CheckinServiceImpl implements CheckinService {
     private final CheckinMapper checkinMapper;
 
     @Override
+    @Transactional
     public void checkin(Long userId, Long communityId) {
         // Get checkin bit map
         UserCommunity userCommunity = checkinMapper.getUserCommunity(userId, communityId);

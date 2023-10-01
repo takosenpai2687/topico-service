@@ -58,7 +58,10 @@ public class CommunityServiceImpl implements CommunityService {
         if (communityMapper.isUserFollowingCommunity(userId, communityId)) {
             throw new BadRequestException("User has already followed this community");
         }
-        communityMapper.follow(userId, communityId);
+        communityMapper.insertToUserCommunity(userId, communityId);
+
+        communityMapper.incrementCommunityFollowers(communityId);
+
         return communityMapper.getUserCommunity(userId, communityId);
     }
 
@@ -67,7 +70,9 @@ public class CommunityServiceImpl implements CommunityService {
         if (!communityMapper.isUserFollowingCommunity(userId, communityId)) {
             throw new BadRequestException("User has not followed this community");
         }
-        communityMapper.unfollow(userId, communityId);
+        communityMapper.deleteFromUserCommunity(userId, communityId);
+        communityMapper.decrementCommunityFollowers(communityId);
+
     }
 
     @Override
@@ -114,5 +119,6 @@ public class CommunityServiceImpl implements CommunityService {
     public void deleteCommunity(Long communityId) {
         postService.deletePostsByCommunityId(communityId);
         communityMapper.unfollowCommunityForAllUsers(communityId);
+        communityMapper.deleteOne(communityId);
     }
 }
