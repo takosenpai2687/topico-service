@@ -88,3 +88,7 @@ Pojos are plain old java objects.
 - Admin Operations: create / delete community, assign admin
 - User Info Update / User password update
 - Image Upload / Fetch
+
+## TODO
+
+1. increment `replies` in `t_post` table when a comment is added to a post
