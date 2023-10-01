@@ -86,5 +86,5 @@ Pojos are plain old java objects.
 ### Mengting Nian
 
 - Admin Operations: create / delete community, assign admin
-- User
+- User Info Update / User password update
 - Image Upload / Fetch
