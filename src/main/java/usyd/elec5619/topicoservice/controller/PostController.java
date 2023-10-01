@@ -22,8 +22,8 @@ public class PostController {
     private final PostLikeService postLikeService;
 
     @GetMapping("/{id}")
-    public CommonResponse<PostVO> getPostById(@Valid @PathVariable("id") Long id) {
-        PostVO post = postService.getPostById(id);
+    public CommonResponse<PostVO> getPostVOById(@Valid @PathVariable("id") Long postId) {
+        PostVO post = postService.getPostVOById(postId);
         return CommonResponse.success(post);
     }
 

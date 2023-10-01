@@ -14,7 +14,7 @@ public interface PostService {
 
     Pager<PostVO> searchByKeyword(String keyword, Integer page, Integer size, SortBy sortBy);
 
-    PostVO getPostById(Long id);
+    PostVO getPostVOById(Long id);
 
     PostVO createPost(Long userId, CreatePostDto createPostDto);
 

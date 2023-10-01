@@ -5,10 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import usyd.elec5619.topicoservice.dto.post.CreatePostDto;
-import usyd.elec5619.topicoservice.exception.http.InternalException;
 import usyd.elec5619.topicoservice.exception.http.NotFoundException;
+import usyd.elec5619.topicoservice.mapper.CommunityMapper;
 import usyd.elec5619.topicoservice.mapper.PostMapper;
+import usyd.elec5619.topicoservice.mapper.UserMapper;
 import usyd.elec5619.topicoservice.model.Post;
+import usyd.elec5619.topicoservice.model.User;
 import usyd.elec5619.topicoservice.service.CommentService;
 import usyd.elec5619.topicoservice.service.ImageService;
 import usyd.elec5619.topicoservice.service.NotificationService;
@@ -26,8 +28,11 @@ public class PostServiceImpl implements PostService {
 
     private final PostMapper postMapper;
     private final ImageService imageService;
+    private final UserMapper userMapper;
     private CommentService commentService;
     private NotificationService notificationService;
+
+    private final CommunityMapper communityMapper;
 
     @Override
     public Pager<PostVO> getPostsByUserId(Long userId, Integer page, Integer size) {
@@ -55,8 +60,24 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostVO getPostById(Long id) {
-        return postMapper.getPostVOById(id).orElseThrow(() -> new NotFoundException("Post not found"));
+    public PostVO getPostVOById(Long postId) {
+        Post post = postMapper.getPostById(postId).orElseThrow(() -> new NotFoundException("Post not found"));
+        User author = userMapper.getUserById(post.getAuthorId()).orElseThrow(() -> new NotFoundException("Author not found"));
+        return PostVO.builder()
+                     .id(postId)
+                     .community(communityMapper.getCommunityByPostId(post.getId()))
+                     .author(author)
+                     .title(post.getTitle())
+                     .content(post.getContent())
+                     .spoiler(post.getSpoiler())
+                     .tags(post.getTags())
+                     .images(imageService.getImagesByPostId(postId))
+                     .ctime(post.getCtime())
+                     .utime(post.getUtime())
+                     .likes(post.getLikes())
+                     .dislikes(post.getDislikes())
+                     .replies(post.getReplies())
+                     .build();
     }
 
     @Override
@@ -77,7 +98,7 @@ public class PostServiceImpl implements PostService {
         if (images != null && !images.isEmpty()) {
             imageService.addImagesToPost(post.getId(), images);
         }
-        return postMapper.getPostVOById(postId).orElseThrow(() -> new InternalException("Failed to create post"));
+        return this.getPostVOById(postId);
     }
 
     @Override

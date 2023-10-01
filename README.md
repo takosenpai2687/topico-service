@@ -82,7 +82,6 @@ Pojos are plain old java objects.
 - Community Follow
 - Search
 
-
 ### Mengting Nian
 
 - Admin Operations: create / delete community, assign admin
@@ -91,4 +90,11 @@ Pojos are plain old java objects.
 
 ## TODO
 
-1. increment `replies` in `t_post` table when a comment is added to a post
+1. `t_post`表中的`replies`字段要在comment创建时更新
+2. 所有mapper中的@Results子查询都要改成Java代码实现，涉及类：
+
+- PostMapper
+- CommentMapper
+- NotificationMapper
+
+以及所调用的任何serviceImpl类！

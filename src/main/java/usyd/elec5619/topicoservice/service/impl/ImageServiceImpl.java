@@ -70,4 +70,9 @@ public class ImageServiceImpl implements ImageService {
     public void deleteImagesByPostId(Long id) {
         imageMapper.deleteImagesByPostId(id);
     }
+
+    @Override
+    public List<String> getImagesByPostId(Long postId) {
+        return imageMapper.getImagesByPostId(postId);
+    }
 }

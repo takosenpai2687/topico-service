@@ -3,6 +3,7 @@ package usyd.elec5619.topicoservice.mapper;
 import org.apache.ibatis.annotations.*;
 import usyd.elec5619.topicoservice.model.Image;
 
+import java.util.List;
 import java.util.Optional;
 
 @Mapper
@@ -30,4 +31,7 @@ public interface ImageMapper {
 
     @Delete("DELETE FROM t_post_image WHERE post_id = #{id}")
     void deleteImagesByPostId(Long id);
+
+    @Select("SELECT image_id FROM t_post_image WHERE post_id = #{postId}")
+    List<String> getImagesByPostId(Long postId);
 }

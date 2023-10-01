@@ -55,4 +55,5 @@ public interface UserMapper {
 
     @Update("UPDATE t_user SET password = #{password} WHERE id = #{userId}")
     void updatePassword(Long userId, String password);
+
 }
