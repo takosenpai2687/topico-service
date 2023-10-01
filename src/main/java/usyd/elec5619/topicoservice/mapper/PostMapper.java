@@ -198,7 +198,7 @@ public interface PostMapper {
 
     @Insert("INSERT INTO t_post (community_id, author_id, title, content, spoiler) VALUES (#{communityId}, #{authorId}, #{title}, #{content}, #{spoiler})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
-    Long insertOne(Post post);
+    void insertOne(Post post);
 
     @Select("SELECT * FROM t_post WHERE id = #{postId} LIMIT 1")
     Optional<Post> getPostById(Long postId);

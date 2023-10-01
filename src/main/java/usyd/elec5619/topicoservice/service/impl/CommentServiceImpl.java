@@ -44,7 +44,8 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentVO createComment(Long userId, CreateCommentDto createCommentDto) {
         Comment comment = Comment.builder().postId(createCommentDto.getPostId()).authorId(userId).parentId(createCommentDto.getParentId()).replyToUserId(createCommentDto.getReplyToUserId()).content(createCommentDto.getContent()).build();
-        Long id = commentMapper.insertOne(comment);
+        commentMapper.insertOne(comment);
+        Long id = comment.getId();
         // Is reply
         boolean isReply = comment.getParentId() != null;
         if (isReply) {

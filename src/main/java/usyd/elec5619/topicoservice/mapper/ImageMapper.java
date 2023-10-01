@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface ImageMapper {
     @Insert("INSERT INTO t_image (data, md5, ext) VALUES(#{data}, #{md5}, #{ext})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
-    Long insert(Image image);
+    void insert(Image image);
 
     @Select("SELECT * FROM t_image WHERE `id` = #{id}")
     Optional<Image> getById(Long id);

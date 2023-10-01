@@ -45,7 +45,9 @@ public class ImageServiceImpl implements ImageService {
 
             // Insert new image
             final Image image = Image.builder().data(data).md5(md5).ext(ext).build();
-            Long imageId = imageMapper.insert(image);
+            imageMapper.insert(image);
+
+            final Long imageId = image.getId();
 
             // Return created image
             return imageMapper.getById(imageId).orElseThrow(() -> new InternalException("Failed to upload image"));

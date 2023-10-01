@@ -71,7 +71,7 @@ public interface CommunityMapper {
     @Insert("INSERT INTO t_community(name, description, followers, avatar, banner) " +
             "VALUES (#{name}, #{description}, #{followers}, #{avatar}, #{banner})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
-    Long insertOne(Community community);
+    void insertOne(Community community);
 
     @Update("UPDATE t_community SET name = #{updateDto.name}, description = #{updateDto.description}," +
             " avatar = #{updateDto.avatar}, banner = #{updateDto.banner} WHERE id = #{communityId}")

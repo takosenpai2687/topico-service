@@ -138,7 +138,7 @@ public interface CommentMapper {
             "VALUES " +
             "(#{postId}, #{authorId}, #{parentId}, #{replyToUserId}, #{content})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
-    Long insertOne(Comment comment);
+    void insertOne(Comment comment);
 
     @Select("SELECT " +
             "id," +

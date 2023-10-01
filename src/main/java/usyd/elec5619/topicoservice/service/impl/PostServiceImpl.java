@@ -70,7 +70,8 @@ public class PostServiceImpl implements PostService {
                         .spoiler(createPostDto.getSpoiler())
                         .tags(createPostDto.getTags())
                         .build();
-        Long postId = postMapper.insertOne(post);
+        postMapper.insertOne(post);
+        final Long postId = post.getId();
         // Add images
         final List<Long> images = createPostDto.getImages();
         if (images != null && !images.isEmpty()) {

@@ -62,10 +62,11 @@ public class AuthServiceImpl implements AuthService {
                         .gender(Gender.NOT_KNOWN)
                         .build();
         userMapper.insertOne(user);
+        final Long generatedId = user.getId();
         // JWT
         String token = jwtService.generateToken(user);
         return LoginVO.builder()
-                      .id(user.getId())
+                      .id(generatedId)
                       .email(email)
                       .nickName(nickName)
                       .token(token)
