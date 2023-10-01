@@ -82,7 +82,11 @@ Pojos are plain old java objects.
 
 - Community
 - Community Follow
+- Community Posts
+- Search
 
 ### Mengting Nian
 
-- Admin Operations
+- Admin Operations: create / delete community, assign admin
+- Image Upload
+- Image Fetch
