@@ -63,30 +63,28 @@ Pojos are plain old java objects.
 
 - Checkin
 - Notification
-- Top Search
-- Top Communities
+- Top Search & Top Communities
 
 ### Yiyuan Lu
 
 - Post
 - Post likes
-- Comments
 
 ### Paddy Zong
 
-- Login
-- Signup
-- Auth
+- Auth / Login / Signup
+- Comment
+- Comment likes
 
 ### Ao Xiao
 
 - Community
 - Community Follow
-- Community Posts
 - Search
+
 
 ### Mengting Nian
 
 - Admin Operations: create / delete community, assign admin
-- Image Upload
-- Image Fetch
+- User
+- Image Upload / Fetch
