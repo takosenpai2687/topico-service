@@ -85,7 +85,8 @@ public class CommunityServiceImpl implements CommunityService {
                                        .avatar(createCommunityDto.getAvatar())
                                        .banner(createCommunityDto.getBanner())
                                        .build();
-        Long id = communityMapper.insertOne(community);
+        communityMapper.insertOne(community);
+        Long id = community.getId();  //fix the id problem that always return 1: Long id = communityMapper.insertOne(community);
         return communityMapper.getCommunityById(id);
 
     }

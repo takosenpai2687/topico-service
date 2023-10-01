@@ -32,7 +32,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(Long id, UpdateUserDto updateUserDTO) {
-        return userMapper.updateUser(id, updateUserDTO);
+        userMapper.updateUser(id, updateUserDTO);
+        return getUserById(id);
     }
 
     public User getUserByEmail(String email) {
