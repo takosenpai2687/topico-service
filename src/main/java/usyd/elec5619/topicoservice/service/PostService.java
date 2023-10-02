@@ -6,11 +6,15 @@ import usyd.elec5619.topicoservice.type.SortBy;
 import usyd.elec5619.topicoservice.vo.Pager;
 import usyd.elec5619.topicoservice.vo.PostVO;
 
+import java.util.List;
+
 @Service
 public interface PostService {
     Pager<PostVO> getPostsByUserId(Long userId, Integer page, Integer size);
 
     Pager<PostVO> getPostsByCommunityId(Long communityId, Integer page, Integer size, SortBy sortBy);
+
+    List<PostVO> convertPostToPostVO(Long communityId, Integer offset, Integer size);
 
     Pager<PostVO> searchByKeyword(String keyword, Integer page, Integer size, SortBy sortBy);
 

@@ -47,61 +47,9 @@ public interface PostMapper {
     List<String> getImageUuidsByPostId(Long id);
 
 
-    @Select("SELECT " +
-            "id,title," +
-            "SUBSTR(content, 0, 144) shortContent," +
-            "spoiler," +
-            "ctime,utime," +
-            "community_id," +
-            "author_id," +
-            "likes," +
-            "dislikes " +
-            "FROM t_post " +
-            "WHERE community_id = #{communityId} ORDER BY ctime DESC LIMIT #{offset}, #{size}")
-    @Results({
-            @Result(column = "id", property = "id"),
-            @Result(column = "title", property = "title"),
-            @Result(column = "shortContent", property = "content"),
-            @Result(column = "spoiler", property = "spoiler"),
-            @Result(column = "likes", property = "likes"),
-            @Result(column = "dislikes", property = "dislikes"),
-            @Result(column = "tags", property = "tags"),
-            @Result(column = "ctime", property = "ctime"),
-            @Result(column = "utime", property = "utime"),
-            @Result(column = "community_id", property = "community", javaType = Community.class, one = @One(select = "CommunityMapper.getCommunityById")),
-            @Result(column = "author_id", property = "author", javaType = User.class, one = @One(select = "UserMapper.getUserById")),
-            @Result(column = "id", property = "commentsCount", javaType = Integer.class, one = @One(select = "CommentMapper.countCommentsByPostId")),
-            @Result(column = "id", property = "images", javaType = List.class, many = @Many(select = "getImageUuidsByPostId"))
-    })
-    List<PostVO> getNewPostsByCommunityId(Long communityId, Integer offset, Integer size);
+    @Select("SELECT * FROM t_post WHERE community_id = #{communityId} ORDER BY likes DESC, ctime DESC LIMIT #{offset}, #{size}")
+    List<Post> getOrderedPostsByCommunityId(Long communityId, Integer offset, Integer size);
 
-    @Select("SELECT " +
-            "id,title," +
-            "SUBSTR(content, 0, 144) shortContent," +
-            "spoiler," +
-            "ctime,utime," +
-            "community_id," +
-            "author_id," +
-            "likes," +
-            "dislikes " +
-            "FROM t_post " +
-            "WHERE community_id = #{communityId} ORDER BY likes DESC LIMIT #{offset}, #{size}")
-    @Results({
-            @Result(column = "id", property = "id"),
-            @Result(column = "title", property = "title"),
-            @Result(column = "shortContent", property = "content"),
-            @Result(column = "spoiler", property = "spoiler"),
-            @Result(column = "likes", property = "likes"),
-            @Result(column = "dislikes", property = "dislikes"),
-            @Result(column = "tags", property = "tags"),
-            @Result(column = "ctime", property = "ctime"),
-            @Result(column = "utime", property = "utime"),
-            @Result(column = "community_id", property = "community", javaType = Community.class, one = @One(select = "CommunityMapper.getCommunityById")),
-            @Result(column = "author_id", property = "author", javaType = User.class, one = @One(select = "UserMapper.getUserById")),
-            @Result(column = "id", property = "commentsCount", javaType = Integer.class, one = @One(select = "CommentMapper.countCommentsByPostId")),
-            @Result(column = "id", property = "images", javaType = List.class, many = @Many(select = "getImageUuidsByPostId"))
-    })
-    List<PostVO> getHotPostsByCommunityId(Long communityId, Integer offset, Integer size);
 
     @Select("SELECT COUNT(id) FROM t_post WHERE community_id = #{communityId}")
     Integer countPostsByCommunityId(Long communityId);

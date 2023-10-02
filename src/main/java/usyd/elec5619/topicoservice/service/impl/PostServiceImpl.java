@@ -19,6 +19,7 @@ import usyd.elec5619.topicoservice.type.SortBy;
 import usyd.elec5619.topicoservice.vo.Pager;
 import usyd.elec5619.topicoservice.vo.PostVO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -43,13 +44,47 @@ public class PostServiceImpl implements PostService {
         return Pager.<PostVO>builder().data(posts).page(page).size(size).total(total).build();
     }
 
+
+@Override
+public Pager<PostVO> getPostsByCommunityId(Long communityId, Integer page, Integer size, SortBy sortBy) {
+    assert page > -1;
+    final int offset = (page-1) * size;
+
+    List<PostVO> posts = convertPostToPostVO(communityId, offset, size);
+
+    final Integer total = postMapper.countPostsByCommunityId(communityId);
+    return Pager.<PostVO>builder().data(posts).page(page).size(size).total(total).build();
+}
+
     @Override
-    public Pager<PostVO> getPostsByCommunityId(Long communityId, Integer page, Integer size, SortBy sortBy) {
-        final int offset = page * size;
-        final List<PostVO> posts = sortBy.equals(SortBy.MOST_LIKES) ? postMapper.getHotPostsByCommunityId(communityId, offset, size) : postMapper.getNewPostsByCommunityId(communityId, offset, size);
-        final Integer total = postMapper.countPostsByCommunityId(communityId);
-        return Pager.<PostVO>builder().data(posts).page(page).size(size).total(total).build();
+    public List<PostVO> convertPostToPostVO(Long communityId, Integer offset, Integer size) {
+        List<Post> posts = postMapper.getOrderedPostsByCommunityId(communityId, offset, size);
+        List<PostVO> postVOs = new ArrayList<>();
+        //TODO: reuse code
+        for (Post post : posts) {
+            User author = userMapper.getUserById(post.getAuthorId()).orElseThrow(() -> new NotFoundException("Author not found"));
+            PostVO postVO = PostVO.builder()
+                    .id(post.getId())
+                    .community(communityMapper.getCommunityById(post.getCommunityId()))
+                    .author(author)
+                    .title(post.getTitle())
+                    .content(post.getContent().substring(0, Math.min(post.getContent().length(), 144))) // Get short content
+                    .spoiler(post.getSpoiler())
+                    .tags(post.getTags())
+                    .images(imageService.getImagesByPostId(post.getId()))
+                    .ctime(post.getCtime())
+                    .utime(post.getUtime())
+                    .likes(post.getLikes())
+                    .dislikes(post.getDislikes())
+                    .replies(post.getReplies())
+                    .build();
+
+            postVOs.add(postVO);
+        }
+
+        return postVOs;
     }
+
 
     @Override
     public Pager<PostVO> searchByKeyword(String keyword, Integer page, Integer size, SortBy sortBy) {
@@ -115,7 +150,7 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public void deletePostsByCommunityId(Long communityId) {
         List<Post> posts = postMapper.getPostsByCommunityId(communityId);
-        posts.forEach(post -> deletePostById(post.getId()));
+        posts.parallelStream().forEach(post -> deletePostById(post.getId()));
     }
 
 
@@ -134,4 +169,3 @@ public class PostServiceImpl implements PostService {
 }
 
 
-//  posts.parallelStream().forEach(post -> {
