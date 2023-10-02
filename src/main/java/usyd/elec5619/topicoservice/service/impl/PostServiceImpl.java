@@ -29,8 +29,8 @@ public class PostServiceImpl implements PostService {
     private final PostMapper postMapper;
     private final ImageService imageService;
     private final UserMapper userMapper;
-    private CommentService commentService;
-    private NotificationService notificationService;
+    private final CommentService commentService;
+    private final NotificationService notificationService;
 
     private final CommunityMapper communityMapper;
 
@@ -102,29 +102,36 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional
     public void deletePost(Long userId, Long postId) {
         Post post = postMapper.getPostById(postId).orElseThrow(() -> new NotFoundException("Post not found"));
         if (!post.getAuthorId().equals(userId)) {
             throw new NotFoundException("not your post");
         }
-        postMapper.deleteOne(postId);
+        deletePostById(postId);
     }
 
     @Override
     @Transactional
     public void deletePostsByCommunityId(Long communityId) {
         List<Post> posts = postMapper.getPostsByCommunityId(communityId);
-        posts.parallelStream().forEach(post -> {
-            // delete post images
-            imageService.deleteImagesByPostId(post.getId());
-            // delete post like notifications
-            notificationService.deleteAllNotificationsByPostId(post.getId());
-            // delete post likes
-            postMapper.deleteAllLikesByPostId(post.getId());
-            // delete comments
-            commentService.deleteAllCommentsByPostId(post.getId());
-            postMapper.deleteOne(post.getId());
-        });
+        posts.forEach(post -> deletePostById(post.getId()));
+    }
+
+
+    private void deletePostById(Long postId) {
+        // delete post images
+        imageService.deleteImagesByPostId(postId);
+        // delete post like notifications
+        notificationService.deleteAllNotificationsByPostId(postId);
+        // delete post likes
+        postMapper.deleteAllLikesByPostId(postId);
+        // delete comments
+        commentService.deleteAllCommentsByPostId(postId);
+        postMapper.deleteOne(postId);
     }
 
 }
+
+
+//  posts.parallelStream().forEach(post -> {

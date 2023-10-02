@@ -20,7 +20,7 @@ public interface PostMapper {
             "author_id," +
             "likes," +
             "dislikes," +
-            "replies" +
+            "replies " +
             "FROM t_post " +
             "WHERE author_id = #{userId} ORDER BY ctime DESC LIMIT #{offset}, #{size}")
     @Results({
@@ -169,7 +169,7 @@ public interface PostMapper {
     List<PostVO> searchHotByKeyword(String keyword, int offset, Integer size);
  
 
-    @Insert("INSERT INTO t_post (community_id, author_id, title, content, spoiler) VALUES (#{communityId}, #{authorId}, #{title}, #{content}, #{spoiler})")
+    @Insert("INSERT INTO t_post (community_id, author_id, title, content, spoiler, tags) VALUES (#{communityId}, #{authorId}, #{title}, #{content}, #{spoiler}, #{tags})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     void insertOne(Post post);
 

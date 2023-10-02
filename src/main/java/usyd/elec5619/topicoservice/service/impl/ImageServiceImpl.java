@@ -45,7 +45,7 @@ public class ImageServiceImpl implements ImageService {
 
             // Insert new image
             final Image image = Image.builder().data(data).md5(md5).ext(ext).build();
-            imageMapper.insert(image);
+            imageMapper.insertOne(image);
 
             final Long imageId = image.getId();
 
@@ -61,7 +61,7 @@ public class ImageServiceImpl implements ImageService {
     public void addImagesToPost(Long postId, List<Long> imageIds) {
         for (Long imageId : imageIds) {
             if (!imageMapper.isImageExist(imageId)) continue;
-            if (!imageMapper.isImageInPost(imageId, postId)) continue;
+            if (imageMapper.isImageInPost(imageId, postId)) continue;
             imageMapper.addImageToPost(postId, imageId);
         }
     }
