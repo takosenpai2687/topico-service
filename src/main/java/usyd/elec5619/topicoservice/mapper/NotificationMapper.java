@@ -150,7 +150,7 @@ public interface NotificationMapper {
     })
     List<NotificationVO> getCommentReplyNotifications(Long receiverId);
 
-    @Select("SELECT id FROM t_post WHERE id = #{postId}")
+    @Select("SELECT author_id FROM t_post WHERE id = #{postId}")
     Long getPostAuthorId(Long postId);
 
     @Select("SELECT id FROM t_comment WHERE id = #{commentId}")

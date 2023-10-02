@@ -47,7 +47,7 @@ CREATE TABLE `t_image`
 CREATE TABLE `t_notification`
 (
     `id`                  int     NOT NULL AUTO_INCREMENT,
-    `type`                tinyint NOT NULL DEFAULT 0,
+    `type`                VARCHAR(50) NOT NULL,
     `sender_id`           int     NOT NULL,
     `receiver_id`         int     NOT NULL,
     `post_id`             int     NULL,

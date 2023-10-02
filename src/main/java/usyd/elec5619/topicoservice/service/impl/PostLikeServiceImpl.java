@@ -16,6 +16,26 @@ public class PostLikeServiceImpl implements PostLikeService {
     private final PostLikeMapper postLikeMapper;
     private final NotificationService notificationService;
 
+    public void mapperLikePost(Long userId, Long postId) {
+        postLikeMapper.insertUserLikePost(userId, postId);
+        postLikeMapper.updatePostLikes(postId);
+    }
+
+    public void mapperUnlikePost(Long userId, Long postId) {
+        postLikeMapper.deleteUserLikePost(userId, postId);
+        postLikeMapper.decrementPostLikes(postId);
+    }
+
+    public void mapperDislikePost(Long userId, Long postId) {
+        postLikeMapper.insertUserDislikePost(userId, postId);
+        postLikeMapper.incrementPostDislikes(postId);
+    }
+
+    public void mapperUnDislikePost(Long userId, Long postId) {
+        postLikeMapper.deleteUserDislikePost(userId, postId);
+        postLikeMapper.decrementPostDislikes(postId);
+    }
+
     @Override
     @Transactional
     public LikeVO likePost(Long userId, Long postId) {
@@ -26,9 +46,10 @@ public class PostLikeServiceImpl implements PostLikeService {
         }
         // Already disliked before: remove dislike first
         if (postLikedStatus != null) {
-            postLikeMapper.unDislikePost(userId, postId);
+            mapperDislikePost(userId, postId);
         }
-        postLikeMapper.likePost(userId, postId);
+           mapperLikePost(userId, postId);
+
         // Build result
         Boolean likedStatus = postLikeMapper.getPostLikedStatus(userId, postId);
         // Send notification
@@ -50,7 +71,7 @@ public class PostLikeServiceImpl implements PostLikeService {
             throw new BadRequestException("Post already unliked");
         }
         // Liked before: unlike it
-        postLikeMapper.unlikePost(userId, postId);
+        mapperUnlikePost(userId, postId);
         // Build result
         Boolean likedStatus = postLikeMapper.getPostLikedStatus(userId, postId);
         // Send notification
@@ -73,11 +94,11 @@ public class PostLikeServiceImpl implements PostLikeService {
         }
         // Already liked before: remove like first
         if (postLikedStatus != null) {
-            postLikeMapper.unlikePost(userId, postId);
+            mapperUnlikePost(userId, postId);
             // Send unlike notification
             notificationService.sendLikePostNotification(userId, postId, false);
         }
-        postLikeMapper.dislikePost(userId, postId);
+        mapperDislikePost(userId, postId);
         // Build result
         Boolean likedStatus = postLikeMapper.getPostLikedStatus(userId, postId);
         return LikeVO.builder()
@@ -97,7 +118,7 @@ public class PostLikeServiceImpl implements PostLikeService {
             throw new BadRequestException("Post already un-disliked");
         }
         // Disliked before: unDislike it
-        postLikeMapper.unDislikePost(userId, postId);
+        mapperUnDislikePost(userId, postId);
         // Build result
         Boolean likedStatus = postLikeMapper.getPostLikedStatus(userId, postId);
         return LikeVO.builder()
@@ -107,4 +128,7 @@ public class PostLikeServiceImpl implements PostLikeService {
                      .dislikes(postLikeMapper.getPostDislikes(postId))
                      .build();
     }
+
+
+
 }
