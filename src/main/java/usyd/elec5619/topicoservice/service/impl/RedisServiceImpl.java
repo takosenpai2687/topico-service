@@ -40,12 +40,15 @@ public class RedisServiceImpl implements RedisService {
             return;
         }
         cachedTopSearch = typedTuples.stream()
-                                     .collect(Collectors.toMap(
-                                             val -> Objects.requireNonNull(val.getValue()).toString(),
-                                             tuple -> Objects.requireNonNull(tuple.getScore()).intValue(),
-                                             (a, b) -> a,
-                                             LinkedHashMap::new
-                                     ));
+                //filter null value and add log
+                .filter(tuple -> tuple.getValue() != null && tuple.getScore() != null) // Filter out null values
+                .peek(tuple -> log.debug("Value: {}, Score: {}", tuple.getValue(), tuple.getScore())) // Logging for debug
+                .collect(Collectors.toMap(
+                        val -> Objects.requireNonNull(val.getValue()).toString(),
+                        tuple -> Objects.requireNonNull(tuple.getScore()).intValue(),
+                        (a, b) -> a,
+                        LinkedHashMap::new
+                ));
     }
 
     public Map<String, Integer> getTopSearch() {

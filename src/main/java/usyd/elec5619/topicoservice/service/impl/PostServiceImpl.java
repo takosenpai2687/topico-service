@@ -38,29 +38,39 @@ public class PostServiceImpl implements PostService {
     @Override
     public Pager<PostVO> getPostsByUserId(Long userId, Integer page, Integer size) {
         assert page > -1;
+        //TODO: default page size should = 0 or 1 ?
         final int offset = page * size;
-        List<PostVO> posts = postMapper.getPostsByUserId(userId, offset, size);
+        List<Post> posts = postMapper.getPostsByUserId(userId, offset, size);
+        List<PostVO> postVOs = convertPostToPostVO(posts);
         Integer total = postMapper.countPostsByUserId(userId);
-        return Pager.<PostVO>builder().data(posts).page(page).size(size).total(total).build();
+        return Pager.<PostVO>builder().data(postVOs).page(page).size(size).total(total).build();
     }
 
 
-@Override
-public Pager<PostVO> getPostsByCommunityId(Long communityId, Integer page, Integer size, SortBy sortBy) {
-    assert page > -1;
-    final int offset = (page-1) * size;
+    @Override
+    public Pager<PostVO> getPostsByCommunityId(Long communityId, Integer page, Integer size, SortBy sortBy) {
+        assert page > -1;
+        final int offset = (page - 1) * size;
+        List<Post> posts = postMapper.getOrderedPostsByCommunityId(communityId, offset, size);
+        List<PostVO> postVOs = convertPostToPostVO(posts);
+        final Integer total = postMapper.countPostsByCommunityId(communityId);
+        return Pager.<PostVO>builder().data(postVOs).page(page).size(size).total(total).build();
+    }
 
-    List<PostVO> posts = convertPostToPostVO(communityId, offset, size);
-
-    final Integer total = postMapper.countPostsByCommunityId(communityId);
-    return Pager.<PostVO>builder().data(posts).page(page).size(size).total(total).build();
-}
 
     @Override
-    public List<PostVO> convertPostToPostVO(Long communityId, Integer offset, Integer size) {
-        List<Post> posts = postMapper.getOrderedPostsByCommunityId(communityId, offset, size);
+    public Pager<PostVO> searchByKeyword(String keyword, Integer page, Integer size, SortBy sortBy) {
+        assert page > -1;
+        final int offset = (page - 1) * size;
+        List<Post> posts = postMapper.searchPostsByKeyword(keyword, offset, size);
+        List<PostVO> postVOs = convertPostToPostVO(posts);
+        final Integer total = postMapper.countSearchByTitle(keyword);
+        return Pager.<PostVO>builder().data(postVOs).page(page).size(size).total(total).build();
+    }
+
+    @Override
+    public List<PostVO> convertPostToPostVO(List<Post> posts) {
         List<PostVO> postVOs = new ArrayList<>();
-        //TODO: reuse code
         for (Post post : posts) {
             User author = userMapper.getUserById(post.getAuthorId()).orElseThrow(() -> new NotFoundException("Author not found"));
             PostVO postVO = PostVO.builder()
@@ -86,13 +96,6 @@ public Pager<PostVO> getPostsByCommunityId(Long communityId, Integer page, Integ
     }
 
 
-    @Override
-    public Pager<PostVO> searchByKeyword(String keyword, Integer page, Integer size, SortBy sortBy) {
-        final int offset = page * size;
-        List<PostVO> posts = sortBy.equals(SortBy.MOST_LIKES) ? postMapper.searchHotByKeyword(keyword, offset, size) : postMapper.searchNewByKeyword(keyword, offset, size);
-        final Integer total = postMapper.countSearchByTitle(keyword);
-        return Pager.<PostVO>builder().data(posts).page(page).size(size).total(total).build();
-    }
 
     @Override
     public PostVO getPostVOById(Long postId) {
