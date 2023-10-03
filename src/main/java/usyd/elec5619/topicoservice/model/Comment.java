@@ -1,7 +1,9 @@
 package usyd.elec5619.topicoservice.model;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NonNull;
 
 import java.time.LocalDateTime;
 

@@ -3,19 +3,26 @@ package usyd.elec5619.topicoservice.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import usyd.elec5619.topicoservice.dto.comment.CreateCommentDto;
 import usyd.elec5619.topicoservice.exception.http.BadRequestException;
 import usyd.elec5619.topicoservice.exception.http.InternalException;
 import usyd.elec5619.topicoservice.exception.http.NotFoundException;
 import usyd.elec5619.topicoservice.mapper.CommentMapper;
+import usyd.elec5619.topicoservice.mapper.PostMapper;
+import usyd.elec5619.topicoservice.mapper.UserMapper;
 import usyd.elec5619.topicoservice.model.Comment;
+import usyd.elec5619.topicoservice.model.Post;
+import usyd.elec5619.topicoservice.model.User;
 import usyd.elec5619.topicoservice.service.CommentService;
 import usyd.elec5619.topicoservice.service.NotificationService;
 import usyd.elec5619.topicoservice.type.SortBy;
 import usyd.elec5619.topicoservice.vo.CommentVO;
 import usyd.elec5619.topicoservice.vo.Pager;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Slf4j
@@ -23,9 +30,12 @@ import java.util.List;
 public class CommentServiceImpl implements CommentService {
 
     private final CommentMapper commentMapper;
+    private final PostMapper postMapper;
     private final NotificationService notificationService;
+    private final UserMapper userMapper;
 
     @Override
+    //TODO: should be only comments or includes replies?
     public Pager<CommentVO> getCommentsByUserId(Long userId, Integer page, Integer size) {
         final Integer offset = page * size;
         List<CommentVO> commentVOList = commentMapper.getCommentsByUserId(userId, offset, size);
@@ -42,19 +52,85 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional
     public CommentVO createComment(Long userId, CreateCommentDto createCommentDto) {
-        Comment comment = Comment.builder().postId(createCommentDto.getPostId()).authorId(userId).parentId(createCommentDto.getParentId()).replyToUserId(createCommentDto.getReplyToUserId()).content(createCommentDto.getContent()).build();
+        Long postId = createCommentDto.getPostId();
+        Post post = postMapper.getPostById(postId)
+                .orElseThrow(() -> new NotFoundException("Post with id " + postId + " does not exist"));
+        //TODO: may be removed in the future as front_end changed
+        if (createCommentDto.getParentId() != null &&
+                commentMapper.getCommentIdsByPostId(postId).stream()
+                        .noneMatch(id -> id.equals(createCommentDto.getParentId()))) {
+            throw new BadRequestException("Parent comment does not belong to this post");
+        }
+
+        if (!Objects.equals(createCommentDto.getReplyToUserId(), postMapper.getAuthorIdByPostId(postId))) {
+            throw new BadRequestException("Reply to user does not belong to this post");
+        }
+
+        //TODO: can be simplified
+        Comment comment = Comment.builder()
+                .postId(postId)
+                .authorId(userId)
+                .parentId(createCommentDto.getParentId())
+                .replyToUserId(createCommentDto.getReplyToUserId())
+                .content(createCommentDto.getContent())
+                .build();
         commentMapper.insertOne(comment);
-        Long id = comment.getId();
+        Long commentId = comment.getId();
         // Is reply
         boolean isReply = comment.getParentId() != null;
         if (isReply) {
-            notificationService.sendCommentReplyNotification(userId, comment.getReplyToUserId(), comment.getPostId(), id);
+            notificationService.sendCommentReplyNotification(userId, comment.getReplyToUserId(), comment.getPostId(), commentId);
         } else {
-            notificationService.sendCommentPostNotification(userId, comment.getPostId(), id);
+            notificationService.sendCommentPostNotification(userId, comment.getPostId(), commentId);
         }
-        return commentMapper.getCommentVOById(id).orElseThrow(() -> new InternalException("Failed to create comment"));
+        Comment newComment = commentMapper.getCommentById(commentId).orElseThrow(() -> new InternalException("Failed to create comment"));
+
+
+        User author = userMapper.getUserById(newComment.getAuthorId()).orElseThrow(() -> new NotFoundException("Author not found"));
+        // add a reply to post it belongs to after the comment is inserted
+        postMapper.addReplyToPost(newComment.getPostId());
+        //add a reply to comment it belongs to after its reply is inserted
+        commentMapper.addReplyToComment(newComment.getParentId());
+
+        return CommentVO.builder()
+                .id(commentId)
+                .postId(newComment.getPostId())
+                .postTitle(postMapper.getPostTitleById(newComment.getPostId()))
+                .author(author)
+              //  .children(convertCommentToCommentVO(commentMapper.getRepliesByCommentId(commentId)))
+                .content(newComment.getContent())
+                .likes(newComment.getLikes())
+                .dislikes(newComment.getDislikes())
+                .replies(newComment.getReplies())
+                .utime(newComment.getUtime())
+                .ctime(newComment.getUtime())
+                .build();
     }
+
+    //TODO: only check comments to show its children(reply)?
+    public List<CommentVO> convertCommentToCommentVO(List<Comment> comments) {
+        List<CommentVO> commentVOs = new ArrayList<>();
+        for (Comment comment : comments) {
+            User author = userMapper.getUserById(comment.getAuthorId()).orElseThrow(() -> new NotFoundException("Author not found"));
+            CommentVO commentVO = CommentVO.builder()
+                    .id(comment.getId())
+                    .postId(comment.getPostId())
+                    .postTitle(postMapper.getPostTitleById(comment.getPostId()))
+                    .author(author)
+                    .content(comment.getContent())
+                    .likes(comment.getLikes())
+                    .dislikes(comment.getDislikes())
+                    .replies(comment.getReplies())
+                    .ctime(comment.getCtime())
+                    .utime(comment.getUtime())
+                    .build();
+            commentVOs.add(commentVO);
+        }
+        return commentVOs;
+    }
+
 
     @Override
     public void deleteComment(Long userId, Long commentId) {

@@ -11,42 +11,17 @@ import java.util.Optional;
 
 @Mapper
 public interface PostMapper {
-//    @Select("SELECT " +
-//            "id,title," +
-//            "SUBSTR(content, 0, 144) shortContent," +
-//            "spoiler," +
-//            "ctime,utime," +
-//            "community_id," +
-//            "author_id," +
-//            "likes," +
-//            "dislikes," +
-//            "replies " +
-//            "FROM t_post " +
-//            "WHERE author_id = #{userId} ORDER BY ctime DESC LIMIT #{offset}, #{size}")
-//    @Results({
-//            @Result(column = "id", property = "id"),
-//            @Result(column = "title", property = "title"),
-//            @Result(column = "shortContent", property = "content"),
-//            @Result(column = "spoiler", property = "spoiler"),
-//            @Result(column = "likes", property = "likes"),
-//            @Result(column = "dislikes", property = "dislikes"),
-//            @Result(column = "replies", property = "replies"),
-//            @Result(column = "tags", property = "tags"),
-//            @Result(column = "ctime", property = "ctime"),
-//            @Result(column = "utime", property = "utime"),
-//            @Result(column = "community_id", property = "community", javaType = Community.class, one = @One(select = "CommunityMapper.getCommunityById")),
-//            @Result(column = "author_id", property = "author", javaType = User.class, one = @One(select = "UserMapper.getUserById")),
-//            @Result(column = "id", property = "images", javaType = List.class, many = @Many(select = "getImageUuidsByPostId"))
-//    })
-//    List<PostVO> getPostsByUserId(Long userId, Integer offset, Integer size);
+
     @Select("SELECT * FROM t_post WHERE author_id = #{userId} ORDER BY ctime DESC LIMIT #{offset}, #{size}")
     List<Post> getPostsByUserId(Long userId, Integer offset, Integer size);
 
     @Select("SELECT COUNT(id) FROM t_post WHERE author_id = #{userId}")
     Integer countPostsByUserId(Long userId);
 
-    @Select("SELECT image_uuid FROM t_post_image WHERE post_id = #{id}")
-    List<String> getImageUuidsByPostId(Long id);
+//    @Select("SELECT image_uuid FROM t_post_image WHERE post_id = #{id}")
+//    List<String> getImageUuidsByPostId(Long id);
+    @Select("SELECT id FROM t_post_image WHERE post_id = #{id}")
+    List<String> getImagesByPostId(Long id);
 
 
     @Select("SELECT * FROM t_post WHERE community_id = #{communityId} ORDER BY likes DESC, ctime DESC LIMIT #{offset}, #{size}")
@@ -80,4 +55,13 @@ public interface PostMapper {
 
     @Delete("DELETE FROM t_user_like_post WHERE post_id = #{id}")
     void deleteAllLikesByPostId(Long id);
+
+    @Select("SELECT author_id FROM t_post WHERE id = #{postId} LIMIT 1")
+    Long getAuthorIdByPostId(Long postId);
+
+    @Update("UPDATE t_post SET replies = replies + 1 WHERE id = #{postId}")
+    void addReplyToPost(Long postId);
+
+    @Update("UPDATE t_post SET replies = CASE WHEN replies > 0 THEN replies - 1 ELSE 0 END WHERE id = #{postId}")
+    void decrementReplyToPost(Long postId);
 }
