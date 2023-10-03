@@ -98,3 +98,5 @@ Pojos are plain old java objects.
 - NotificationMapper
 
 以及所调用的任何serviceImpl类！
+
+3. 测试topSearch
