@@ -45,7 +45,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Pager<CommentVO> getCommentsByPostId(Long postId, Integer page, Integer size, SortBy sortBy) {
-        final Integer offset = page * size;
+        final Integer offset = (page - 1) * size;
         List<CommentVO> commentVOList = sortBy.equals(SortBy.MOST_LIKES) ? commentMapper.getHotCommentsByPostId(postId, offset, size) : commentMapper.getNewCommentsByPostId(postId, offset, size);
         Integer total = commentMapper.countCommentsByPostId(postId);
         return Pager.<CommentVO>builder().data(commentVOList).page(page).size(size).total(total).build();

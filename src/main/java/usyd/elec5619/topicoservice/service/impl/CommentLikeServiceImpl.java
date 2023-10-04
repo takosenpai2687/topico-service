@@ -18,6 +18,26 @@ public class CommentLikeServiceImpl implements CommentLikeService {
     private final CommentLikeMapper commentLikeMapper;
     private final NotificationService notificationService;
 
+    public void mapperLikeComment(Long userId, Long commentId) {
+        commentLikeMapper.insertUserLikeComment(userId, commentId);
+        commentLikeMapper.incrementCommentLikes(commentId);
+    }
+
+    public void mapperUnlikeComment(Long userId, Long commentId) {
+        commentLikeMapper.deleteUserLikePost(userId, commentId);
+        commentLikeMapper.decrementCommentLikes(commentId);
+    }
+
+    public void mapperDislikeComment(Long userId, Long commentId) {
+        commentLikeMapper.insertDislikeForComment(userId, commentId);
+        commentLikeMapper.incrementDislikeForComment(commentId);
+    }
+
+    public void mapperUnDislikeComment(Long userId, Long commentId) {
+      commentLikeMapper.deleteDislikeForComment(userId, commentId);
+      commentLikeMapper.decrementDislikeForComment(commentId);
+    }
+
     @Override
     @Transactional
     public LikeVO likeComment(Long userId, Long commentId) {
@@ -28,9 +48,9 @@ public class CommentLikeServiceImpl implements CommentLikeService {
         }
         // Already disliked before: remove dislike first
         if (commentLikedStatus != null) {
-            commentLikeMapper.unDislikeComment(userId, commentId);
+            this.mapperUnDislikeComment(userId, commentId);
         }
-        commentLikeMapper.likeComment(userId, commentId);
+        this.mapperLikeComment(userId, commentId);
         // Send notification
         notificationService.sendLikeCommentNotification(userId, commentId, true);
         // Build result
@@ -52,7 +72,7 @@ public class CommentLikeServiceImpl implements CommentLikeService {
             throw new BadRequestException("Comment already unliked");
         }
         // Liked before: unlike it
-        commentLikeMapper.unlikeComment(userId, commentId);
+        this.mapperUnlikeComment(userId, commentId);
         // Send unlike notification
         notificationService.sendLikeCommentNotification(userId, commentId, false);
         // Build result
@@ -75,11 +95,11 @@ public class CommentLikeServiceImpl implements CommentLikeService {
         }
         // Already liked before: remove like first
         if (commentLikedStatus != null) {
-            commentLikeMapper.unlikeComment(userId, commentId);
+            this.mapperUnlikeComment(userId, commentId);
             // Send unlike notification
             notificationService.sendLikeCommentNotification(userId, commentId, false);
         }
-        commentLikeMapper.dislikeComment(userId, commentId);
+        this.mapperDislikeComment(userId, commentId);
         // Build result
         Boolean likedStatus = commentLikeMapper.getCommentLikedStatus(userId, commentId);
         return LikeVO.builder()
@@ -99,7 +119,7 @@ public class CommentLikeServiceImpl implements CommentLikeService {
             throw new BadRequestException("Comment already un-disliked");
         }
         // Disliked before: unDislike it
-        commentLikeMapper.unDislikeComment(userId, commentId);
+        this.mapperUnDislikeComment(userId, commentId);
         // Build result
         Boolean likedStatus = commentLikeMapper.getCommentLikedStatus(userId, commentId);
         return LikeVO.builder()
