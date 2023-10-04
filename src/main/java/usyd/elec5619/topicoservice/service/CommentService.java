@@ -12,7 +12,7 @@ public interface CommentService {
 
     Pager<CommentVO> getCommentsByPostId(Long postId, Integer page, Integer size, SortBy sortBy);
 
-    Pager<CommentVO> getCommentsWithReplyByPostId(Long postId, Integer page, Integer size, SortBy sortBy);
+    Pager<CommentVO> getCommentsWithReplyByPostId(Long postId, Integer page, Integer size);
 
     CommentVO createComment(Long userId, CreateCommentDto createCommentDto);
 

@@ -37,27 +37,32 @@ public class CommentServiceImpl implements CommentService {
     private final UserMapper userMapper;
 
     @Override
-    //TODO: should be only comments or includes replies? any order rules?
+    //TODO:  only comments, do not includes replies,  any order rules on likes?
+    /*
+    在评论可以翻页，每页显示10条的情况下，回复不能同时翻页，只能最多显示前10条回复(可设置)，如果回复超过10条，需要点击评论/显示“查看更多回复”按钮，点击后显示所有回复。
+     */
     public Pager<CommentVO> getCommentsByUserId(Long userId, Integer page, Integer size) {
-        final Integer offset = (page - 1) * size;
+        final Integer offset = (page ) * size;
         List<Comment> commentList = commentMapper.getCommentsByUserId(userId, offset, size);
         Integer total = commentMapper.countCommentsByUserId(userId);
-        return Pager.<CommentVO>builder().data(this.convertCommentToCommentVO(commentList)).page(page).size(size).total(total).build();
+        return Pager.<CommentVO>builder().data(this.convertCommentToCommentVO(commentList, offset, size)).page(page).size(size).total(total).build();
     }
 
     @Override
+    //TODO: only comments, do not includes replies
     public Pager<CommentVO> getCommentsByPostId(Long postId, Integer page, Integer size, SortBy sortBy) {
         final Integer offset = (page - 1) * size;
-        List<CommentVO> commentVOList = sortBy.equals(SortBy.MOST_LIKES) ? commentMapper.getHotCommentsByPostId(postId, offset, size) : commentMapper.getNewCommentsByPostId(postId, offset, size);
+        List<Comment> commentList = commentMapper.getHotAndNewCommentsByPostId(postId, offset, size);
         Integer total = commentMapper.countCommentsByPostId(postId);
-        return Pager.<CommentVO>builder().data(commentVOList).page(page).size(size).total(total).build();
+        return Pager.<CommentVO>builder().data(this.convertCommentToCommentVO(commentList, offset, size)).page(page).size(size).total(total).build();
     }
 
     @Override
-    //TODO: check replies for single comment?
-    public Pager<CommentVO> getCommentsWithReplyByPostId(Long postId, Integer page, Integer size, SortBy sortBy) {
+    //TODO: check replies for single comment, when click the comment, show its replies
+    public Pager<CommentVO> getCommentsWithReplyByPostId(Long postId, Integer page, Integer size) {
         final Integer offset = (page - 1) * size;
-        return null;
+        return Pager.<CommentVO>builder()
+        .build();
     }
 
 
@@ -109,7 +114,6 @@ public class CommentServiceImpl implements CommentService {
                 .postId(newComment.getPostId())
                 .postTitle(postMapper.getPostTitleById(newComment.getPostId()))
                 .author(author)
-              //  .children(convertCommentToCommentVO(commentMapper.getRepliesByCommentId(commentId)))
                 .content(newComment.getContent())
                 .likes(newComment.getLikes())
                 .dislikes(newComment.getDislikes())
@@ -120,7 +124,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     //TODO: only check comments to show its children(reply)?
-    public List<CommentVO> convertCommentToCommentVO(List<Comment> comments) {
+    public List<CommentVO> convertCommentToCommentVO(List<Comment> comments, Integer offset, Integer size) {
         List<CommentVO> commentVOs = new ArrayList<>();
         for (Comment comment : comments) {
             User author = userMapper.getUserById(comment.getAuthorId()).orElseThrow(() -> new NotFoundException("Author not found"));
@@ -129,6 +133,7 @@ public class CommentServiceImpl implements CommentService {
                     .postId(comment.getPostId())
                     .postTitle(postMapper.getPostTitleById(comment.getPostId()))
                     .author(author)
+                    .children(convertCommentToCommentVO(commentMapper.getRepliesByCommentId(comment.getId(),0, 10), offset, size))
                     .content(comment.getContent())
                     .likes(comment.getLikes())
                     .dislikes(comment.getDislikes())
@@ -187,10 +192,8 @@ public void deleteComment(Long userId, Long commentId) {
         commentMapper.decrementReplyToComment(comment.getParentId());
     }
 
-    // Delete likes or dislikes related to this comment
     commentLikeMapper.deleteCommentLikesOrDislikes(commentId);
 
-    // Delete the comment itself
     commentMapper.deleteOne(commentId);
 }
 

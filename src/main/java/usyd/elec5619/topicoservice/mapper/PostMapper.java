@@ -18,8 +18,6 @@ public interface PostMapper {
     @Select("SELECT COUNT(id) FROM t_post WHERE author_id = #{userId}")
     Integer countPostsByUserId(Long userId);
 
-//    @Select("SELECT image_uuid FROM t_post_image WHERE post_id = #{id}")
-//    List<String> getImageUuidsByPostId(Long id);
     @Select("SELECT id FROM t_post_image WHERE post_id = #{id}")
     List<String> getImagesByPostId(Long id);
 

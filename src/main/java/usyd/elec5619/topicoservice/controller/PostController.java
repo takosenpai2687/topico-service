@@ -6,10 +6,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import usyd.elec5619.topicoservice.dto.post.CreatePostDto;
 import usyd.elec5619.topicoservice.pojo.CommonResponse;
+import usyd.elec5619.topicoservice.service.CommentService;
 import usyd.elec5619.topicoservice.service.PostLikeService;
 import usyd.elec5619.topicoservice.service.PostService;
 import usyd.elec5619.topicoservice.service.UserService;
+import usyd.elec5619.topicoservice.type.SortBy;
+import usyd.elec5619.topicoservice.vo.CommentVO;
 import usyd.elec5619.topicoservice.vo.LikeVO;
+import usyd.elec5619.topicoservice.vo.Pager;
 import usyd.elec5619.topicoservice.vo.PostVO;
 
 @RestController()
@@ -20,6 +24,7 @@ public class PostController {
     private final PostService postService;
     private final UserService userService;
     private final PostLikeService postLikeService;
+    private final CommentService commentService;
 
     @GetMapping("/{id}")
     public CommonResponse<PostVO> getPostVOById(@Valid @PathVariable("id") Long postId) {
@@ -74,5 +79,11 @@ public class PostController {
         final Long userId = userService.emailToId(email);
         LikeVO likeVO = postLikeService.unDislikePost(userId, postId);
         return CommonResponse.success(likeVO);
+    }
+
+    @GetMapping("/post_comments/{postId}")
+    public CommonResponse<Pager<CommentVO>> getPostComments(@PathVariable Long postId, @RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "10") Integer size, @RequestParam(defaultValue = "MOST_LIKES") SortBy sortBy) {
+        final Pager<CommentVO> comments = commentService.getCommentsByPostId(postId, page, size, sortBy);
+        return CommonResponse.success(comments);
     }
 }
