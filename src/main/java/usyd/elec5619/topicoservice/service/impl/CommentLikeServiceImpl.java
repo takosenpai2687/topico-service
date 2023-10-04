@@ -19,23 +19,23 @@ public class CommentLikeServiceImpl implements CommentLikeService {
     private final NotificationService notificationService;
 
     public void mapperLikeComment(Long userId, Long commentId) {
-        commentLikeMapper.insertUserLikeComment(userId, commentId);
+        commentLikeMapper.insertLikeComment(userId, commentId);
         commentLikeMapper.incrementCommentLikes(commentId);
     }
 
     public void mapperUnlikeComment(Long userId, Long commentId) {
-        commentLikeMapper.deleteUserLikePost(userId, commentId);
+        commentLikeMapper.deleteLikeComment(userId, commentId);
         commentLikeMapper.decrementCommentLikes(commentId);
     }
 
     public void mapperDislikeComment(Long userId, Long commentId) {
-        commentLikeMapper.insertDislikeForComment(userId, commentId);
-        commentLikeMapper.incrementDislikeForComment(commentId);
+        commentLikeMapper.insertDislikeComment(userId, commentId);
+        commentLikeMapper.incrementCommentDislike(commentId);
     }
 
     public void mapperUnDislikeComment(Long userId, Long commentId) {
-      commentLikeMapper.deleteDislikeForComment(userId, commentId);
-      commentLikeMapper.decrementDislikeForComment(commentId);
+      commentLikeMapper.deleteDislikeComment(userId, commentId);
+      commentLikeMapper.decrementCommentDislike(commentId);
     }
 
     @Override

@@ -66,7 +66,7 @@ public class HomeController {
     }
 
     @GetMapping("/my_comments")
-    public CommonResponse<Pager<CommentVO>> getMyComments(Authentication authentication, @Valid @RequestParam(required = false, defaultValue = "0") Integer page, @Valid @RequestParam(required = false, defaultValue = "10") Integer size) {
+    public CommonResponse<Pager<CommentVO>> getMyComments(Authentication authentication, @Valid @RequestParam(required = false, defaultValue = "1") Integer page, @Valid @RequestParam(required = false, defaultValue = "10") Integer size) {
         final String email = authentication.getName();
         final Long userId = userService.emailToId(email);
         Pager<CommentVO> comments = commentService.getCommentsByUserId(userId, page, size);

@@ -8,6 +8,7 @@ import usyd.elec5619.topicoservice.dto.comment.CreateCommentDto;
 import usyd.elec5619.topicoservice.exception.http.BadRequestException;
 import usyd.elec5619.topicoservice.exception.http.InternalException;
 import usyd.elec5619.topicoservice.exception.http.NotFoundException;
+import usyd.elec5619.topicoservice.mapper.CommentLikeMapper;
 import usyd.elec5619.topicoservice.mapper.CommentMapper;
 import usyd.elec5619.topicoservice.mapper.PostMapper;
 import usyd.elec5619.topicoservice.mapper.UserMapper;
@@ -30,17 +31,18 @@ import java.util.Objects;
 public class CommentServiceImpl implements CommentService {
 
     private final CommentMapper commentMapper;
+    private final CommentLikeMapper commentLikeMapper;
     private final PostMapper postMapper;
     private final NotificationService notificationService;
     private final UserMapper userMapper;
 
     @Override
-    //TODO: should be only comments or includes replies?
+    //TODO: should be only comments or includes replies? any order rules?
     public Pager<CommentVO> getCommentsByUserId(Long userId, Integer page, Integer size) {
-        final Integer offset = page * size;
-        List<CommentVO> commentVOList = commentMapper.getCommentsByUserId(userId, offset, size);
+        final Integer offset = (page - 1) * size;
+        List<Comment> commentList = commentMapper.getCommentsByUserId(userId, offset, size);
         Integer total = commentMapper.countCommentsByUserId(userId);
-        return Pager.<CommentVO>builder().data(commentVOList).page(page).size(size).total(total).build();
+        return Pager.<CommentVO>builder().data(this.convertCommentToCommentVO(commentList)).page(page).size(size).total(total).build();
     }
 
     @Override
@@ -50,6 +52,14 @@ public class CommentServiceImpl implements CommentService {
         Integer total = commentMapper.countCommentsByPostId(postId);
         return Pager.<CommentVO>builder().data(commentVOList).page(page).size(size).total(total).build();
     }
+
+    @Override
+    //TODO: check replies for single comment?
+    public Pager<CommentVO> getCommentsWithReplyByPostId(Long postId, Integer page, Integer size, SortBy sortBy) {
+        final Integer offset = (page - 1) * size;
+        return null;
+    }
+
 
     @Override
     @Transactional
@@ -132,18 +142,57 @@ public class CommentServiceImpl implements CommentService {
     }
 
 
-    @Override
-    public void deleteComment(Long userId, Long commentId) {
-        Comment comment = commentMapper.getCommentById(commentId).orElseThrow(() -> new NotFoundException("Comment not found"));
-        if (!comment.getAuthorId().equals(userId)) {
-            throw new BadRequestException("not your comment");
-        }
-        // Delete all replies
-        if (comment.getParentId() == null) {
-            commentMapper.getRepliesByCommentId(commentId).parallelStream().forEach(reply -> deleteComment(userId, reply.getId()));
-        }
-        commentMapper.deleteOne(commentId);
+//    @Override
+//    @Transactional
+//    public void deleteComment(Long userId, Long commentId) {
+//        Comment comment = commentMapper.getCommentById(commentId).orElseThrow(() -> new NotFoundException("Comment not found"));
+//        if (!comment.getAuthorId().equals(userId)) {
+//            throw new BadRequestException("not your comment");
+//        }
+//        // Delete all likes of comment  and its replies in t_comment_like when delete a comment
+//        // Delete all replies
+//        List<Long> commentsAndRepliesIds = new ArrayList<>();
+//        //if it is a comment
+//        if (comment.getParentId() == null) {
+//            commentMapper.getRepliesByCommentId(commentId).parallelStream().forEach(reply -> deleteComment(userId, reply.getId()));
+//            commentsAndRepliesIds = commentMapper.getRepliesIdByCommentId(commentId);
+//        }else{
+//            //if it is just a reply
+//            commentMapper.decrementReplyToComment(comment.getParentId());
+//        }
+//            commentsAndRepliesIds.add(commentId);
+//        for (Long id : commentsAndRepliesIds) {
+//            commentLikeMapper.deleteCommentLikesOrDislikes(id);
+//        }
+//
+//        commentMapper.deleteOne(commentId);
+//    }
+@Override
+@Transactional
+public void deleteComment(Long userId, Long commentId) {
+    Comment comment = commentMapper.getCommentById(commentId).orElseThrow(() -> new NotFoundException("Comment not found"));
+    if (!comment.getAuthorId().equals(userId)) {
+        throw new BadRequestException("not your comment");
     }
+
+    // Delete all likes of comment and its replies in t_comment_like when delete a comment
+    // If the comment has replies, delete all the replies
+    if (comment.getParentId() == null) {
+        List<Long> replyIds = commentMapper.getRepliesIdByCommentId(commentId);
+        for (Long replyId : replyIds) {
+            deleteComment(userId, replyId);
+        }
+    } else {
+        // If it's just a reply, decrement the reply count of the parent comment
+        commentMapper.decrementReplyToComment(comment.getParentId());
+    }
+
+    // Delete likes or dislikes related to this comment
+    commentLikeMapper.deleteCommentLikesOrDislikes(commentId);
+
+    // Delete the comment itself
+    commentMapper.deleteOne(commentId);
+}
 
     @Override
     public void deleteAllCommentsByPostId(Long id) {

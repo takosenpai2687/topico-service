@@ -2,6 +2,8 @@ package usyd.elec5619.topicoservice.mapper;
 
 import org.apache.ibatis.annotations.*;
 
+import java.util.List;
+
 @Mapper
 public interface CommentLikeMapper {
     @Select("SELECT liked FROM t_user_like_comment WHERE user_id = #{userId} AND comment_id = #{commentId}")
@@ -13,7 +15,7 @@ public interface CommentLikeMapper {
 //            "</script>"})
 //    void likeComment(Long userId, Long commentId);
     @Insert("insert into t_user_like_comment (user_id, comment_id, liked) values (#{userId}, #{commentId}, 1)")
-    void insertUserLikeComment(Long userId, Long commentId);
+    void insertLikeComment(Long userId, Long commentId);
 
     @Update("update t_comment set likes = likes + 1 where id = #{commentId}")
     void incrementCommentLikes(Long commentId);
@@ -28,7 +30,7 @@ public interface CommentLikeMapper {
 //    })
 //    void unlikeComment(Long userId, Long commentId);
     @Delete("delete from t_user_like_comment where user_id = #{userId} and comment_id = #{commentId}")
-    void deleteUserLikePost(Long userId, Long commentId);
+    void deleteLikeComment(Long userId, Long commentId);
     @Update("update t_comment set likes = likes - 1 where id = #{commentId}")
     void decrementCommentLikes(Long commentId);
 
@@ -40,10 +42,10 @@ public interface CommentLikeMapper {
 //            "</script>"})
 //    void dislikeComment(Long userId, Long commentId);
     @Insert("insert into t_user_like_comment (user_id, comment_id, liked) values (#{userId}, #{commentId}, 0);")
-    void insertDislikeForComment(Long userId, Long commentId);
+    void insertDislikeComment(Long userId, Long commentId);
 
     @Update("update t_comment set dislikes = dislikes + 1 where id = #{commentId};")
-    void incrementDislikeForComment(Long commentId);
+    void incrementCommentDislike(Long commentId);
 
 
 //
@@ -55,10 +57,10 @@ public interface CommentLikeMapper {
 //    })
 //    void unDislikeComment(Long userId, Long commentId);
     @Delete("delete from t_user_like_comment where user_id = #{userId} and comment_id = #{commentId};")
-    void deleteDislikeForComment(Long userId, Long commentId);
+    void deleteDislikeComment(Long userId, Long commentId);
 
     @Update("update t_comment set dislikes = dislikes - 1 where id = #{commentId};")
-    void decrementDislikeForComment(Long commentId);
+    void decrementCommentDislike(Long commentId);
 
 
 
@@ -67,4 +69,19 @@ public interface CommentLikeMapper {
 
     @Select("SELECT dislikes from t_comment where id = #{commentId}")
     Integer getCommentDislikes(Long commentId);
+
+//    @Delete({
+//            "<script>",
+//            "DELETE FROM t_user_like_comment ",
+//            "WHERE comment_id IN",
+//            "<foreach item='id' collection='list' open='(' separator=',' close=')'>",
+//            "#{id}",
+//            "</foreach>",
+//            "</script>"
+//    })
+//    void deleteMultipleCommentLikesOrDislikes(List<Long> commentIds);
+    @Delete("DELETE FROM t_user_like_comment WHERE comment_id = #{commentId}")
+    void deleteCommentLikesOrDislikes(Long commentId);
+
+
 }
