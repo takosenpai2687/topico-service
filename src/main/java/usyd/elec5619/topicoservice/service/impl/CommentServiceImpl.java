@@ -24,6 +24,7 @@ import usyd.elec5619.topicoservice.vo.Pager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -42,7 +43,7 @@ public class CommentServiceImpl implements CommentService {
     在评论可以翻页，每页显示10条的情况下，回复不能同时翻页，只能最多显示前10条回复(可设置)，如果回复超过10条，需要点击评论/显示“查看更多回复”按钮，点击后显示所有回复。
      */
     public Pager<CommentVO> getCommentsByUserId(Long userId, Integer page, Integer size) {
-        final Integer offset = (page ) * size;
+        final Integer offset = (page -1 ) * size;
         List<Comment> commentList = commentMapper.getCommentsByUserId(userId, offset, size);
         Integer total = commentMapper.countCommentsByUserId(userId);
         return Pager.<CommentVO>builder().data(this.convertCommentToCommentVO(commentList, offset, size)).page(page).size(size).total(total).build();
@@ -52,6 +53,10 @@ public class CommentServiceImpl implements CommentService {
     //TODO: only comments, do not includes replies
     public Pager<CommentVO> getCommentsByPostId(Long postId, Integer page, Integer size, SortBy sortBy) {
         final Integer offset = (page - 1) * size;
+        Optional<Post> optionalPost = postMapper.getPostById(postId);
+        if (!optionalPost.isPresent()) {
+            throw new NotFoundException("Post not found");
+        }
         List<Comment> commentList = commentMapper.getHotAndNewCommentsByPostId(postId, offset, size);
         Integer total = commentMapper.countCommentsByPostId(postId);
         return Pager.<CommentVO>builder().data(this.convertCommentToCommentVO(commentList, offset, size)).page(page).size(size).total(total).build();
@@ -59,10 +64,28 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     //TODO: check replies for single comment, when click the comment, show its replies
-    public Pager<CommentVO> getCommentsWithReplyByPostId(Long postId, Integer page, Integer size) {
+    public Pager<CommentVO> getSingleCommentRepliesByPostId(Long commentId, Integer page, Integer size) {
         final Integer offset = (page - 1) * size;
+        Optional<Comment> optionalComment = commentMapper.getCommentById(commentId);
+        if (!optionalComment.isPresent()) {
+            throw new NotFoundException("Comment not found");
+        }
+        if (optionalComment.get().getParentId() != null) {
+            throw new BadRequestException("Not a comment");
+        }
+        List<Comment> replyList = commentMapper.getRepliesByCommentId(commentId, offset, size);
+        if (replyList == null || replyList.isEmpty()) {
+            throw new NotFoundException("This comment has no reply");
+        }
+
+        Integer total = commentMapper.countRepliesByCommentId(commentId);
+        List<CommentVO> replyVOList = this.convertCommentToCommentVO(replyList, offset, size);
         return Pager.<CommentVO>builder()
-        .build();
+                .data(replyVOList)
+                .page(page)
+                .size(size)
+                .total(total)
+                .build();
     }
 
 
@@ -76,7 +99,7 @@ public class CommentServiceImpl implements CommentService {
         if (createCommentDto.getParentId() != null &&
                 commentMapper.getCommentIdsByPostId(postId).stream()
                         .noneMatch(id -> id.equals(createCommentDto.getParentId()))) {
-            throw new BadRequestException("Parent comment does not belong to this post");
+            throw new BadRequestException("Parent comment  does not exist or does not belong to this post");
         }
 
         if (!Objects.equals(createCommentDto.getReplyToUserId(), postMapper.getAuthorIdByPostId(postId))) {

@@ -11,6 +11,7 @@ import usyd.elec5619.topicoservice.service.CommentLikeService;
 import usyd.elec5619.topicoservice.service.UserService;
 import usyd.elec5619.topicoservice.vo.CommentVO;
 import usyd.elec5619.topicoservice.vo.LikeVO;
+import usyd.elec5619.topicoservice.vo.Pager;
 
 @RestController()
 @RequestMapping("/api/v1/comments")
@@ -37,6 +38,12 @@ public class CommentController {
         final Long userId = userService.emailToId(email);
         commentService.deleteComment(userId, commentId);
         return CommonResponse.success();
+    }
+
+    @GetMapping("/{id}")
+    public CommonResponse<Pager<CommentVO>> getCommentReplies(@Valid @PathVariable("id") Long commentId,  @RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "10") Integer size) {
+        final Pager<CommentVO> commentWithRepliesVO = commentService.getSingleCommentRepliesByPostId(commentId, page, size);
+        return CommonResponse.success(commentWithRepliesVO);
     }
 
     /**
