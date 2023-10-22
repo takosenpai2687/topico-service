@@ -40,8 +40,8 @@ admin:
 
 jwt:
   secret: elec5619elec5619elec5619elec5619elec5619elec5619elec5619elec5619elec5619elec5619elec5619elec5619
-  # 7 days
-  expire-ms: 604800_000
+  # 700 days
+  expire-ms: 604800_000_00
 
 scheduled:
   updateTopSearch: 60_000  # 1 minute

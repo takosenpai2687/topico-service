@@ -36,7 +36,7 @@ CREATE TABLE `t_community`
 CREATE TABLE `t_image`
 (
     `id`    int          NOT NULL AUTO_INCREMENT,
-    `data`  blob         NOT NULL,
+    `data`  longblob     NOT NULL,
     `md5`   varchar(255) NOT NULL,
     `ext`   varchar(255) NOT NULL,
     `ctime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -46,17 +46,17 @@ CREATE TABLE `t_image`
 
 CREATE TABLE `t_notification`
 (
-    `id`                  int     NOT NULL AUTO_INCREMENT,
+    `id`                  int         NOT NULL AUTO_INCREMENT,
     `type`                VARCHAR(50) NOT NULL,
-    `sender_id`           int     NOT NULL,
-    `receiver_id`         int     NOT NULL,
-    `post_id`             int     NULL,
-    `comment_id`          int     NULL,
-    `reply_to_comment_id` int     NULL,
-    `content`             text    NULL,
-    `unread`              tinyint NOT NULL DEFAULT 1,
-    `ctime`               TIMESTAMP        DEFAULT CURRENT_TIMESTAMP,
-    `utime`               TIMESTAMP        DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `sender_id`           int         NOT NULL,
+    `receiver_id`         int         NOT NULL,
+    `post_id`             int         NULL,
+    `comment_id`          int         NULL,
+    `reply_to_comment_id` int         NULL,
+    `content`             text        NULL,
+    `unread`              tinyint     NOT NULL DEFAULT 1,
+    `ctime`               TIMESTAMP            DEFAULT CURRENT_TIMESTAMP,
+    `utime`               TIMESTAMP            DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 );
 
