@@ -124,4 +124,9 @@ public class CommunityServiceImpl implements CommunityService {
         communityMapper.unfollowCommunityForAllUsers(communityId);
         communityMapper.deleteOne(communityId);
     }
+
+    @Override
+    public Community getCommunity(Long communityId) {
+        return communityMapper.getCommunityById(communityId);
+    }
 }

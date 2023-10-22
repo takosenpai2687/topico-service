@@ -33,4 +33,6 @@ public interface CommunityService {
     Community updateCommunity(Long communityId, UpdateCommunityDto updateCommunityDto);
 
     void deleteCommunity(Long communityId);
+
+    Community getCommunity(Long communityId);
 }
