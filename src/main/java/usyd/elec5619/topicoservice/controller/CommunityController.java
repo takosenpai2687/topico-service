@@ -2,6 +2,7 @@ package usyd.elec5619.topicoservice.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import usyd.elec5619.topicoservice.exception.http.NotFoundException;
@@ -13,12 +14,15 @@ import usyd.elec5619.topicoservice.service.CommunityService;
 import usyd.elec5619.topicoservice.service.PostService;
 import usyd.elec5619.topicoservice.service.UserService;
 import usyd.elec5619.topicoservice.type.SortBy;
+import usyd.elec5619.topicoservice.util.LevelUtil;
+import usyd.elec5619.topicoservice.vo.CheckinVO;
 import usyd.elec5619.topicoservice.vo.Pager;
 import usyd.elec5619.topicoservice.vo.PostVO;
 
 @RestController()
 @RequestMapping("/api/v1/communities")
 @RequiredArgsConstructor
+@Slf4j
 public class CommunityController {
 
     private final UserService userService;
@@ -40,7 +44,14 @@ public class CommunityController {
         final Long userId = userService.emailToId(email);
         UserCommunity userCommunity = communityService.getUserCommunity(userId, communityId);
         return CommonResponse.success(userCommunity);
-        //TODO ??
+    }
+
+    @GetMapping("/checkin/{communityId}")
+    public CommonResponse<CheckinVO> getCheckin(Authentication authentication, @Valid @PathVariable Long communityId) {
+        final String email = authentication.getName();
+        final Long userId = userService.emailToId(email);
+        final CheckinVO checkinVO = checkinService.getCheckin(userId, communityId);
+        return CommonResponse.success(checkinVO);
     }
 
     @PostMapping("/checkin/{communityId}")
@@ -71,6 +82,19 @@ public class CommunityController {
     @GetMapping("/community_posts/{communityId}")
     public CommonResponse<Pager<PostVO>> getCommunityPosts(@PathVariable Long communityId, @RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "10") Integer size, @RequestParam(defaultValue = "MOST_LIKES") SortBy sortBy) {
         final Pager<PostVO> posts = postService.getPostsByCommunityId(communityId, page, size, sortBy);
+        log.info("getting trending posts: {}", posts);
         return CommonResponse.success(posts);
+    }
+
+    @GetMapping("/rank_by_size/{communityId}")
+    public CommonResponse<Integer> getRankBySize(@PathVariable Long communityId) {
+        final Integer rank = communityService.getRankBySize(communityId);
+        return CommonResponse.success(rank);
+    }
+
+    @GetMapping("/next_exp")
+    public CommonResponse<Integer> getNextExp(@RequestParam("level") Integer level) {
+        final Integer nextExp = LevelUtil.maxExpAtLevel(level);
+        return CommonResponse.success(nextExp);
     }
 }

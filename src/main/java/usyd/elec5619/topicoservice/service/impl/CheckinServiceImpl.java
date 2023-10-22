@@ -10,11 +10,11 @@ import usyd.elec5619.topicoservice.model.UserCommunity;
 import usyd.elec5619.topicoservice.service.CheckinService;
 import usyd.elec5619.topicoservice.util.BitUtil;
 import usyd.elec5619.topicoservice.util.LevelUtil;
+import usyd.elec5619.topicoservice.vo.CheckinVO;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 @Slf4j
@@ -79,6 +79,21 @@ public class CheckinServiceImpl implements CheckinService {
         }
         // Update checkin bit maps
         checkinMapper.checkinForAll(checkinQueue.parallelStream().toList());
+    }
+
+    @Override
+    public CheckinVO getCheckin(Long userId, Long communityId) {
+        UserCommunity userCommunity = checkinMapper.getUserCommunity(userId, communityId);
+        if (userCommunity == null) {
+            throw new BadRequestException("You are not a member of this community");
+        }
+        final int checkinBitmap = userCommunity.getCheckin();
+        int todayIdx = LocalDate.now().getDayOfMonth() - 1;
+        final int checkinDays = BitUtil.countBitsBeforeIth(checkinBitmap, todayIdx);
+        return CheckinVO.builder()
+                        .isCheckedToday(isCheckedInAtDay(checkinBitmap, todayIdx))
+                        .checkinDays(checkinDays)
+                        .build();
     }
 
 

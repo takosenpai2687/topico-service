@@ -35,4 +35,6 @@ public interface CommunityService {
     void deleteCommunity(Long communityId);
 
     Community getCommunity(Long communityId);
+
+    Integer getRankBySize(Long communityId);
 }

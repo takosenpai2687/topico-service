@@ -69,4 +69,6 @@ public interface CommunityMapper {
     @Select("SELECT * FROM t_community WHERE name = #{communityName}")
     Optional<Community> getCommunityByName(String communityName);
 
+    @Select("SELECT DENSE_RANK() OVER (ORDER BY followers DESC) FROM t_community WHERE id = #{communityId}")
+    Integer getRankBySize(Long communityId);
 }

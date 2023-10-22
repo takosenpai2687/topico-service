@@ -32,7 +32,7 @@ public class PostController {
         return CommonResponse.success(post);
     }
 
-    @PostMapping("/")
+    @PostMapping()
     public CommonResponse<PostVO> createPost(Authentication authentication, @Valid @RequestBody CreatePostDto createPostDto) {
         final String email = authentication.getName();
         final Long userId = userService.emailToId(email);

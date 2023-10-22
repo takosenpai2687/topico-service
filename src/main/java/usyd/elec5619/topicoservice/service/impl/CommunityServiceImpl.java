@@ -66,6 +66,7 @@ public class CommunityServiceImpl implements CommunityService {
     }
 
     @Override
+    @Transactional
     public void unfollow(Long userId, Long communityId) {
         if (!communityMapper.isUserFollowingCommunity(userId, communityId)) {
             throw new BadRequestException("User has not followed this community");
@@ -128,5 +129,10 @@ public class CommunityServiceImpl implements CommunityService {
     @Override
     public Community getCommunity(Long communityId) {
         return communityMapper.getCommunityById(communityId);
+    }
+
+    @Override
+    public Integer getRankBySize(Long communityId) {
+        return communityMapper.getRankBySize(communityId);
     }
 }

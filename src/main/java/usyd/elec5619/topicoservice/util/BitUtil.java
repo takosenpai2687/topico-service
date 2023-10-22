@@ -35,11 +35,25 @@ public class BitUtil {
         return booleanList;
     }
 
-//    public static void main(String[] args) {
-//        int checkin = 0;
-//        checkin = setBit(checkin, 0);   // 1
-//        checkin = setBit(checkin, 4);   // 5
-//        checkin = setBit(checkin, 30);  // 31
-//        System.out.println(toBooleanList(checkin));
-//    }
+    public static int countBitsBeforeIth(int bitMap, int i) {
+        if (i < 0 || i >= 32) {
+            throw new IllegalArgumentException("Position must be between 0 and 31");
+        }
+
+        int count = 0;
+
+        int mask = (1 << (i + 1)) - 1; // This creates a number with 'i+1' rightmost bits set.
+
+        // Apply the mask to the bitMap, so we only consider bits from 0 to i.
+        int maskedMap = bitMap & mask;
+
+        // Count the number of 1 bits in the masked portion.
+        while (maskedMap != 0) {
+            count += (maskedMap & 1); // Check the rightmost bit and add it to the count if it's set.
+            maskedMap >>>= 1; // Shift the bits to the right, preparing the next bit for checking.
+        }
+
+        return count;
+    }
+
 }

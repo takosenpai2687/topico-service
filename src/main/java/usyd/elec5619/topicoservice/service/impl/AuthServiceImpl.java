@@ -60,6 +60,7 @@ public class AuthServiceImpl implements AuthService {
                         .password(passwordEncoder.encode(password))
                         .role(Role.ROLE_USER)
                         .gender(Gender.NOT_KNOWN)
+                        .avatar(1L)
                         .build();
         userMapper.insertOne(user);
         final Long generatedId = user.getId();

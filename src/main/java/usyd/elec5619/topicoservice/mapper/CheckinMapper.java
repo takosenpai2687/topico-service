@@ -12,7 +12,7 @@ public interface CheckinMapper {
     @Select("SELECT * FROM t_user_community WHERE user_id = #{userId} AND community_id = #{communityId}")
     UserCommunity getUserCommunity(Long userId, Long communityId);
 
-    @Update("UPDATE t_user_community SET checkin = #{checkin}, exp = #{exp} WHERE user_id = #{userId} AND community_id = #{communityId}")
+    @Update("UPDATE t_user_community SET checkin = #{checkin}, exp = #{exp}, level = #{level} WHERE user_id = #{userId} AND community_id = #{communityId}")
     void checkin(UserCommunity userCommunity);
 
     @Select("SELECT * FROM t_user_community WHERE user_id = #{userId}")
@@ -22,7 +22,7 @@ public interface CheckinMapper {
             "<script>",
             "<foreach collection='list' item='userCommunity' separator=';'>",
             "UPDATE t_user_community ",
-            "SET checkin = #{userCommunity.checkin}, exp = #{userCommunity.exp}",
+            "SET checkin = #{userCommunity.checkin}, exp = #{userCommunity.exp}, level = #{level}",
             "WHERE user_id = #{userCommunity.userId}",
             "AND community_id = #{userCommunity.communityId}",
             "</foreach>",

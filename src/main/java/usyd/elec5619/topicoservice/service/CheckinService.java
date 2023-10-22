@@ -1,6 +1,7 @@
 package usyd.elec5619.topicoservice.service;
 
 import org.springframework.stereotype.Service;
+import usyd.elec5619.topicoservice.vo.CheckinVO;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,4 +13,6 @@ public interface CheckinService {
     List<Boolean> getCheckinRecordsThisMonth(Long userId, Long communityId);
 
     void checkinForAll(Long userId);
+
+    CheckinVO getCheckin(Long userId, Long communityId);
 }
