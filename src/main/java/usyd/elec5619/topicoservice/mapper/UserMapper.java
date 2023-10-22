@@ -15,7 +15,7 @@ public interface UserMapper {
     @Select("SELECT id FROM t_user WHERE email = #{email}")
     Optional<Long> emailToId(String email);
 
-    @Insert("INSERT INTO t_user (email, nick_name, password, gender, role) " + "VALUES (#{email}, #{nickName}, #{password}, #{gender}, #{role})")
+    @Insert("INSERT INTO t_user (email, nick_name, password, gender, role, avatar) " + "VALUES (#{email}, #{nickName}, #{password}, #{gender}, #{role}, #{avatar})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     void insertOne(User user);
 
