@@ -15,6 +15,8 @@ import usyd.elec5619.topicoservice.vo.CheckinVO;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 
 @Service
 @Slf4j
@@ -63,7 +65,7 @@ public class CheckinServiceImpl implements CheckinService {
         // Get today idx
         int todayIdx = LocalDate.now().getDayOfMonth() - 1;
         // Update checkin bit maps and exp
-        ConcurrentLinkedQueue<UserCommunity> checkinQueue = new ConcurrentLinkedQueue<>();
+        AtomicInteger checkinCount = new AtomicInteger();
         userCommunities.parallelStream()
                        .filter(userCommunity -> !BitUtil.isBitSet(userCommunity.getCheckin(), todayIdx))
                        .forEach(userCommunity -> {
@@ -71,14 +73,12 @@ public class CheckinServiceImpl implements CheckinService {
                            userCommunity.setExp(newExp);
                            userCommunity.setLevel(LevelUtil.expToLevel(newExp));
                            userCommunity.setCheckin(BitUtil.setBit(userCommunity.getCheckin(), todayIdx));
-                           checkinQueue.offer(userCommunity);
+                           checkinMapper.updateUserCommunity(userCommunity);
+                           checkinCount.incrementAndGet();
                        });
-        // No need to update
-        if (checkinQueue.isEmpty()) {
+        if (checkinCount.get() == 0) {
             throw new BadRequestException("You have already checked in today");
         }
-        // Update checkin bit maps
-        checkinMapper.checkinForAll(checkinQueue.parallelStream().toList());
     }
 
     @Override
@@ -90,10 +90,7 @@ public class CheckinServiceImpl implements CheckinService {
         final int checkinBitmap = userCommunity.getCheckin();
         int todayIdx = LocalDate.now().getDayOfMonth() - 1;
         final int checkinDays = BitUtil.countBitsBeforeIth(checkinBitmap, todayIdx);
-        return CheckinVO.builder()
-                        .isCheckedToday(isCheckedInAtDay(checkinBitmap, todayIdx))
-                        .checkinDays(checkinDays)
-                        .build();
+        return CheckinVO.builder().isCheckedToday(isCheckedInAtDay(checkinBitmap, todayIdx)).checkinDays(checkinDays).build();
     }
 
 

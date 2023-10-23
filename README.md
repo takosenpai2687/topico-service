@@ -1,5 +1,10 @@
 # topico-service
 
+## TEST: ADMIN
+
+- username: admin
+- password: 123456
+
 ## Tech Stack
 
 - Spring Boot 3.1.3
@@ -15,6 +20,17 @@
 - Open the project in IntelliJ Idea.
 - Open `pom.xml` and install the maven packages.
 - Make sure you have Docker desktop app or Docker service up and running.
+
+## Initialize data
+
+run `mock_main.py` in `src/main/python` to initialize data.
+
+Command:  
+```shell
+cd ./src/main/python
+python ./mock_main.py
+```
+
 
 ## Run in Development mode
 

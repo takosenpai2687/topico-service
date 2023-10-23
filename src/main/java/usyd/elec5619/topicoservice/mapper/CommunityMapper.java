@@ -71,4 +71,7 @@ public interface CommunityMapper {
 
     @Select("SELECT DENSE_RANK() OVER (ORDER BY followers DESC) FROM t_community WHERE id = #{communityId}")
     Integer getRankBySize(Long communityId);
+
+    @Select("SELECT level from t_user_community where user_id = #{userId} and community_id = #{communityId}")
+    Optional<Integer> getMyLevel(Long communityId);
 }

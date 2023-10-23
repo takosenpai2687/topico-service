@@ -1,5 +1,6 @@
 package usyd.elec5619.topicoservice.controller;
 
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +38,14 @@ public class CommunityController {
             throw new NotFoundException("Community not found");
         return CommonResponse.success(community);
     }
+
+    @GetMapping("/level/{communityId}")
+    @ApiResponse(responseCode = "200", description = "Returns the level of the user in the community, returns 0 if the user is not in the community")
+    public CommonResponse<Integer> getMyLevel(@Valid @PathVariable Long communityId) {
+        final Integer level = communityService.getMyLevel(communityId);
+        return CommonResponse.success(level);
+    }
+
 
     @GetMapping("/my/{communityId}")
     public CommonResponse<UserCommunity> getUserCommunity(Authentication authentication, @Valid @PathVariable Long communityId) {

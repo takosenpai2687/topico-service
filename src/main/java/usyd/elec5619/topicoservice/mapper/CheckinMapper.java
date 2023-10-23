@@ -18,15 +18,20 @@ public interface CheckinMapper {
     @Select("SELECT * FROM t_user_community WHERE user_id = #{userId}")
     List<UserCommunity> getUserCommunities(Long userId);
 
-    @Update({
-            "<script>",
-            "<foreach collection='list' item='userCommunity' separator=';'>",
-            "UPDATE t_user_community ",
-            "SET checkin = #{userCommunity.checkin}, exp = #{userCommunity.exp}, level = #{level}",
-            "WHERE user_id = #{userCommunity.userId}",
-            "AND community_id = #{userCommunity.communityId}",
-            "</foreach>",
-            "</script>"
-    })
-    void checkinForAll(List<UserCommunity> userCommunities);
+    //    @Update({
+//            "<script>",
+//            "<foreach collection='list' item='userCommunity' separator=';'>",
+//            "UPDATE t_user_community ",
+//            "SET checkin = #{userCommunity.checkin}, exp = #{userCommunity.exp}, level = #{level}",
+//            "WHERE user_id = #{userCommunity.userId}",
+//            "AND community_id = #{userCommunity.communityId}",
+//            "</foreach>",
+//            "</script>"
+//    })
+ 
+
+    @Update("UPDATE t_user_community " +
+            "SET checkin = #{checkin}, exp = #{exp}, level = #{level} " +
+            "WHERE user_id = #{userId} AND community_id = #{communityId}")
+    void updateUserCommunity(UserCommunity userCommunity);
 }

@@ -1,7 +1,9 @@
 package usyd.elec5619.topicoservice.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import usyd.elec5619.topicoservice.dto.auth.LoginDto;
@@ -14,6 +16,7 @@ import usyd.elec5619.topicoservice.vo.LoginVO;
 
 @RestController
 @RequestMapping("/api/v1/auth")
+@Slf4j
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
@@ -25,8 +28,9 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public CommonResponse<LoginVO> login(@RequestBody LoginDto loginDto) {
-        return CommonResponse.success(authService.login(loginDto));
+    public CommonResponse<LoginVO> login(@RequestBody LoginDto loginDto, HttpServletRequest request) {
+        final String clientIp = request.getRemoteAddr();
+        return CommonResponse.success(authService.login(loginDto, clientIp));
     }
 
 

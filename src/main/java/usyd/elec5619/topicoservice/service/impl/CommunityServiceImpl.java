@@ -87,13 +87,7 @@ public class CommunityServiceImpl implements CommunityService {
         if (communityMapper.getCommunityByName(communityName).isPresent()) {
             throw new BadRequestException("Community name already exists");
         }
-        Community community = Community.builder()
-                                       .name(createCommunityDto.getName())
-                                       .description(createCommunityDto.getDescription())
-                                       .followers(createCommunityDto.getFollowers())
-                                       .avatar(createCommunityDto.getAvatar())
-                                       .banner(createCommunityDto.getBanner())
-                                       .build();
+        Community community = Community.builder().name(createCommunityDto.getName()).description(createCommunityDto.getDescription()).avatar(createCommunityDto.getAvatar()).banner(createCommunityDto.getBanner()).followers(0).build();
         communityMapper.insertOne(community);
         Long id = community.getId();  //fix the id problem that always return 1: Long id = communityMapper.insertOne(community);
         return communityMapper.getCommunityById(id);
@@ -134,5 +128,14 @@ public class CommunityServiceImpl implements CommunityService {
     @Override
     public Integer getRankBySize(Long communityId) {
         return communityMapper.getRankBySize(communityId);
+    }
+
+    @Override
+    public Integer getMyLevel(Long communityId) {
+        if (communityMapper.getMyLevel(communityId).isPresent()) {
+            return communityMapper.getMyLevel(communityId).get();
+        } else {
+            return 0;
+        }
     }
 }

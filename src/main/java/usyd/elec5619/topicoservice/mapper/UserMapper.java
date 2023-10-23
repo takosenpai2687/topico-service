@@ -56,4 +56,6 @@ public interface UserMapper {
     @Update("UPDATE t_user SET password = #{password} WHERE id = #{userId}")
     void updatePassword(Long userId, String password);
 
+    @Update("UPDATE t_user SET location = #{city} WHERE id = #{id}")
+    void updateUserLocation(Long id, String city);
 }

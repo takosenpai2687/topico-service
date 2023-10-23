@@ -34,7 +34,7 @@ public class HomeController {
     }
 
     @GetMapping("/communities_recommended")
-    public CommonResponse<List<Community>> getCommunitiesRecommended(Authentication authentication, @RequestParam(required = false, defaultValue = "5") Integer limit) {
+    public CommonResponse<List<Community>> getCommunitiesRecommended(Authentication authentication, @RequestParam(required = false, defaultValue = "24") Integer limit) {
         final String email = authentication.getName();
         final Long userId = userService.emailToId(email);
         List<Community> communitiesRecommended = communityService.getCommunitiesRecommendedToUser(userId, limit);

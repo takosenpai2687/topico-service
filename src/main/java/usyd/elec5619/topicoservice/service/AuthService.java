@@ -10,7 +10,7 @@ import usyd.elec5619.topicoservice.vo.LoginVO;
 public interface AuthService {
     LoginVO signup(SignupDto signupDto);
 
-    LoginVO login(LoginDto loginDto);
+    LoginVO login(LoginDto loginDto, String ip);
 
     void updatePassword(Long id, UpdatePasswordDto updatePasswordDto);
 }

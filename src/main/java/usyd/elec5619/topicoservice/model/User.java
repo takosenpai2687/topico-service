@@ -26,7 +26,6 @@ public class User implements UserDetails {
     private Long avatar;
     private String description;
     private Role role;
-    @JsonIgnore
     private LocalDateTime ctime;
     @JsonIgnore
     private LocalDateTime utime;

@@ -14,6 +14,7 @@ import usyd.elec5619.topicoservice.mapper.UserMapper;
 import usyd.elec5619.topicoservice.model.User;
 import usyd.elec5619.topicoservice.service.AuthService;
 import usyd.elec5619.topicoservice.service.JwtService;
+import usyd.elec5619.topicoservice.service.LocationService;
 import usyd.elec5619.topicoservice.type.Gender;
 import usyd.elec5619.topicoservice.type.Role;
 import usyd.elec5619.topicoservice.vo.LoginVO;
@@ -28,6 +29,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final LocationService locationService;
 
 
     @Override
@@ -75,10 +77,11 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public LoginVO login(LoginDto loginDto) {
+    public LoginVO login(LoginDto loginDto, String clientIp) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
         var user = userMapper.getByEmail(loginDto.getEmail()).orElseThrow(() -> new IllegalArgumentException("Invalid email"));
         String token = jwtService.generateToken(user);
+        locationService.updateUserLocation(user.getId(), clientIp);
         return LoginVO.builder()
                       .id(user.getId())
                       .email(user.getEmail())

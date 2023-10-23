@@ -3,6 +3,7 @@ package usyd.elec5619.topicoservice.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import usyd.elec5619.topicoservice.dto.comment.CreateCommentDto;
@@ -17,6 +18,7 @@ import usyd.elec5619.topicoservice.vo.Pager;
 @RestController()
 @RequestMapping("/api/v1/comments")
 @RequiredArgsConstructor
+@Slf4j
 public class CommentController {
 
     private final UserService userService;
