@@ -4,17 +4,18 @@ USE `topico`;
 
 CREATE TABLE `t_comment`
 (
-    `id`               int  NOT NULL AUTO_INCREMENT,
-    `post_id`          int  NOT NULL,
-    `author_id`        int  NOT NULL,
-    `parent_id`        int  NULL,
-    `reply_to_user_id` int  NULL,
-    `content`          text NOT NULL,
-    `likes`            int  not null default 0,
-    `dislikes`         int  not null default 0,
-    `replies`          int  not null default 0,
-    `ctime`            TIMESTAMP     DEFAULT CURRENT_TIMESTAMP,
-    `utime`            TIMESTAMP     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `id`               int          NOT NULL AUTO_INCREMENT,
+    `post_id`          int          NOT NULL,
+    `author_id`        int          NOT NULL,
+    `parent_id`        int          NULL,
+    `reply_to_user_id` int          NULL,
+    `content`          text         NOT NULL,
+    `likes`            int          not null default 0,
+    `dislikes`         int          not null default 0,
+    `replies`          int          not null default 0,
+    `location`         varchar(255) NULL     DEFAULT 'Unknown',
+    `ctime`            TIMESTAMP             DEFAULT CURRENT_TIMESTAMP,
+    `utime`            TIMESTAMP             DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 );
 
@@ -72,6 +73,7 @@ CREATE TABLE `t_post`
     `dislikes`     int          NOT NULL DEFAULT 0,
     `replies`      int          not null default 0,
     `tags`         text,
+    `location`     varchar(255) NULL     DEFAULT 'Unknown',
     `ctime`        TIMESTAMP             DEFAULT CURRENT_TIMESTAMP,
     `utime`        TIMESTAMP             DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
@@ -95,7 +97,7 @@ CREATE TABLE `t_user`
     `nick_name`   varchar(255) NOT NULL,
     `password`    varchar(255) NOT NULL,
     `gender`      varchar(20)  NOT NULL COMMENT ' ISO/IEC 5218 ',
-    `location`    varchar(255) NULL DEFAULT '',
+    `location`    varchar(255) NULL DEFAULT 'Unknown',
     `avatar`      int          NULL,
     `description` text         NULL DEFAULT NULL,
     `role`        varchar(255) NULL DEFAULT ' user ',
@@ -156,8 +158,6 @@ ALTER TABLE `t_post_image`
     ADD CONSTRAINT `t_post_image_post_id` FOREIGN KEY (`post_id`) REFERENCES `t_post` (`id`);
 ALTER TABLE `t_post_image`
     ADD CONSTRAINT `t_post_image_image_id` FOREIGN KEY (`image_id`) REFERENCES `t_image` (`id`);
-ALTER TABLE `t_user`
-    ADD CONSTRAINT `t_user_image_id` FOREIGN KEY (`avatar`) REFERENCES `t_image` (`id`);
 ALTER TABLE `t_user_community`
     ADD CONSTRAINT `t_user_community_user_id` FOREIGN KEY (`user_id`) REFERENCES `t_user` (`id`);
 ALTER TABLE `t_user_community`

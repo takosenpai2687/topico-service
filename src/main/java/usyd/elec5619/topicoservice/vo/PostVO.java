@@ -26,5 +26,6 @@ public class PostVO {
     @NonNull Integer likes;
     @NonNull Integer dislikes;
     @NonNull Integer replies;
+    @NonNull String location;
     List<Comment> comments;
 }

@@ -1,10 +1,13 @@
 package usyd.elec5619.topicoservice.mock;
 
 import lombok.RequiredArgsConstructor;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.stereotype.Component;
 import usyd.elec5619.topicoservice.dto.community.CreateCommunityDto;
 import usyd.elec5619.topicoservice.exception.http.BadRequestException;
 import usyd.elec5619.topicoservice.service.CommunityService;
+import usyd.elec5619.topicoservice.service.ImageService;
 
 @Component
 @RequiredArgsConstructor

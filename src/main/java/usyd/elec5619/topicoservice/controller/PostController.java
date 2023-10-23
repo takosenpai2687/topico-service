@@ -1,8 +1,10 @@
 package usyd.elec5619.topicoservice.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import usyd.elec5619.topicoservice.dto.post.CreatePostDto;
 import usyd.elec5619.topicoservice.pojo.CommonResponse;
@@ -33,10 +35,11 @@ public class PostController {
     }
 
     @PostMapping()
-    public CommonResponse<PostVO> createPost(Authentication authentication, @Valid @RequestBody CreatePostDto createPostDto) {
+    public CommonResponse<PostVO> createPost(Authentication authentication, @Valid @RequestBody CreatePostDto createPostDto, HttpServletRequest request) {
         final String email = authentication.getName();
         final Long userId = userService.emailToId(email);
-        PostVO post = postService.createPost(userId, createPostDto);
+        final String clientIp = request.getRemoteAddr();
+        PostVO post = postService.createPost(userId, createPostDto, clientIp);
         return CommonResponse.success(post);
     }
 

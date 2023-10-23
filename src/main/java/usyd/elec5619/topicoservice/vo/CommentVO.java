@@ -21,6 +21,7 @@ public class CommentVO {
     @NonNull Integer likes;
     @NonNull Integer dislikes;
     @NonNull Integer replies;
+    @NonNull String location;
     @NonNull LocalDateTime ctime;
     @NonNull LocalDateTime utime;
 }

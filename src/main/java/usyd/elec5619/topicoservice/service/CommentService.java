@@ -14,7 +14,7 @@ public interface CommentService {
 
     Pager<CommentVO> getSingleCommentRepliesByPostId(Long postId, Integer page, Integer size);
 
-    CommentVO createComment(Long userId, CreateCommentDto createCommentDto);
+    CommentVO createComment(Long userId, CreateCommentDto createCommentDto, String clientIp);
 
     void deleteComment(Long userId, Long commentId);
 

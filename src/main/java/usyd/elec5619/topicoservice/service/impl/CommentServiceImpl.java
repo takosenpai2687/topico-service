@@ -16,6 +16,7 @@ import usyd.elec5619.topicoservice.model.Comment;
 import usyd.elec5619.topicoservice.model.Post;
 import usyd.elec5619.topicoservice.model.User;
 import usyd.elec5619.topicoservice.service.CommentService;
+import usyd.elec5619.topicoservice.service.LocationService;
 import usyd.elec5619.topicoservice.service.NotificationService;
 import usyd.elec5619.topicoservice.type.SortBy;
 import usyd.elec5619.topicoservice.vo.CommentVO;
@@ -36,6 +37,7 @@ public class CommentServiceImpl implements CommentService {
     private final PostMapper postMapper;
     private final NotificationService notificationService;
     private final UserMapper userMapper;
+    private final LocationService locationService;
 
     @Override
     //TODO:  only comments, do not includes replies,  any order rules on likes?
@@ -43,7 +45,7 @@ public class CommentServiceImpl implements CommentService {
     在评论可以翻页，每页显示10条的情况下，回复不能同时翻页，只能最多显示前10条回复(可设置)，如果回复超过10条，需要点击评论/显示“查看更多回复”按钮，点击后显示所有回复。
      */
     public Pager<CommentVO> getCommentsByUserId(Long userId, Integer page, Integer size) {
-        final Integer offset = (page -1 ) * size;
+        final Integer offset = (page - 1) * size;
         List<Comment> commentList = commentMapper.getCommentsByUserId(userId, offset, size);
         Integer total = commentMapper.countCommentsByUserId(userId);
         return Pager.<CommentVO>builder().data(this.convertCommentToCommentVO(commentList, offset, size)).page(page).size(size).total(total).build();
@@ -81,24 +83,23 @@ public class CommentServiceImpl implements CommentService {
         Integer total = commentMapper.countRepliesByCommentId(commentId);
         List<CommentVO> replyVOList = this.convertCommentToCommentVO(replyList, offset, size);
         return Pager.<CommentVO>builder()
-                .data(replyVOList)
-                .page(page)
-                .size(size)
-                .total(total)
-                .build();
+                    .data(replyVOList)
+                    .page(page)
+                    .size(size)
+                    .total(total)
+                    .build();
     }
-
 
     @Override
     @Transactional
-    public CommentVO createComment(Long userId, CreateCommentDto createCommentDto) {
+    public CommentVO createComment(Long userId, CreateCommentDto createCommentDto, String clientIp) {
         Long postId = createCommentDto.getPostId();
         Post post = postMapper.getPostById(postId)
-                .orElseThrow(() -> new NotFoundException("Post with id " + postId + " does not exist"));
+                              .orElseThrow(() -> new NotFoundException("Post with id " + postId + " does not exist"));
         //TODO: may be removed in the future as front_end changed
         if (createCommentDto.getParentId() != null &&
                 commentMapper.getCommentIdsByPostId(postId).stream()
-                        .noneMatch(id -> id.equals(createCommentDto.getParentId()))) {
+                             .noneMatch(id -> id.equals(createCommentDto.getParentId()))) {
             throw new BadRequestException("Parent comment  does not exist or does not belong to this post");
         }
 
@@ -106,14 +107,17 @@ public class CommentServiceImpl implements CommentService {
             throw new BadRequestException("Reply to user does not belong to this post");
         }
 
+        final String city = locationService.getCity(clientIp);
+
         //TODO: can be simplified
         Comment comment = Comment.builder()
-                .postId(postId)
-                .authorId(userId)
-                .parentId(createCommentDto.getParentId())
-                .replyToUserId(createCommentDto.getReplyToUserId())
-                .content(createCommentDto.getContent())
-                .build();
+                                 .postId(postId)
+                                 .authorId(userId)
+                                 .parentId(createCommentDto.getParentId())
+                                 .replyToUserId(createCommentDto.getReplyToUserId())
+                                 .content(createCommentDto.getContent())
+                                 .location(city)
+                                 .build();
         commentMapper.insertOne(comment);
         Long commentId = comment.getId();
         // Is reply
@@ -133,18 +137,21 @@ public class CommentServiceImpl implements CommentService {
         commentMapper.addReplyToComment(newComment.getParentId());
 
         return CommentVO.builder()
-                .id(commentId)
-                .postId(newComment.getPostId())
-                .postTitle(postMapper.getPostTitleById(newComment.getPostId()))
-                .author(author)
-                .content(newComment.getContent())
-                .likes(newComment.getLikes())
-                .dislikes(newComment.getDislikes())
-                .replies(newComment.getReplies())
-                .utime(newComment.getUtime())
-                .ctime(newComment.getUtime())
-                .build();
+                        .id(commentId)
+                        .postId(newComment.getPostId())
+                        .postTitle(postMapper.getPostTitleById(newComment.getPostId()))
+                        .author(author)
+                        .content(newComment.getContent())
+                        .likes(newComment.getLikes())
+                        .dislikes(newComment.getDislikes())
+                        .replies(newComment.getReplies())
+                        .utime(newComment.getUtime())
+                        .ctime(newComment.getUtime())
+                        .location(newComment.getLocation())
+                        .build();
+
     }
+
 
     //TODO: only check comments to show its children(reply)?
     public List<CommentVO> convertCommentToCommentVO(List<Comment> comments, Integer offset, Integer size) {
@@ -152,25 +159,26 @@ public class CommentServiceImpl implements CommentService {
         for (Comment comment : comments) {
             User author = userMapper.getUserById(comment.getAuthorId()).orElseThrow(() -> new NotFoundException("Author not found"));
             CommentVO commentVO = CommentVO.builder()
-                    .id(comment.getId())
-                    .postId(comment.getPostId())
-                    .postTitle(postMapper.getPostTitleById(comment.getPostId()))
-                    .author(author)
-                    .children(convertCommentToCommentVO(commentMapper.getRepliesByCommentId(comment.getId(),0, 10), offset, size))
-                    .content(comment.getContent())
-                    .likes(comment.getLikes())
-                    .dislikes(comment.getDislikes())
-                    .replies(comment.getReplies())
-                    .ctime(comment.getCtime())
-                    .utime(comment.getUtime())
-                    .build();
+                                           .id(comment.getId())
+                                           .postId(comment.getPostId())
+                                           .postTitle(postMapper.getPostTitleById(comment.getPostId()))
+                                           .author(author)
+                                           .children(convertCommentToCommentVO(commentMapper.getRepliesByCommentId(comment.getId(), 0, 10), offset, size))
+                                           .content(comment.getContent())
+                                           .likes(comment.getLikes())
+                                           .dislikes(comment.getDislikes())
+                                           .replies(comment.getReplies())
+                                           .ctime(comment.getCtime())
+                                           .utime(comment.getUtime())
+                                           .location(comment.getLocation())
+                                           .build();
             commentVOs.add(commentVO);
         }
         return commentVOs;
     }
 
 
-//    @Override
+    //    @Override
 //    @Transactional
 //    public void deleteComment(Long userId, Long commentId) {
 //        Comment comment = commentMapper.getCommentById(commentId).orElseThrow(() -> new NotFoundException("Comment not found"));
@@ -195,30 +203,30 @@ public class CommentServiceImpl implements CommentService {
 //
 //        commentMapper.deleteOne(commentId);
 //    }
-@Override
-@Transactional
-public void deleteComment(Long userId, Long commentId) {
-    Comment comment = commentMapper.getCommentById(commentId).orElseThrow(() -> new NotFoundException("Comment not found"));
-    if (!comment.getAuthorId().equals(userId)) {
-        throw new BadRequestException("not your comment");
-    }
-
-    // Delete all likes of comment and its replies in t_comment_like when delete a comment
-    // If the comment has replies, delete all the replies
-    if (comment.getParentId() == null) {
-        List<Long> replyIds = commentMapper.getRepliesIdByCommentId(commentId);
-        for (Long replyId : replyIds) {
-            deleteComment(userId, replyId);
+    @Override
+    @Transactional
+    public void deleteComment(Long userId, Long commentId) {
+        Comment comment = commentMapper.getCommentById(commentId).orElseThrow(() -> new NotFoundException("Comment not found"));
+        if (!comment.getAuthorId().equals(userId)) {
+            throw new BadRequestException("not your comment");
         }
-    } else {
-        // If it's just a reply, decrement the reply count of the parent comment
-        commentMapper.decrementReplyToComment(comment.getParentId());
+
+        // Delete all likes of comment and its replies in t_comment_like when delete a comment
+        // If the comment has replies, delete all the replies
+        if (comment.getParentId() == null) {
+            List<Long> replyIds = commentMapper.getRepliesIdByCommentId(commentId);
+            for (Long replyId : replyIds) {
+                deleteComment(userId, replyId);
+            }
+        } else {
+            // If it's just a reply, decrement the reply count of the parent comment
+            commentMapper.decrementReplyToComment(comment.getParentId());
+        }
+
+        commentLikeMapper.deleteCommentLikesOrDislikes(commentId);
+
+        commentMapper.deleteOne(commentId);
     }
-
-    commentLikeMapper.deleteCommentLikesOrDislikes(commentId);
-
-    commentMapper.deleteOne(commentId);
-}
 
     @Override
     public void deleteAllCommentsByPostId(Long id) {

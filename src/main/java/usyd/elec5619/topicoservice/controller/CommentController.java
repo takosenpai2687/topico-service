@@ -1,5 +1,6 @@
 package usyd.elec5619.topicoservice.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -25,10 +26,11 @@ public class CommentController {
     private final CommentLikeService commentLikeService;
 
     @PostMapping("/")
-    public CommonResponse<CommentVO> createComment(Authentication authentication, @Valid @RequestBody CreateCommentDto createCommentDto) {
+    public CommonResponse<CommentVO> createComment(Authentication authentication, @Valid @RequestBody CreateCommentDto createCommentDto, HttpServletRequest request) {
         final String email = authentication.getName();
         final Long userId = userService.emailToId(email);
-        CommentVO commentVO = commentService.createComment(userId, createCommentDto);
+        final String clientIp = request.getRemoteAddr();
+        CommentVO commentVO = commentService.createComment(userId, createCommentDto, clientIp);
         return CommonResponse.success(commentVO);
     }
 

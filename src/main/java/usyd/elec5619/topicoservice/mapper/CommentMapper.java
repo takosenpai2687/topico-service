@@ -38,9 +38,9 @@ public interface CommentMapper {
     List<Long> getRepliesIdByCommentId(Long commentId);
 
     @Insert("INSERT INTO t_comment " +
-            "(post_id, author_id, parent_id, reply_to_user_id, content) " +
+            "(post_id, author_id, parent_id, reply_to_user_id, content, location) " +
             "VALUES " +
-            "(#{postId}, #{authorId}, #{parentId}, #{replyToUserId}, #{content})")
+            "(#{postId}, #{authorId}, #{parentId}, #{replyToUserId}, #{content}, #{location})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     void insertOne(Comment comment);
 
@@ -58,6 +58,7 @@ public interface CommentMapper {
 
     @Update("UPDATE t_comment SET replies = replies + 1 WHERE id = #{postId}")
     void addReplyToComment(Long commentId);
+
     @Update("UPDATE t_comment SET replies = CASE WHEN replies > 0 THEN replies - 1 ELSE 0 END WHERE id = #{postId}")
     void decrementReplyToComment(Long commentId);
 }

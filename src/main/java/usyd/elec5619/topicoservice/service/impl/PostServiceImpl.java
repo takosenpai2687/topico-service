@@ -11,10 +11,7 @@ import usyd.elec5619.topicoservice.mapper.PostMapper;
 import usyd.elec5619.topicoservice.mapper.UserMapper;
 import usyd.elec5619.topicoservice.model.Post;
 import usyd.elec5619.topicoservice.model.User;
-import usyd.elec5619.topicoservice.service.CommentService;
-import usyd.elec5619.topicoservice.service.ImageService;
-import usyd.elec5619.topicoservice.service.NotificationService;
-import usyd.elec5619.topicoservice.service.PostService;
+import usyd.elec5619.topicoservice.service.*;
 import usyd.elec5619.topicoservice.type.SortBy;
 import usyd.elec5619.topicoservice.vo.Pager;
 import usyd.elec5619.topicoservice.vo.PostVO;
@@ -32,7 +29,7 @@ public class PostServiceImpl implements PostService {
     private final UserMapper userMapper;
     private final CommentService commentService;
     private final NotificationService notificationService;
-
+    private final LocationService locationService;
     private final CommunityMapper communityMapper;
 
     @Override
@@ -74,27 +71,27 @@ public class PostServiceImpl implements PostService {
         for (Post post : posts) {
             User author = userMapper.getUserById(post.getAuthorId()).orElseThrow(() -> new NotFoundException("Author not found"));
             PostVO postVO = PostVO.builder()
-                    .id(post.getId())
-                    .community(communityMapper.getCommunityById(post.getCommunityId()))
-                    .author(author)
-                    .title(post.getTitle())
-                    .content(post.getContent().substring(0, Math.min(post.getContent().length(), 144))) // Get short content
-                    .spoiler(post.getSpoiler())
-                    .tags(post.getTags())
-                    .images(imageService.getImagesByPostId(post.getId()))
-                    .ctime(post.getCtime())
-                    .utime(post.getUtime())
-                    .likes(post.getLikes())
-                    .dislikes(post.getDislikes())
-                    .replies(post.getReplies())
-                    .build();
+                                  .id(post.getId())
+                                  .community(communityMapper.getCommunityById(post.getCommunityId()))
+                                  .author(author)
+                                  .title(post.getTitle())
+                                  .content(post.getContent().substring(0, Math.min(post.getContent().length(), 144))) // Get short content
+                                  .spoiler(post.getSpoiler())
+                                  .tags(post.getTags())
+                                  .images(imageService.getImagesByPostId(post.getId()))
+                                  .ctime(post.getCtime())
+                                  .utime(post.getUtime())
+                                  .likes(post.getLikes())
+                                  .dislikes(post.getDislikes())
+                                  .replies(post.getReplies())
+                                  .location(post.getLocation())
+                                  .build();
 
             postVOs.add(postVO);
         }
 
         return postVOs;
     }
-
 
 
     @Override
@@ -115,12 +112,14 @@ public class PostServiceImpl implements PostService {
                      .likes(post.getLikes())
                      .dislikes(post.getDislikes())
                      .replies(post.getReplies())
+                     .location(post.getLocation())
                      .build();
     }
 
     @Override
     @Transactional
-    public PostVO createPost(Long userId, CreatePostDto createPostDto) {
+    public PostVO createPost(Long userId, CreatePostDto createPostDto, String clientIp) {
+        final String city = locationService.getCity(clientIp);
         Post post = Post.builder()
                         .communityId(createPostDto.getCommunityId())
                         .authorId(userId)
@@ -128,6 +127,7 @@ public class PostServiceImpl implements PostService {
                         .content(createPostDto.getContent())
                         .spoiler(createPostDto.getSpoiler())
                         .tags(createPostDto.getTags())
+                        .location(city)
                         .build();
         postMapper.insertOne(post);
         final Long postId = post.getId();

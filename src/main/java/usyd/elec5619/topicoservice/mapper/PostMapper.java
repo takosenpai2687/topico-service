@@ -38,7 +38,7 @@ public interface PostMapper {
     @Select("SELECT * FROM t_post WHERE title LIKE CONCAT('%', #{keyword}, '%') OR tags LIKE CONCAT('%', #{keyword}, '%') ORDER BY likes DESC, ctime DESC LIMIT #{offset}, #{size}")
     List<Post> searchPostsByKeyword(String keyword, int offset, Integer size);
 
-    @Insert("INSERT INTO t_post (community_id, author_id, title, content, spoiler, tags) VALUES (#{communityId}, #{authorId}, #{title}, #{content}, #{spoiler}, #{tags})")
+    @Insert("INSERT INTO t_post (community_id, author_id, title, content, spoiler, tags, location) VALUES (#{communityId}, #{authorId}, #{title}, #{content}, #{spoiler}, #{tags}, #{location})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     void insertOne(Post post);
 

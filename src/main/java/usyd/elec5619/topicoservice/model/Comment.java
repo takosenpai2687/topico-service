@@ -19,6 +19,7 @@ public class Comment {
     private Integer likes;
     private Integer dislikes;
     private Integer replies;
+    private String location;
     private LocalDateTime ctime;
     private LocalDateTime utime;
 }

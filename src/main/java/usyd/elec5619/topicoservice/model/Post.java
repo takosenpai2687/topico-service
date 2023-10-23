@@ -18,6 +18,7 @@ public class Post {
     private Integer dislikes;
     private Integer replies;
     private String tags;
+    private String location;
     private LocalDateTime ctime;
     private LocalDateTime utime;
 }
