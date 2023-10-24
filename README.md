@@ -2,7 +2,7 @@
 
 ## TEST: ADMIN
 
-- username: admin
+- email: admin@qq.com
 - password: 123456
 
 ## Tech Stack
