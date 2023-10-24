@@ -3,7 +3,10 @@ package usyd.elec5619.topicoservice.service;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import usyd.elec5619.topicoservice.model.Community;
+import usyd.elec5619.topicoservice.model.Post;
 import usyd.elec5619.topicoservice.type.SortBy;
+import usyd.elec5619.topicoservice.vo.Pager;
+import usyd.elec5619.topicoservice.vo.PostVO;
 import usyd.elec5619.topicoservice.vo.SearchResultVO;
 
 import java.util.List;
@@ -17,4 +20,5 @@ public interface ExploreService {
 
     SearchResultVO search(String keyword, Integer page, Integer size, SortBy sortBy);
 
+    Pager<PostVO> getTrendingPosts(SortBy sortBy, Integer page, Integer size);
 }

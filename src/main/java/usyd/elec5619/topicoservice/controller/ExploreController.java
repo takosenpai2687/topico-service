@@ -1,11 +1,16 @@
 package usyd.elec5619.topicoservice.controller;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import usyd.elec5619.topicoservice.model.Community;
+import usyd.elec5619.topicoservice.model.Post;
 import usyd.elec5619.topicoservice.pojo.CommonResponse;
 import usyd.elec5619.topicoservice.service.ExploreService;
 import usyd.elec5619.topicoservice.type.SortBy;
+import usyd.elec5619.topicoservice.vo.Pager;
+import usyd.elec5619.topicoservice.vo.PostVO;
 import usyd.elec5619.topicoservice.vo.SearchResultVO;
 
 import java.util.List;
@@ -33,12 +38,15 @@ public class ExploreController {
     }
 
     @GetMapping("/search")
-    public CommonResponse<SearchResultVO> search(String keyword,
-                                                 @RequestParam(defaultValue = "1") Integer page,
-                                                 @RequestParam(defaultValue = "10") Integer size,
-                                                 @RequestParam(defaultValue = "MOST_LIKES") SortBy sortBy) {
+    public CommonResponse<SearchResultVO> search(@Valid @NotBlank @RequestParam String keyword, @RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "10") Integer size, @RequestParam(defaultValue = "MOST_LIKES") SortBy sortBy) {
         SearchResultVO searchResultVO = exploreService.search(keyword, page, size, sortBy);
         return CommonResponse.success(searchResultVO);
+    }
+
+    @GetMapping("/trending_posts")
+    public CommonResponse<Pager<PostVO>> getTrendingPosts(@RequestParam() SortBy sortBy, @RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "10") Integer size) {
+        Pager<PostVO> trendingPosts = exploreService.getTrendingPosts(sortBy, page, size);
+        return CommonResponse.success(trendingPosts);
     }
 
 }

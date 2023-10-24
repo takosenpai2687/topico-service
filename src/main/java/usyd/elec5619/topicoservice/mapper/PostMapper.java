@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.*;
 import usyd.elec5619.topicoservice.model.Community;
 import usyd.elec5619.topicoservice.model.Post;
 import usyd.elec5619.topicoservice.model.User;
+import usyd.elec5619.topicoservice.type.SortBy;
 import usyd.elec5619.topicoservice.vo.PostVO;
 
 import java.util.List;
@@ -32,11 +33,9 @@ public interface PostMapper {
     @Select("SELECT title from t_post WHERE id = #{id} LIMIT 1")
     String getPostTitleById(Long id);
 
-    @Select("SELECT COUNT(id) FROM t_post WHERE title LIKE CONCAT('%', #{keyword}, '%')")
+    @Select("SELECT COUNT(id) FROM t_post WHERE LOWER(title) LIKE LOWER(CONCAT('%', #{keyword}, '%'))")
     Integer countSearchByTitle(String keyword);
 
-    @Select("SELECT * FROM t_post WHERE title LIKE CONCAT('%', #{keyword}, '%') OR tags LIKE CONCAT('%', #{keyword}, '%') ORDER BY likes DESC, ctime DESC LIMIT #{offset}, #{size}")
-    List<Post> searchPostsByKeyword(String keyword, int offset, Integer size);
 
     @Insert("INSERT INTO t_post (community_id, author_id, title, content, spoiler, tags, location) VALUES (#{communityId}, #{authorId}, #{title}, #{content}, #{spoiler}, #{tags}, #{location})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
@@ -62,4 +61,19 @@ public interface PostMapper {
 
     @Update("UPDATE t_post SET replies = CASE WHEN replies > 0 THEN replies - 1 ELSE 0 END WHERE id = #{postId}")
     void decrementReplyToPost(Long postId);
+
+    @Select("SELECT * FROM t_post WHERE LOWER(`title`) LIKE LOWER(CONCAT('%', #{keyword}, '%')) OR LOWER(`tags`) LIKE LOWER(CONCAT('%', #{keyword}, '%')) ORDER BY likes DESC, ctime DESC LIMIT #{offset}, #{size}")
+    List<Post> searchPostsByKeywordHot(String keyword, int offset, Integer size);
+
+    @Select("SELECT * FROM t_post WHERE LOWER(`title`) LIKE LOWER(CONCAT('%', #{keyword}, '%')) OR LOWER(`tags`) LIKE LOWER(CONCAT('%', #{keyword}, '%')) ORDER BY ctime DESC, utime DESC LIMIT #{offset}, #{size}")
+    List<Post> searchPostsByKeywordNew(String keyword, int offset, Integer size);
+
+    @Select("SELECT * FROM t_post ORDER BY likes DESC, ctime DESC LIMIT #{offset}, #{size}")
+    List<Post> getTrendingPostsHot(SortBy sortBy, int offset, Integer size);
+
+    @Select("SELECT * FROM t_post ORDER BY ctime DESC, utime DESC LIMIT #{offset}, #{size}")
+    List<Post> getTrendingPostsNew(SortBy sortBy, int offset, Integer size);
+
+    @Select("SELECT COUNT(id) FROM t_post")
+    Integer countPosts();
 }

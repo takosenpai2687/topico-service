@@ -35,7 +35,6 @@ public interface UserMapper {
             "<set>",
             "<if test='dto.nickName != null'>nick_name=#{dto.nickName},</if>",
             "<if test='dto.gender != null'>gender=#{dto.gender},</if>",
-            "<if test='dto.location != null'>location=#{dto.location},</if>",
             "<if test='dto.avatar != null'>avatar=#{dto.avatar},</if>",
             "<if test='dto.description != null'>description=#{dto.description}</if>",
             "</set>",

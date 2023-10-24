@@ -16,9 +16,6 @@ public class UpdateUserDto {
     Gender gender;
 
     @Nullable
-    String location;
-
-    @Nullable
     Long avatar;
 
     @Nullable

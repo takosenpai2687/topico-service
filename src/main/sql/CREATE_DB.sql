@@ -1,4 +1,8 @@
 DROP DATABASE `topico`;
+set global time_zone = 'Australia/Sydney';
+set time_zone = 'Australia/Sydney';
+flush privileges;
+
 CREATE DATABASE IF NOT EXISTS `topico`;
 USE `topico`;
 

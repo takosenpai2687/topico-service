@@ -42,7 +42,10 @@ public class MockAdmin {
         if (existingUser != null) {
             adminId = existingUser.getId();
             UpdateUserDto updateUserDto = UpdateUserDto.builder().nickName(adminNickName).build();
-            userService.updateUser(adminId, updateUserDto);
+            try {
+                userService.updateUser(adminId, updateUserDto);
+            } catch (Exception ignored) {
+            }
         } else {
             SignupDto superAdmin = SignupDto.builder().email(adminEmail).password(adminPassword).confirmPassword(adminPassword).nickName(adminNickName).build();
             LoginVO adminVO = authService.signup(superAdmin);

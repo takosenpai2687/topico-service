@@ -31,8 +31,9 @@ public class UserController {
         return CommonResponse.success(user);
     }
 
-    @PutMapping("/{id}")
-    public CommonResponse<User> updateUser(@PathVariable @Valid Long id, @Valid @RequestBody UpdateUserDto updateUserDTO) {
+    @PutMapping()
+    public CommonResponse<User> updateUser(Authentication authentication, @Valid @RequestBody UpdateUserDto updateUserDTO) {
+        final Long id = userService.emailToId(authentication.getName());
         User updatedUser = userService.updateUser(id, updateUserDTO);
         return CommonResponse.success(updatedUser);
     }

@@ -11,6 +11,7 @@ def main():
     HEADERS = admin_login()
     create_communities(HEADERS)
 
+
 if __name__ == '__main__':
     main()
 

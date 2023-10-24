@@ -4,6 +4,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import usyd.elec5619.topicoservice.model.Community;
+import usyd.elec5619.topicoservice.model.Post;
 import usyd.elec5619.topicoservice.service.CommunityService;
 import usyd.elec5619.topicoservice.service.ExploreService;
 import usyd.elec5619.topicoservice.service.PostService;
@@ -56,6 +57,11 @@ public class ExploreServiceImpl implements ExploreService {
         Pager<PostVO> posts = postService.searchByKeyword(keyword, page, size, sortBy);
         redisService.addSearch(keyword);
         return SearchResultVO.builder().communities(communities).posts(posts).sortBy(sortBy).build();
+    }
+
+    @Override
+    public Pager<PostVO> getTrendingPosts(SortBy sortBy, Integer page, Integer size) {
+        return postService.getTrendingPosts(sortBy, page, size);
     }
 
     @Scheduled(fixedRateString = "${scheduled.updateTopCommunities}")

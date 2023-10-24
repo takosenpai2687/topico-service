@@ -13,6 +13,7 @@ import usyd.elec5619.topicoservice.service.UserService;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +33,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(Long id, UpdateUserDto updateUserDTO) {
+        String nickName = updateUserDTO.getNickName();
+        if (nickName != null) {
+            User userWithNewNickName = userMapper.getByNickName(nickName);
+            if (userWithNewNickName != null && !userWithNewNickName.getId().equals(id)) {
+                throw new IllegalArgumentException("nickname already exists");
+            }
+        }
+        Long avatarId = updateUserDTO.getAvatar();
+        if (avatarId != null && avatarId <= 0) {
+            updateUserDTO.setAvatar(null);
+        }
         userMapper.updateUser(id, updateUserDTO);
         return getUserById(id);
     }
@@ -55,6 +67,5 @@ public class UserServiceImpl implements UserService {
     public User getUserById(Long id) {
         return userMapper.getUserById(id).orElseThrow(() -> new NotFoundException("user not found"));
     }
-
 
 }

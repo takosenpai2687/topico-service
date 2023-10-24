@@ -26,4 +26,6 @@ public interface PostService {
     void deletePost(Long userId, Long postId);
 
     void deletePostsByCommunityId(Long communityId);
+
+    Pager<PostVO> getTrendingPosts(SortBy sortBy, Integer page, Integer size);
 }

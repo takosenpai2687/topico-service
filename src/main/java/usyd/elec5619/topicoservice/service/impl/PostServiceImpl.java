@@ -59,7 +59,7 @@ public class PostServiceImpl implements PostService {
     public Pager<PostVO> searchByKeyword(String keyword, Integer page, Integer size, SortBy sortBy) {
         assert page > -1;
         final int offset = (page - 1) * size;
-        List<Post> posts = postMapper.searchPostsByKeyword(keyword, offset, size);
+        List<Post> posts = sortBy.equals(SortBy.MOST_LIKES) ? postMapper.searchPostsByKeywordHot(keyword, offset, size) : postMapper.searchPostsByKeywordNew(keyword, offset, size);
         List<PostVO> postVOs = convertPostToPostVO(posts);
         final Integer total = postMapper.countSearchByTitle(keyword);
         return Pager.<PostVO>builder().data(postVOs).page(page).size(size).total(total).build();
@@ -154,6 +154,16 @@ public class PostServiceImpl implements PostService {
     public void deletePostsByCommunityId(Long communityId) {
         List<Post> posts = postMapper.getPostsByCommunityId(communityId);
         posts.parallelStream().forEach(post -> deletePostById(post.getId()));
+    }
+
+    @Override
+    public Pager<PostVO> getTrendingPosts(SortBy sortBy, Integer page, Integer size) {
+        assert page > -1;
+        final int offset = (page - 1) * size;
+        List<Post> posts = sortBy.equals(SortBy.MOST_LIKES) ? postMapper.getTrendingPostsHot(sortBy, offset, size) : postMapper.getTrendingPostsNew(sortBy, offset, size);
+        List<PostVO> postVOs = convertPostToPostVO(posts);
+        final Integer total = postMapper.countPosts();
+        return Pager.<PostVO>builder().data(postVOs).page(page).size(size).total(total).build();
     }
 
 
