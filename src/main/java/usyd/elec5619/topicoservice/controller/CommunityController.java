@@ -40,33 +40,30 @@ public class CommunityController {
     }
 
     @GetMapping("/level/{communityId}")
-    @ApiResponse(responseCode = "200", description = "Returns the level of the user in the community, returns 0 if the user is not in the community")
-    public CommonResponse<Integer> getMyLevel(@Valid @PathVariable Long communityId) {
-        final Integer level = communityService.getMyLevel(communityId);
+    public CommonResponse<Integer> getMyLevel(@Valid @PathVariable Long communityId, Authentication authentication) {
+        final Long userId = Long.parseLong(authentication.getName());
+        final Integer level = communityService.getMyLevel(userId, communityId);
         return CommonResponse.success(level);
     }
 
 
     @GetMapping("/my/{communityId}")
     public CommonResponse<UserCommunity> getUserCommunity(Authentication authentication, @Valid @PathVariable Long communityId) {
-        final String email = authentication.getName();
-        final Long userId = userService.emailToId(email);
+        final Long userId = Long.parseLong(authentication.getName());
         UserCommunity userCommunity = communityService.getUserCommunity(userId, communityId);
         return CommonResponse.success(userCommunity);
     }
 
     @GetMapping("/checkin/{communityId}")
     public CommonResponse<CheckinVO> getCheckin(Authentication authentication, @Valid @PathVariable Long communityId) {
-        final String email = authentication.getName();
-        final Long userId = userService.emailToId(email);
+        final Long userId = Long.parseLong(authentication.getName());
         final CheckinVO checkinVO = checkinService.getCheckin(userId, communityId);
         return CommonResponse.success(checkinVO);
     }
 
     @PostMapping("/checkin/{communityId}")
     public CommonResponse<UserCommunity> checkin(Authentication authentication, @Valid @PathVariable Long communityId) {
-        final String email = authentication.getName();
-        final Long userId = userService.emailToId(email);
+        final Long userId = Long.parseLong(authentication.getName());
         checkinService.checkin(userId, communityId);
         UserCommunity userCommunity = communityService.getUserCommunity(userId, communityId);
         return CommonResponse.success(userCommunity);
@@ -74,16 +71,14 @@ public class CommunityController {
 
     @PostMapping("/follow/{communityId}")
     public CommonResponse<UserCommunity> follow(Authentication authentication, @Valid @PathVariable Long communityId) {
-        final String email = authentication.getName();
-        final Long userId = userService.emailToId(email);
+        final Long userId = Long.parseLong(authentication.getName());
         final UserCommunity userCommunity = communityService.follow(userId, communityId);
         return CommonResponse.success(userCommunity);
     }
 
     @DeleteMapping("/follow/{communityId}")
     public CommonResponse<Void> unfollow(Authentication authentication, @Valid @PathVariable Long communityId) {
-        final String email = authentication.getName();
-        final Long userId = userService.emailToId(email);
+        final Long userId = Long.parseLong(authentication.getName());
         communityService.unfollow(userId, communityId);
         return CommonResponse.success();
     }

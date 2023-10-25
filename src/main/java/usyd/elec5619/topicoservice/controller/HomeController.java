@@ -27,16 +27,14 @@ public class HomeController {
 
     @GetMapping("/communities_following")
     public CommonResponse<List<Community>> getCommunitiesFollowing(Authentication authentication) {
-        final String email = authentication.getName();
-        final Long userId = userService.emailToId(email);
+        final Long userId = Long.parseLong(authentication.getName());
         List<Community> communitiesFollowing = communityService.getCommunitiesFollowedByUser(userId);
         return CommonResponse.success(communitiesFollowing);
     }
 
     @GetMapping("/communities_recommended")
     public CommonResponse<List<Community>> getCommunitiesRecommended(Authentication authentication, @RequestParam(required = false, defaultValue = "24") Integer limit) {
-        final String email = authentication.getName();
-        final Long userId = userService.emailToId(email);
+        final Long userId = Long.parseLong(authentication.getName());
         List<Community> communitiesRecommended = communityService.getCommunitiesRecommendedToUser(userId, limit);
         return CommonResponse.success(communitiesRecommended);
     }
@@ -50,8 +48,7 @@ public class HomeController {
 
     @GetMapping("/my_posts")
     public CommonResponse<Pager<PostVO>> getMyPosts(Authentication authentication, @Valid @RequestParam(required = false, defaultValue = "0") Integer page, @Valid @RequestParam(required = false, defaultValue = "10") Integer size) {
-        final String email = authentication.getName();
-        final Long userId = userService.emailToId(email);
+        final Long userId = Long.parseLong(authentication.getName());
         Pager<PostVO> posts = postService.getPostsByUserId(userId, page, size);
         return CommonResponse.success(posts);
     }
@@ -59,16 +56,14 @@ public class HomeController {
 
     @PostMapping("/checkin")
     public CommonResponse<Void> checkinForAll(Authentication authentication) {
-        final String email = authentication.getName();
-        final Long userId = userService.emailToId(email);
+        final Long userId = Long.parseLong(authentication.getName());
         checkinService.checkinForAll(userId);
         return CommonResponse.success();
     }
 
     @GetMapping("/my_comments")
     public CommonResponse<Pager<CommentVO>> getMyComments(Authentication authentication, @Valid @RequestParam(required = false, defaultValue = "1") Integer page, @Valid @RequestParam(required = false, defaultValue = "10") Integer size) {
-        final String email = authentication.getName();
-        final Long userId = userService.emailToId(email);
+        final Long userId = Long.parseLong(authentication.getName());
         Pager<CommentVO> comments = commentService.getCommentsByUserId(userId, page, size);
         return CommonResponse.success(comments);
     }

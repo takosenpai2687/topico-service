@@ -33,16 +33,16 @@ public class UserController {
 
     @PutMapping()
     public CommonResponse<User> updateUser(Authentication authentication, @Valid @RequestBody UpdateUserDto updateUserDTO) {
-        final Long id = userService.emailToId(authentication.getName());
-        User updatedUser = userService.updateUser(id, updateUserDTO);
+        final Long userId = Long.parseLong(authentication.getName());
+        User updatedUser = userService.updateUser(userId, updateUserDTO);
         return CommonResponse.success(updatedUser);
     }
 
 
     @GetMapping("/test")
-    public CommonResponse<Authentication> getCredential(Authentication authentication) {
-        String email = authentication.getName();
-        return CommonResponse.success(authentication);
+    public CommonResponse<Long> getCredential(Authentication authentication) {
+        final Long userId = Long.parseLong(authentication.getName());
+        return CommonResponse.success(userId);
     }
 
 }

@@ -20,16 +20,14 @@ public class NotificationController {
 
     @GetMapping("/")
     public CommonResponse<List<NotificationVO>> getAllNotifications(Authentication authentication) {
-        final String email = authentication.getName();
-        final Long userId = userService.emailToId(email);
+        final Long userId = Long.parseLong(authentication.getName());
         final List<NotificationVO> notifications = notificationService.getAllNotifications(userId);
         return CommonResponse.success(notifications);
     }
 
     @PostMapping("/read/{notificationId}")
     public CommonResponse<Void> readNotification(Authentication authentication, @PathVariable("notificationId") Long notificationId) {
-        final String email = authentication.getName();
-        final Long userId = userService.emailToId(email);
+        final Long userId = Long.parseLong(authentication.getName());
         notificationService.readNotification(userId, notificationId);
         return CommonResponse.success();
     }

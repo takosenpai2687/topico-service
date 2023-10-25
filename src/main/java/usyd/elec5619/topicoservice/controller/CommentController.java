@@ -29,8 +29,7 @@ public class CommentController {
 
     @PostMapping("/")
     public CommonResponse<CommentVO> createComment(Authentication authentication, @Valid @RequestBody CreateCommentDto createCommentDto, HttpServletRequest request) {
-        final String email = authentication.getName();
-        final Long userId = userService.emailToId(email);
+        final Long userId = Long.parseLong(authentication.getName());
         final String clientIp = request.getRemoteAddr();
         CommentVO commentVO = commentService.createComment(userId, createCommentDto, clientIp);
         return CommonResponse.success(commentVO);
@@ -38,8 +37,7 @@ public class CommentController {
 
     @DeleteMapping("/{id}")
     public CommonResponse<Void> deleteComment(Authentication authentication, @Valid @PathVariable("id") Long commentId) {
-        final String email = authentication.getName();
-        final Long userId = userService.emailToId(email);
+        final Long userId = Long.parseLong(authentication.getName());
         commentService.deleteComment(userId, commentId);
         return CommonResponse.success();
     }
@@ -55,8 +53,7 @@ public class CommentController {
      */
     @PostMapping("/like/{id}")
     public CommonResponse<LikeVO> likeComment(Authentication authentication, @Valid @PathVariable("id") Long commentId) {
-        final String email = authentication.getName();
-        final Long userId = userService.emailToId(email);
+        final Long userId = Long.parseLong(authentication.getName());
         LikeVO likeVO = commentLikeService.likeComment(userId, commentId);
         return CommonResponse.success(likeVO);
     }
@@ -66,8 +63,7 @@ public class CommentController {
      */
     @DeleteMapping("/like/{id}")
     public CommonResponse<LikeVO> unlikeComment(Authentication authentication, @Valid @PathVariable("id") Long commentId) {
-        final String email = authentication.getName();
-        final Long userId = userService.emailToId(email);
+        final Long userId = Long.parseLong(authentication.getName());
         LikeVO likeVO = commentLikeService.unlikeComment(userId, commentId);
         return CommonResponse.success(likeVO);
     }
@@ -77,8 +73,7 @@ public class CommentController {
      */
     @PostMapping("/dislike/{id}")
     public CommonResponse<LikeVO> dislikeComment(Authentication authentication, @Valid @PathVariable("id") Long commentId) {
-        final String email = authentication.getName();
-        final Long userId = userService.emailToId(email);
+        final Long userId = Long.parseLong(authentication.getName());
         LikeVO likeVO = commentLikeService.dislikeComment(userId, commentId);
         return CommonResponse.success(likeVO);
     }
@@ -88,8 +83,7 @@ public class CommentController {
      */
     @DeleteMapping("/dislike/{id}")
     public CommonResponse<LikeVO> unDislikeComment(Authentication authentication, @Valid @PathVariable("id") Long commentId) {
-        final String email = authentication.getName();
-        final Long userId = userService.emailToId(email);
+        final Long userId = Long.parseLong(authentication.getName());
         LikeVO likeVO = commentLikeService.unDislikeComment(userId, commentId);
         return CommonResponse.success(likeVO);
     }

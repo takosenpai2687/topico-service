@@ -1,5 +1,6 @@
 package usyd.elec5619.topicoservice.model;
 
+import jakarta.annotation.Nullable;
 import lombok.Builder;
 import lombok.Data;
 

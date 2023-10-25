@@ -14,6 +14,7 @@ import usyd.elec5619.topicoservice.service.CommunityService;
 import usyd.elec5619.topicoservice.service.PostService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -131,11 +132,8 @@ public class CommunityServiceImpl implements CommunityService {
     }
 
     @Override
-    public Integer getMyLevel(Long communityId) {
-        if (communityMapper.getMyLevel(communityId).isPresent()) {
-            return communityMapper.getMyLevel(communityId).get();
-        } else {
-            return 0;
-        }
+    public Integer getMyLevel(Long userId, Long communityId) {
+        Optional<Integer> myUserComm = communityMapper.getMyLevel(userId, communityId);
+        return myUserComm.orElse(0);
     }
 }

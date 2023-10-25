@@ -36,8 +36,7 @@ public class PostController {
 
     @PostMapping()
     public CommonResponse<PostVO> createPost(Authentication authentication, @Valid @RequestBody CreatePostDto createPostDto, HttpServletRequest request) {
-        final String email = authentication.getName();
-        final Long userId = userService.emailToId(email);
+        final Long userId = Long.parseLong(authentication.getName());
         final String clientIp = request.getRemoteAddr();
         PostVO post = postService.createPost(userId, createPostDto, clientIp);
         return CommonResponse.success(post);
@@ -45,8 +44,7 @@ public class PostController {
 
     @DeleteMapping("/{id}")
     public CommonResponse<Void> deletePost(Authentication authentication, @Valid @PathVariable("id") Long postId) {
-        final String email = authentication.getName();
-        final Long userId = userService.emailToId(email);
+        final Long userId = Long.parseLong(authentication.getName());
         postService.deletePost(userId, postId);
         return CommonResponse.success();
     }
@@ -54,32 +52,28 @@ public class PostController {
     // Likes
     @PostMapping("/like/{id}")
     public CommonResponse<LikeVO> likePost(Authentication authentication, @Valid @PathVariable("id") Long postId) {
-        final String email = authentication.getName();
-        final Long userId = userService.emailToId(email);
+        final Long userId = Long.parseLong(authentication.getName());
         LikeVO likeVO = postLikeService.likePost(userId, postId);
         return CommonResponse.success(likeVO);
     }
 
     @DeleteMapping("/like/{id}")
     public CommonResponse<LikeVO> unlikePost(Authentication authentication, @Valid @PathVariable("id") Long postId) {
-        final String email = authentication.getName();
-        final Long userId = userService.emailToId(email);
+        final Long userId = Long.parseLong(authentication.getName());
         LikeVO likeVO = postLikeService.unlikePost(userId, postId);
         return CommonResponse.success(likeVO);
     }
 
     @PostMapping("/dislike/{id}")
     public CommonResponse<LikeVO> dislikePost(Authentication authentication, @Valid @PathVariable("id") Long postId) {
-        final String email = authentication.getName();
-        final Long userId = userService.emailToId(email);
+        final Long userId = Long.parseLong(authentication.getName());
         LikeVO likeVO = postLikeService.dislikePost(userId, postId);
         return CommonResponse.success(likeVO);
     }
 
     @DeleteMapping("/dislike/{id}")
     public CommonResponse<LikeVO> unDislikePost(Authentication authentication, @Valid @PathVariable("id") Long postId) {
-        final String email = authentication.getName();
-        final Long userId = userService.emailToId(email);
+        final Long userId = Long.parseLong(authentication.getName());
         LikeVO likeVO = postLikeService.unDislikePost(userId, postId);
         return CommonResponse.success(likeVO);
     }

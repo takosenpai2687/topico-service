@@ -36,8 +36,7 @@ public class AuthController {
 
     @PutMapping("/password")
     public CommonResponse<?> updatePassword(Authentication authentication, @Valid @RequestBody UpdatePasswordDto updatePasswordDto) {
-        final String email = authentication.getName();
-        final Long id = userService.emailToId(email);
+        final Long id = Long.parseLong(authentication.getName());
         authService.updatePassword(id, updatePasswordDto);
         return CommonResponse.success();
     }

@@ -109,13 +109,4 @@ Pojos are plain old java objects.
 
 ## TODO
 
-1. `t_post`表中的`replies`字段要在comment创建时更新
-2. 所有mapper中的@Results子查询都要改成Java代码实现，涉及类：
-
-- PostMapper
-- CommentMapper
-- NotificationMapper
-
-以及所调用的任何serviceImpl类！
-
-3. 测试topSearch
+1. community level 获取不到authentication

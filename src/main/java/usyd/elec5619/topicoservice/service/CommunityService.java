@@ -38,5 +38,5 @@ public interface CommunityService {
 
     Integer getRankBySize(Long communityId);
 
-    Integer getMyLevel(Long communityId);
+    Integer getMyLevel(Long userId, Long communityId);
 }
