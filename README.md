@@ -21,16 +21,6 @@
 - Open `pom.xml` and install the maven packages.
 - Make sure you have Docker desktop app or Docker service up and running.
 
-## Initialize data
-
-run `mock_main.py` in `src/main/python` to initialize data.
-
-Command:  
-```shell
-cd ./src/main/python
-python ./mock_main.py
-```
-
 
 ## Run in Development mode
 
@@ -50,6 +40,19 @@ python ./mock_main.py
 - First time: Run `CREATE_DB.sql` from the `/src/resources` directory. Configure the datasource if prompted. The default
   username
   is `root` and password is `123456`.
+
+
+## Initialize data
+
+**After the server is up and running,**
+
+run `mock_main.py` in `src/main/python` to initialize data.
+
+Command:
+```shell
+cd ./src/main/python
+python ./mock_main.py
+```
 
 ## API Documentation powered by Swagger
 
