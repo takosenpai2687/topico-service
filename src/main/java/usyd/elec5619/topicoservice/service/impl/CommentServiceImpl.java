@@ -103,7 +103,9 @@ public class CommentServiceImpl implements CommentService {
             throw new BadRequestException("Parent comment  does not exist or does not belong to this post");
         }
 
-        if (!Objects.equals(createCommentDto.getReplyToUserId(), postMapper.getAuthorIdByPostId(postId))) {
+        final Long replyToUserId = createCommentDto.getReplyToUserId();
+        final Long postAuthorId = postMapper.getAuthorIdByPostId(postId);
+        if (replyToUserId != null && !Objects.equals(replyToUserId, postAuthorId)) {
             throw new BadRequestException("Reply to user does not belong to this post");
         }
 
@@ -114,9 +116,10 @@ public class CommentServiceImpl implements CommentService {
                                  .postId(postId)
                                  .authorId(userId)
                                  .parentId(createCommentDto.getParentId())
-                                 .replyToUserId(createCommentDto.getReplyToUserId())
+                                 .replyToUserId(replyToUserId)
                                  .content(createCommentDto.getContent())
                                  .location(city)
+                                 .imageId(createCommentDto.getImageId())
                                  .build();
         commentMapper.insertOne(comment);
         Long commentId = comment.getId();
@@ -148,6 +151,7 @@ public class CommentServiceImpl implements CommentService {
                         .utime(newComment.getUtime())
                         .ctime(newComment.getUtime())
                         .location(newComment.getLocation())
+                        .image(newComment.getImageId())
                         .build();
 
     }
@@ -171,6 +175,7 @@ public class CommentServiceImpl implements CommentService {
                                            .ctime(comment.getCtime())
                                            .utime(comment.getUtime())
                                            .location(comment.getLocation())
+                                           .image(comment.getImageId())
                                            .build();
             commentVOs.add(commentVO);
         }

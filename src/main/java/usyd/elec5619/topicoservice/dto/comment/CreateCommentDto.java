@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Builder
 public class CreateCommentDto {
@@ -15,5 +17,8 @@ public class CreateCommentDto {
     private String content;
     @Nullable
     private Long parentId;
+    @Nullable
     private Long replyToUserId;
+    @Nullable
+    private Long imageId;
 }

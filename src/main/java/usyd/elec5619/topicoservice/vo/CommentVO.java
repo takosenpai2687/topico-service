@@ -22,6 +22,7 @@ public class CommentVO {
     @NonNull Integer dislikes;
     @NonNull Integer replies;
     @NonNull String location;
+    Long image;
     @NonNull LocalDateTime ctime;
     @NonNull LocalDateTime utime;
 }

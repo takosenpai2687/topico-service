@@ -18,6 +18,7 @@ CREATE TABLE `t_comment`
     `dislikes`         int          not null default 0,
     `replies`          int          not null default 0,
     `location`         varchar(255) NULL     DEFAULT 'Unknown',
+    `image_id`         int          NULL,
     `ctime`            TIMESTAMP             DEFAULT CURRENT_TIMESTAMP,
     `utime`            TIMESTAMP             DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)

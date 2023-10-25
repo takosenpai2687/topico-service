@@ -11,6 +11,7 @@ import usyd.elec5619.topicoservice.pojo.CommonResponse;
 import usyd.elec5619.topicoservice.service.CommentService;
 import usyd.elec5619.topicoservice.service.CommentLikeService;
 import usyd.elec5619.topicoservice.service.UserService;
+import usyd.elec5619.topicoservice.type.SortBy;
 import usyd.elec5619.topicoservice.vo.CommentVO;
 import usyd.elec5619.topicoservice.vo.LikeVO;
 import usyd.elec5619.topicoservice.vo.Pager;
@@ -27,7 +28,7 @@ public class CommentController {
 
     private final CommentLikeService commentLikeService;
 
-    @PostMapping("/")
+    @PostMapping()
     public CommonResponse<CommentVO> createComment(Authentication authentication, @Valid @RequestBody CreateCommentDto createCommentDto, HttpServletRequest request) {
         final Long userId = Long.parseLong(authentication.getName());
         final String clientIp = request.getRemoteAddr();
@@ -42,8 +43,15 @@ public class CommentController {
         return CommonResponse.success();
     }
 
+    @GetMapping()
+    public CommonResponse<Pager<CommentVO>> getCommentsByPostId(@RequestParam("postId") Long postId, @RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "10") Integer size,
+                                                                @RequestParam("sortBy") SortBy sortBy) {
+        final Pager<CommentVO> commentVOs = commentService.getCommentsByPostId(postId, page, size, sortBy);
+        return CommonResponse.success(commentVOs);
+    }
+
     @GetMapping("/{id}")
-    public CommonResponse<Pager<CommentVO>> getCommentReplies(@Valid @PathVariable("id") Long commentId,  @RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "10") Integer size) {
+    public CommonResponse<Pager<CommentVO>> getCommentReplies(@Valid @PathVariable("id") Long commentId, @RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "10") Integer size) {
         final Pager<CommentVO> commentWithRepliesVO = commentService.getSingleCommentRepliesByPostId(commentId, page, size);
         return CommonResponse.success(commentWithRepliesVO);
     }

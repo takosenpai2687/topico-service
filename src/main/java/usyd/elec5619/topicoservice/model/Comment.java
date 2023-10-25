@@ -20,6 +20,7 @@ public class Comment {
     private Integer dislikes;
     private Integer replies;
     private String location;
+    private Long imageId;
     private LocalDateTime ctime;
     private LocalDateTime utime;
 }
