@@ -95,4 +95,11 @@ public class CommentController {
         LikeVO likeVO = commentLikeService.unDislikeComment(userId, commentId);
         return CommonResponse.success(likeVO);
     }
+
+    @GetMapping("/like_status/{commentId}")
+    public CommonResponse<LikeVO> getCommentLikeStatus(Authentication authentication, @Valid @PathVariable("commentId") Long commentId) {
+        final Long userId = Long.parseLong(authentication.getName());
+        LikeVO likeVO = commentLikeService.getCommentLikeStatus(userId, commentId);
+        return CommonResponse.success(likeVO);
+    }
 }

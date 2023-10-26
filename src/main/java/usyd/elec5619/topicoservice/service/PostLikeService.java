@@ -12,4 +12,6 @@ public interface PostLikeService {
     LikeVO dislikePost(Long userId, Long postId);
 
     LikeVO unDislikePost(Long userId, Long postId);
+
+    LikeVO getPostLikeStatus(Long userId, Long postId);
 }

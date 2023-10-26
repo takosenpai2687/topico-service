@@ -13,4 +13,6 @@ public interface CommentLikeService {
     LikeVO dislikeComment(Long userId, Long commentId);
 
     LikeVO unDislikeComment(Long userId, Long commentId);
+
+    LikeVO getCommentLikeStatus(Long userId, Long commentId);
 }

@@ -12,6 +12,9 @@ import java.util.Optional;
 @Mapper
 public interface NotificationMapper {
 
+    @Select("SELECT * FROM t_notification WHERE receiver_id = #{receiverId} ORDER BY ctime DESC")
+    List<Notification> getAllNotifications(Long receiverId);
+
     @Select("SELECT * FROM t_notification WHERE id = #{notificationId}")
     Optional<Notification> getNotificationById(Long notificationId);
 
@@ -33,122 +36,6 @@ public interface NotificationMapper {
             "AND receiver_id = #{receiverId} " +
             "AND comment_id = #{commentId}")
     void deleteLikeComment(Long senderId, Long receiverId, Long commentId);
-
-    @Select("SELECT id," +
-            "type," +
-            "sender_id AS senderId," +
-            "receiver_id AS receiverId," +
-            "post_id  AS postId," +
-            "comment_id AS commentId," +
-            "reply_to_comment_id AS replyToCommentId," +
-            "content," +
-            "unread," +
-            "ctime," +
-            "utime " +
-            " FROM t_notification WHERE receiver_id = #{receiverId} " +
-            "AND type = 'LIKE_POST' ORDER BY ctime")
-    @Results({
-            @Result(column = "id", property = "id"),
-            @Result(column = "type", property = "type", javaType = NotificationType.class),
-            @Result(column = "senderId", property = "sender", javaType = usyd.elec5619.topicoservice.model.User.class, one = @One(select = "usyd.elec5619.topicoservice.mapper.UserMapper.getUserById")),
-            @Result(column = "receiverId", property = "receiver", javaType = usyd.elec5619.topicoservice.model.User.class, one = @One(select = "usyd.elec5619.topicoservice.mapper.UserMapper.getUserById")),
-            @Result(column = "postId", property = "post", javaType = usyd.elec5619.topicoservice.vo.PostVO.class, one = @One(select = "usyd.elec5619.topicoservice.mapper.PostMapper.getPostById")),
-            @Result(column = "commentId", property = "comment", javaType = usyd.elec5619.topicoservice.vo.CommentVO.class, one = @One(select = "usyd.elec5619.topicoservice.mapper.CommentMapper.getCommentById")),
-            @Result(column = "replyToCommentId", property = "replyToComment", javaType = usyd.elec5619.topicoservice.vo.CommentVO.class, one = @One(select = "usyd.elec5619.topicoservice.mapper.CommentMapper.getCommentById")),
-            @Result(column = "postId", property = "total", javaType = Integer.class, one = @One(select = "usyd.elec5619.topicoservice.mapper.PostLikeMapper.getPostLikes")),
-            @Result(column = "content", property = "content"),
-            @Result(column = "unread", property = "unread", javaType = Boolean.class),
-            @Result(column = "ctime", property = "ctime"),
-            @Result(column = "utime", property = "utime")
-    })
-    List<NotificationVO> getLikePostNotifications(Long receiverId);
-
-    @Select("SELECT id," +
-            "type," +
-            "sender_id AS senderId," +
-            "receiver_id AS receiverId," +
-            "post_id AS postId," +
-            "comment_id AS commentId," +
-            "reply_to_comment_id AS replyToCommentId," +
-            "content," +
-            "unread," +
-            "ctime," +
-            "utime " +
-            " FROM t_notification WHERE receiver_id = #{receiverId} " +
-            "AND type = 'LIKE_COMMENT' ORDER BY ctime DESC")
-    @Results({
-            @Result(column = "id", property = "id"),
-            @Result(column = "type", property = "type", javaType = NotificationType.class),
-            @Result(column = "senderId", property = "sender", javaType = usyd.elec5619.topicoservice.model.User.class, one = @One(select = "usyd.elec5619.topicoservice.mapper.UserMapper.getUserById")),
-            @Result(column = "receiverId", property = "receiver", javaType = usyd.elec5619.topicoservice.model.User.class, one = @One(select = "usyd.elec5619.topicoservice.mapper.UserMapper.getUserById")),
-            @Result(column = "postId", property = "post", javaType = usyd.elec5619.topicoservice.vo.PostVO.class, one = @One(select = "usyd.elec5619.topicoservice.mapper.PostMapper.getPostById")),
-            @Result(column = "commentId", property = "comment", javaType = usyd.elec5619.topicoservice.vo.CommentVO.class, one = @One(select = "usyd.elec5619.topicoservice.mapper.CommentMapper.getCommentById")),
-            @Result(column = "replyToCommentId", property = "replyToComment", javaType = usyd.elec5619.topicoservice.vo.CommentVO.class, one = @One(select = "usyd.elec5619.topicoservice.mapper.CommentMapper.getCommentById")),
-            @Result(column = "commentId", property = "total", javaType = Integer.class, one = @One(select = "usyd.elec5619.topicoservice.mapper.CommentLikeMapper.getCommentLikes")),
-            @Result(column = "content", property = "content"),
-            @Result(column = "unread", property = "unread", javaType = Boolean.class),
-            @Result(column = "ctime", property = "ctime"),
-            @Result(column = "utime", property = "utime")
-    })
-    List<NotificationVO> getLikeCommentNotifications(Long receiverId);
-
-    @Select("SELECT id," +
-            "type," +
-            "sender_id AS senderId," +
-            "receiver_id AS receiverId," +
-            "post_id AS postId," +
-            "comment_id AS commentId," +
-            "reply_to_comment_id AS replyToCommentId," +
-            "content," +
-            "unread," +
-            "ctime," +
-            "utime " +
-            " FROM t_notification WHERE receiver_id = #{receiverId} " +
-            "AND type = 'COMMENT_POST' ORDER BY ctime DESC")
-    @Results({
-            @Result(column = "id", property = "id"),
-            @Result(column = "type", property = "type", javaType = NotificationType.class),
-            @Result(column = "senderId", property = "sender", javaType = usyd.elec5619.topicoservice.model.User.class, one = @One(select = "usyd.elec5619.topicoservice.mapper.UserMapper.getUserById")),
-            @Result(column = "receiverId", property = "receiver", javaType = usyd.elec5619.topicoservice.model.User.class, one = @One(select = "usyd.elec5619.topicoservice.mapper.UserMapper.getUserById")),
-            @Result(column = "postId", property = "post", javaType = usyd.elec5619.topicoservice.vo.PostVO.class, one = @One(select = "usyd.elec5619.topicoservice.mapper.PostMapper.getPostById")),
-            @Result(column = "commentId", property = "comment", javaType = usyd.elec5619.topicoservice.vo.CommentVO.class, one = @One(select = "usyd.elec5619.topicoservice.mapper.CommentMapper.getCommentById")),
-            @Result(column = "replyToCommentId", property = "replyToComment", javaType = usyd.elec5619.topicoservice.vo.CommentVO.class, one = @One(select = "usyd.elec5619.topicoservice.mapper.CommentMapper.getCommentById")),
-            @Result(column = "postId", property = "total", javaType = Integer.class, one = @One(select = "usyd.elec5619.topicoservice.mapper.CommentMapper.countCommentsByPostId")),
-            @Result(column = "content", property = "content"),
-            @Result(column = "unread", property = "unread", javaType = Boolean.class),
-            @Result(column = "ctime", property = "ctime"),
-            @Result(column = "utime", property = "utime")
-    })
-    List<NotificationVO> getCommentPostNotifications(Long receiverId);
-
-    @Select("SELECT id," +
-            "type," +
-            "sender_id AS senderId," +
-            "receiver_id AS receiverId," +
-            "post_id AS postId," +
-            "comment_id AS commentId," +
-            "reply_to_comment_id AS replyToCommentId," +
-            "content," +
-            "unread," +
-            "ctime," +
-            "utime " +
-            " FROM t_notification WHERE receiver_id = #{receiverId} " +
-            "AND type = 'COMMENT_COMMENT' ORDER BY ctime DESC")
-    @Results({
-            @Result(column = "id", property = "id"),
-            @Result(column = "type", property = "type", javaType = NotificationType.class),
-            @Result(column = "senderId", property = "sender", javaType = usyd.elec5619.topicoservice.model.User.class, one = @One(select = "usyd.elec5619.topicoservice.mapper.UserMapper.getUserById")),
-            @Result(column = "receiverId", property = "receiver", javaType = usyd.elec5619.topicoservice.model.User.class, one = @One(select = "usyd.elec5619.topicoservice.mapper.UserMapper.getUserById")),
-            @Result(column = "postId", property = "post", javaType = usyd.elec5619.topicoservice.vo.PostVO.class, one = @One(select = "usyd.elec5619.topicoservice.mapper.PostMapper.getPostById")),
-            @Result(column = "commentId", property = "comment", javaType = usyd.elec5619.topicoservice.vo.CommentVO.class, one = @One(select = "usyd.elec5619.topicoservice.mapper.CommentMapper.getCommentById")),
-            @Result(column = "replyToCommentId", property = "replyToComment", javaType = usyd.elec5619.topicoservice.vo.CommentVO.class, one = @One(select = "usyd.elec5619.topicoservice.mapper.CommentMapper.getCommentById")),
-            @Result(column = "commentId", property = "total", javaType = Integer.class, one = @One(select = "usyd.elec5619.topicoservice.mapper.CommentMapper.countRepliesByCommentId")),
-            @Result(column = "content", property = "content"),
-            @Result(column = "unread", property = "unread", javaType = Boolean.class),
-            @Result(column = "ctime", property = "ctime"),
-            @Result(column = "utime", property = "utime")
-    })
-    List<NotificationVO> getCommentReplyNotifications(Long receiverId);
 
     @Select("SELECT author_id FROM t_post WHERE id = #{postid}")
     Long getPostAuthorId(Long postId);

@@ -83,4 +83,11 @@ public class PostController {
         final Pager<CommentVO> comments = commentService.getCommentsByPostId(postId, page, size, sortBy);
         return CommonResponse.success(comments);
     }
+
+    @GetMapping("/like_status/{postId}")
+    public CommonResponse<LikeVO> getPostLikeStatus(Authentication authentication, @PathVariable Long postId) {
+        final Long userId = Long.parseLong(authentication.getName());
+        final LikeVO likeVO = postLikeService.getPostLikeStatus(userId, postId);
+        return CommonResponse.success(likeVO);
+    }
 }

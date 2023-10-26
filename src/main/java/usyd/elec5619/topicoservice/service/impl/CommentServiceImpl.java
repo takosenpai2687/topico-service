@@ -24,7 +24,6 @@ import usyd.elec5619.topicoservice.vo.Pager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -50,7 +49,7 @@ public class CommentServiceImpl implements CommentService {
         final Integer offset = (page - 1) * size;
         List<Comment> commentList = commentMapper.getCommentsByUserId(userId, offset, size);
         Integer total = commentMapper.countCommentsByUserId(userId);
-        return Pager.<CommentVO>builder().data(this.convertCommentToCommentVO(commentList, offset, size)).page(page).size(size).total(total).build();
+        return Pager.<CommentVO>builder().data(this.convertCommentsToCommentVO(commentList, offset, size)).page(page).size(size).total(total).build();
     }
 
     @Override
@@ -58,12 +57,12 @@ public class CommentServiceImpl implements CommentService {
     public Pager<CommentVO> getCommentsByPostId(Long postId, Integer page, Integer size, SortBy sortBy) {
         final Integer offset = (page - 1) * size;
         Optional<Post> optionalPost = postMapper.getPostById(postId);
-        if (!optionalPost.isPresent()) {
+        if (optionalPost.isEmpty()) {
             throw new NotFoundException("Post not found");
         }
         List<Comment> commentList = commentMapper.getHotAndNewCommentsByPostId(postId, offset, size);
         Integer total = commentMapper.countCommentsByPostId(postId);
-        return Pager.<CommentVO>builder().data(this.convertCommentToCommentVO(commentList, offset, size)).page(page).size(size).total(total).build();
+        return Pager.<CommentVO>builder().data(this.convertCommentsToCommentVO(commentList, offset, size)).page(page).size(size).total(total).build();
     }
 
     @Override
@@ -83,7 +82,7 @@ public class CommentServiceImpl implements CommentService {
         }
 
         Integer total = commentMapper.countRepliesByCommentId(commentId);
-        List<CommentVO> replyVOList = this.convertCommentToCommentVO(replyList, offset, size);
+        List<CommentVO> replyVOList = this.convertCommentsToCommentVO(replyList, offset, size);
         return Pager.<CommentVO>builder()
                     .data(replyVOList)
                     .page(page)
@@ -134,10 +133,13 @@ public class CommentServiceImpl implements CommentService {
         commentMapper.insertOne(comment);
         Long commentId = comment.getId();
         // Is reply
-        boolean isReply = comment.getParentId() != null;
-        if (isReply) {
-            notificationService.sendCommentReplyNotification(userId, comment.getReplyToUserId(), comment.getPostId(), commentId);
-        } else {
+        final Comment parentComment = commentMapper.getCommentById(comment.getParentId()).orElse(null);
+        boolean isReply = comment.getParentId() != null && parentComment != null;
+        boolean isCommentingOnSelfPost = userId.equals(post.getAuthorId());
+        boolean isReplyingToSelfComment = isReply && userId.equals(parentComment.getAuthorId());
+        if (isReply && !isReplyingToSelfComment) {
+            notificationService.sendCommentReplyNotification(userId, comment.getPostId(), commentId, comment.getParentId());
+        } else if (!isReply && !isCommentingOnSelfPost) {
             notificationService.sendCommentPostNotification(userId, comment.getPostId(), commentId);
         }
         Comment newComment = commentMapper.getCommentById(commentId).orElseThrow(() -> new InternalException("Failed to create comment"));
@@ -168,7 +170,7 @@ public class CommentServiceImpl implements CommentService {
 
 
     //TODO: only check comments to show its children(reply)?
-    public List<CommentVO> convertCommentToCommentVO(List<Comment> comments, Integer offset, Integer size) {
+    public List<CommentVO> convertCommentsToCommentVO(List<Comment> comments, Integer offset, Integer size) {
         List<CommentVO> commentVOs = new ArrayList<>();
         for (Comment comment : comments) {
             User author = userMapper.getUserById(comment.getAuthorId()).orElseThrow(() -> new NotFoundException("Author not found"));
@@ -177,7 +179,7 @@ public class CommentServiceImpl implements CommentService {
                                            .postId(comment.getPostId())
                                            .postTitle(postMapper.getPostTitleById(comment.getPostId()))
                                            .author(author)
-                                           .children(convertCommentToCommentVO(commentMapper.getRepliesByCommentId(comment.getId(), 0, 10), offset, size))
+                                           .children(convertCommentsToCommentVO(commentMapper.getRepliesByCommentId(comment.getId(), 0, 10), offset, size))
                                            .content(comment.getContent())
                                            .likes(comment.getLikes())
                                            .dislikes(comment.getDislikes())

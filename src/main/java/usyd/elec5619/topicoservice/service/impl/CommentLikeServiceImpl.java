@@ -34,8 +34,8 @@ public class CommentLikeServiceImpl implements CommentLikeService {
     }
 
     public void mapperUnDislikeComment(Long userId, Long commentId) {
-      commentLikeMapper.deleteDislikeComment(userId, commentId);
-      commentLikeMapper.decrementCommentDislike(commentId);
+        commentLikeMapper.deleteDislikeComment(userId, commentId);
+        commentLikeMapper.decrementCommentDislike(commentId);
     }
 
     @Override
@@ -125,6 +125,19 @@ public class CommentLikeServiceImpl implements CommentLikeService {
         return LikeVO.builder()
                      .liked(likedStatus != null && likedStatus)
                      .disliked(likedStatus != null && !likedStatus)
+                     .likes(commentLikeMapper.getCommentLikes(commentId))
+                     .dislikes(commentLikeMapper.getCommentDislikes(commentId))
+                     .build();
+    }
+
+    @Override
+    public LikeVO getCommentLikeStatus(Long userId, Long commentId) {
+        final Boolean likedStatus = commentLikeMapper.getCommentLikedStatus(userId, commentId);
+        final Boolean liked = likedStatus != null && likedStatus;
+        final Boolean disliked = likedStatus != null && !likedStatus;
+        return LikeVO.builder()
+                     .liked(liked)
+                     .disliked(disliked)
                      .likes(commentLikeMapper.getCommentLikes(commentId))
                      .dislikes(commentLikeMapper.getCommentDislikes(commentId))
                      .build();

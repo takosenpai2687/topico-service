@@ -46,9 +46,9 @@ public class PostLikeServiceImpl implements PostLikeService {
         }
         // Already disliked before: remove dislike first
         if (postLikedStatus != null) {
-            mapperDislikePost(userId, postId);
+            mapperUnDislikePost(userId, postId);
         }
-           mapperLikePost(userId, postId);
+        mapperLikePost(userId, postId);
 
         // Build result
         Boolean likedStatus = postLikeMapper.getPostLikedStatus(userId, postId);
@@ -129,6 +129,18 @@ public class PostLikeServiceImpl implements PostLikeService {
                      .build();
     }
 
+    @Override
+    public LikeVO getPostLikeStatus(Long userId, Long postId) {
+        final Boolean likedStatus = postLikeMapper.getPostLikedStatus(userId, postId);
+        final Boolean liked = likedStatus != null && likedStatus;
+        final Boolean disliked = likedStatus != null && !likedStatus;
+        return LikeVO.builder()
+                     .liked(liked)
+                     .disliked(disliked)
+                     .likes(postLikeMapper.getPostLikes(postId))
+                     .dislikes(postLikeMapper.getPostDislikes(postId))
+                     .build();
+    }
 
 
 }
