@@ -43,8 +43,8 @@ public class CommentController {
         return CommonResponse.success();
     }
 
-    @GetMapping()
-    public CommonResponse<Pager<CommentVO>> getCommentsByPostId(@RequestParam("postId") Long postId, @RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "10") Integer size,
+    @GetMapping("/by_post/{postId}")
+    public CommonResponse<Pager<CommentVO>> getCommentsByPostId(@Valid @PathVariable Long postId, @RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "10") Integer size,
                                                                 @RequestParam("sortBy") SortBy sortBy) {
         final Pager<CommentVO> commentVOs = commentService.getCommentsByPostId(postId, page, size, sortBy);
         return CommonResponse.success(commentVOs);

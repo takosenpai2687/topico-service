@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @Slf4j
@@ -103,15 +105,23 @@ public class CommentServiceImpl implements CommentService {
             throw new BadRequestException("Parent comment  does not exist or does not belong to this post");
         }
 
-        final Long replyToUserId = createCommentDto.getReplyToUserId();
-        final Long postAuthorId = postMapper.getAuthorIdByPostId(postId);
-        if (replyToUserId != null && !Objects.equals(replyToUserId, postAuthorId)) {
-            throw new BadRequestException("Reply to user does not belong to this post");
-        }
-
         final String city = locationService.getCity(clientIp);
 
-        //TODO: can be simplified
+        // Get reply to id
+        Long replyToUserId = null;
+        final String content = createCommentDto.getContent();
+        String regex = "@(\\S+)\\s";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(content);
+        if (createCommentDto.getParentId() != null && matcher.find()) {
+            String replyToUserName = matcher.group(1);
+            User replyToUser = userMapper.getByNickName(replyToUserName);
+            if (replyToUser != null) {
+                createCommentDto.setReplyToUserId(replyToUser.getId());
+                replyToUserId = replyToUser.getId();
+            }
+        }
+
         Comment comment = Comment.builder()
                                  .postId(postId)
                                  .authorId(userId)
