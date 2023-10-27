@@ -7,20 +7,15 @@ import usyd.elec5619.topicoservice.mapper.CommentMapper;
 import usyd.elec5619.topicoservice.mapper.NotificationMapper;
 import usyd.elec5619.topicoservice.mapper.PostMapper;
 import usyd.elec5619.topicoservice.mapper.UserMapper;
+import usyd.elec5619.topicoservice.model.Comment;
 import usyd.elec5619.topicoservice.model.Notification;
-import usyd.elec5619.topicoservice.model.Post;
 import usyd.elec5619.topicoservice.model.User;
 import usyd.elec5619.topicoservice.service.NotificationService;
-import usyd.elec5619.topicoservice.service.PostService;
 import usyd.elec5619.topicoservice.type.NotificationType;
 import usyd.elec5619.topicoservice.vo.NotificationVO;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -36,17 +31,17 @@ public class NotificationServiceImpl implements NotificationService {
         List<Notification> notifications = notificationMapper.getAllNotifications(receiverId);
         User receiver = userMapper.getUserById(receiverId).orElseThrow(() -> new BadRequestException("Receiver not found"));
         return notifications.stream().map(notification -> NotificationVO.builder()
-                                                                        .id(notification.getId())
-                                                                        .type(notification.getType())
-                                                                        .sender(userMapper.getUserById(notification.getSenderId()).orElse(null))
-                                                                        .receiver(receiver).post(postMapper.getPostById(notification.getPostId()).orElse(null))
-                                                                        .comment(commentMapper.getCommentById(notification.getCommentId()).orElse(null))
-                                                                        .replyToComment(commentMapper.getCommentById(notification.getReplyToCommentId()).orElse(null))
-                                                                        .content(notification.getContent())
-                                                                        .unread(notification.getUnread())
-                                                                        .ctime(notification.getCtime())
-                                                                        .utime(notification.getUtime())
-                                                                        .build()).toList();
+                .id(notification.getId())
+                .type(notification.getType())
+                .sender(userMapper.getUserById(notification.getSenderId()).orElse(null))
+                .receiver(receiver).post(postMapper.getPostById(notification.getPostId()).orElse(null))
+                .comment(commentMapper.getCommentById(notification.getCommentId()).orElse(null))
+                .replyToComment(commentMapper.getCommentById(notification.getReplyToCommentId()).orElse(null))
+                .content(notification.getContent())
+                .unread(notification.getUnread())
+                .ctime(notification.getCtime())
+                .utime(notification.getUtime())
+                .build()).toList();
     }
 
     @Override
@@ -89,7 +84,19 @@ public class NotificationServiceImpl implements NotificationService {
             notificationMapper.deleteLikeComment(senderId, receiverId, commentId);
             return;
         }
-        Notification notification = Notification.builder().type(NotificationType.LIKE_COMMENT).senderId(senderId).receiverId(receiverId).postId(null).commentId(commentId).unread(true).build();
+        final Optional<Comment> commentOptional = commentMapper.getCommentById(commentId);
+        if (commentOptional.isEmpty()) {
+            return;
+        }
+        final Long postId = commentOptional.get().getPostId();
+        Notification notification = Notification.builder()
+                .type(NotificationType.LIKE_COMMENT)
+                .senderId(senderId)
+                .receiverId(receiverId)
+                .postId(postId)
+                .commentId(commentId)
+                .unread(true)
+                .build();
         notificationMapper.insertOne(notification);
     }
 

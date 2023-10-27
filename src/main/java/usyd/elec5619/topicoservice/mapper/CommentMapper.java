@@ -2,7 +2,6 @@ package usyd.elec5619.topicoservice.mapper;
 
 import org.apache.ibatis.annotations.*;
 import usyd.elec5619.topicoservice.model.Comment;
-import usyd.elec5619.topicoservice.vo.CommentVO;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,9 +37,9 @@ public interface CommentMapper {
     List<Long> getRepliesIdByCommentId(Long commentId);
 
     @Insert("INSERT INTO t_comment " +
-            "(post_id, author_id, parent_id, reply_to_user_id, content, location) " +
+            "(post_id, author_id, parent_id, reply_to_user_id, content, location, image_id) " +
             "VALUES " +
-            "(#{postId}, #{authorId}, #{parentId}, #{replyToUserId}, #{content}, #{location})")
+            "(#{postId}, #{authorId}, #{parentId}, #{replyToUserId}, #{content}, #{location}, #{imageId})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     void insertOne(Comment comment);
 

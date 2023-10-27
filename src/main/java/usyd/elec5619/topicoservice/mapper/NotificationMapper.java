@@ -12,7 +12,7 @@ import java.util.Optional;
 @Mapper
 public interface NotificationMapper {
 
-    @Select("SELECT * FROM t_notification WHERE receiver_id = #{receiverId} ORDER BY ctime DESC")
+    @Select("SELECT * FROM t_notification WHERE receiver_id = #{receiverId} AND unread = true ORDER BY ctime DESC")
     List<Notification> getAllNotifications(Long receiverId);
 
     @Select("SELECT * FROM t_notification WHERE id = #{notificationId}")
