@@ -1,8 +1,20 @@
 # topico-service
 
-## TEST: ADMIN
+## 中文食用指南
+
+1. 运行Docker，启动 Mysql 和 Redis 两个服务。详见`docker-compose.yml`。
+2. （如果是初次运行）在`src/main/resources`下运行`CREATE_DB.sql`，配置datasource，用户名`root`，密码`123456`
+3. 启动`TopicoServiceApplication.java`。
+4. （如果是初次运行）运行`src/main/python`下的`mock_main.py`，初始化数据。
+
+## Test account: ADMIN
 
 - email: admin@qq.com
+- password: 123456
+
+## Test account: USER
+
+- email: test1@qq.com, test2@qq.com, ... , test100@qq.com
 - password: 123456
 
 ## Tech Stack
@@ -20,7 +32,6 @@
 - Open the project in IntelliJ Idea.
 - Open `pom.xml` and install the maven packages.
 - Make sure you have Docker desktop app or Docker service up and running.
-
 
 ## Run in Development mode
 
@@ -41,7 +52,6 @@
   username
   is `root` and password is `123456`.
 
-
 ## Initialize data
 
 **After the server is up and running,**
@@ -49,6 +59,7 @@
 run `mock_main.py` in `src/main/python` to initialize data.
 
 Command:
+
 ```shell
 cd ./src/main/python
 python ./mock_main.py
