@@ -56,24 +56,12 @@ public class AuthServiceImpl implements AuthService {
             throw new BadRequestException("Password must be 6-16 characters");
         }
         // Create user
-        User user = User.builder()
-                        .email(email)
-                        .nickName(nickName)
-                        .password(passwordEncoder.encode(password))
-                        .role(Role.ROLE_USER)
-                        .gender(Gender.NOT_KNOWN)
-                        .avatar(1L)
-                        .build();
+        User user = User.builder().email(email).nickName(nickName).password(passwordEncoder.encode(password)).role(Role.ROLE_USER).gender(Gender.NOT_KNOWN).avatar(1L).build();
         userMapper.insertOne(user);
         final Long generatedId = user.getId();
         // JWT
         String token = jwtService.generateToken(user);
-        return LoginVO.builder()
-                      .id(generatedId)
-                      .email(email)
-                      .nickName(nickName)
-                      .token(token)
-                      .build();
+        return LoginVO.builder().id(generatedId).email(email).nickName(nickName).token(token).build();
     }
 
     @Override
@@ -82,12 +70,7 @@ public class AuthServiceImpl implements AuthService {
         var user = userMapper.getByEmail(loginDto.getEmail()).orElseThrow(() -> new IllegalArgumentException("Invalid email"));
         String token = jwtService.generateToken(user);
         locationService.updateUserLocation(user.getId(), clientIp);
-        return LoginVO.builder()
-                      .id(user.getId())
-                      .email(user.getEmail())
-                      .nickName(user.getNickName())
-                      .token(token)
-                      .build();
+        return LoginVO.builder().id(user.getId()).email(user.getEmail()).nickName(user.getNickName()).token(token).build();
     }
 
     @Override
@@ -95,9 +78,16 @@ public class AuthServiceImpl implements AuthService {
         User user = userMapper.getUserById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user id"));
         String oldPassword = updatePasswordDto.getOldPassword();
         String newPassword = updatePasswordDto.getNewPassword();
-        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+        final String encodedCorrectPassword = user.getPassword();
+        // Old password is incorrect
+        if (!passwordEncoder.matches(oldPassword, encodedCorrectPassword)) {
             throw new BadRequestException("Old password is incorrect");
         }
+        // New password is the same as old password
+        if (passwordEncoder.matches(newPassword, encodedCorrectPassword)) {
+            throw new BadRequestException("New password cannot be the same as old password");
+        }
+        // New password is invalid
         if (newPassword.length() < 6 || newPassword.length() > 16) {
             throw new BadRequestException("Password must be 6-16 characters");
         }

@@ -1,6 +1,5 @@
 package usyd.elec5619.topicoservice.controller;
 
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

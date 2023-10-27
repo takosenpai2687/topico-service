@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import usyd.elec5619.topicoservice.dto.user.UpdatePasswordDto;
 import usyd.elec5619.topicoservice.dto.user.UpdateUserDto;
 import usyd.elec5619.topicoservice.model.User;
 import usyd.elec5619.topicoservice.pojo.CommonResponse;

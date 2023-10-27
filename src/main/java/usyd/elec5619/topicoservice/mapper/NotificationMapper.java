@@ -20,8 +20,7 @@ public interface NotificationMapper {
 
     @Update("UPDATE t_notification SET unread = #{unread} WHERE id = #{id}")
     void updateNotification(Notification notification);
-
-
+    
     @Delete("DELETE FROM t_notification WHERE type = 'LIKE_POST' " +
             "AND sender_id = #{senderId} " +
             "AND receiver_id = #{receiverId} AND post_id = #{postId}")
