@@ -93,22 +93,24 @@ Pojos are plain old java objects.
 
 - Checkin
 - Notification
-- Top Search & Top Communities
+- Image Upload / Fetch
+- Top Search
 
 ### Yiyuan Lu
 
 - Post
 - Post likes
+- Top Communities
 
 ### Paddy Zong
 
-- Auth / Login / Signup
+- Auth / Login / HTTPS
 - Comment
 - Comment likes
 
 ### Ao Xiao
 
-- Community
+- Community get
 - Community Follow
 - Search
 
@@ -116,8 +118,4 @@ Pojos are plain old java objects.
 
 - Admin Operations: create / delete community, assign admin
 - User Info Update / User password update
-- Image Upload / Fetch
-
-## TODO
-
-1. community level 获取不到authentication
+- Signup
