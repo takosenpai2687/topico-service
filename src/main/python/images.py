@@ -10,11 +10,11 @@ def upload_image(file_path, headers):
     file_path = file_path.replace('\\', '/')
     ext = file_path.split('.')[-1]
     with open(file_path, 'rb') as file_binary:
-        files = {'image':  (file_path, file_binary.read())}
+        files = {'image': (file_path, file_binary.read())}
         body, content_type = encode_multipart_formdata(files)
-        res = requests.post(url, data=body, headers={
-                            'Authorization': headers['Authorization'],
-                            'Content-Type': content_type}
+        res = requests.post(url, data=body, verify=False, headers={
+            'Authorization': headers['Authorization'],
+            'Content-Type': content_type}
                             ).json()
         print(res)
         print(
@@ -35,7 +35,7 @@ def download_image(url, folder, file_name):
         return
 
     # make request
-    res = requests.get(url)
+    res = requests.get(url, verify=False)
     content_type = res.headers['content-type']
     ext = content_type.split('/')[-1]
     file_path = f"{folder}/{file_name}.{ext}"

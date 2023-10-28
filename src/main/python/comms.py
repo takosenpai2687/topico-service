@@ -41,7 +41,7 @@ def create_communities(headers):
             "banner": banner_id
         }
         print(headers)
-        res = requests.post(url, json=data, headers=headers).json()
+        res = requests.post(url, json=data, headers=headers, verify=False).json()
         print(res)
         print(
             f"{res['code']} {res['message']} ||| Create community: name={comm['name']}")

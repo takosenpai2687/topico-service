@@ -1,1 +1,1 @@
-ROOT_URL = 'http://localhost:8080'
+ROOT_URL = 'https://127.0.0.1:8080'

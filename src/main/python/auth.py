@@ -22,7 +22,7 @@ def create_users():
         body = {"email": email, "password": "123456",
                 "nickName": name, "confirmPassword": "123456"}
         res = requests.post(
-            ROOT_URL + "/api/v1/auth/signup", json=body).json()
+            ROOT_URL + "/api/v1/auth/signup", json=body, verify=False).json()
         print(
             f"{res['code']} {res['message']} ||| Sign up user: email={email}, nickName={name}")
 
@@ -30,7 +30,7 @@ def create_users():
 def admin_login():
     url = ROOT_URL + '/api/v1/auth/login'
     data = {'email': 'admin@qq.com', 'password': '123456'}
-    response = requests.post(url, json=data)
+    response = requests.post(url, json=data, verify=False)
     token = response.json()['data']['token']
     headers = {'Authorization': 'Bearer ' + token}
     return headers
