@@ -35,8 +35,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public Pager<PostVO> getPostsByUserId(Long userId, Integer page, Integer size) {
         assert page > -1;
-        //TODO: default page size should = 0 or 1 ?
-        final int offset = page * size;
+        final int offset = (page - 1) * size;
         List<Post> posts = postMapper.getPostsByUserId(userId, offset, size);
         List<PostVO> postVOs = convertPostToPostVO(posts);
         Integer total = postMapper.countPostsByUserId(userId);
