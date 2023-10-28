@@ -2,7 +2,7 @@ package usyd.elec5619.topicoservice.service.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -14,14 +14,21 @@ import usyd.elec5619.topicoservice.service.LocationService;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
 public class LocationServiceImpl implements LocationService {
     private final OkHttpClient httpClient = new OkHttpClient();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     private final UserMapper userMapper;
 
+    @Value("${ipcheck.fallback_city}")
+    private String fallbackCity;
+
+    public LocationServiceImpl(UserMapper userMapper) {
+        this.userMapper = userMapper;
+    }
+
     public String getCity(String ipAddress) {
+
 
         final String url = "https://ipapi.co/" + ipAddress + "/json/";
 
@@ -37,6 +44,7 @@ public class LocationServiceImpl implements LocationService {
             JsonNode jsonNode = objectMapper.readTree(response.body().string());
             return jsonNode.get("city").asText();
         } catch (Exception e) {
+            if (ipAddress != null) return fallbackCity; // localhost
             return "Unknown";
         }
     }

@@ -53,3 +53,5 @@ scheduled:
   updateTopSearch: 60_000  # 1 minute
   updateTopCommunities: 60_000 # 1 minute
 
+ipcheck:
+  fallback_city: Sydney
