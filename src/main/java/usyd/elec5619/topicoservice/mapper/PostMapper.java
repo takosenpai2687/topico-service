@@ -23,8 +23,12 @@ public interface PostMapper {
     List<String> getImagesByPostId(Long id);
 
 
+    @Select("SELECT * FROM t_post WHERE community_id = #{communityId} ORDER BY ctime DESC, likes DESC LIMIT #{offset}, #{size}")
+    List<Post> getNewPostsByCommunityId(Long communityId, Integer offset, Integer size);
+
+
     @Select("SELECT * FROM t_post WHERE community_id = #{communityId} ORDER BY likes DESC, ctime DESC LIMIT #{offset}, #{size}")
-    List<Post> getOrderedPostsByCommunityId(Long communityId, Integer offset, Integer size);
+    List<Post> getHotPostsByCommunityId(Long communityId, Integer offset, Integer size);
 
 
     @Select("SELECT COUNT(id) FROM t_post WHERE community_id = #{communityId}")

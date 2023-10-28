@@ -47,7 +47,7 @@ public class PostServiceImpl implements PostService {
     public Pager<PostVO> getPostsByCommunityId(Long communityId, Integer page, Integer size, SortBy sortBy) {
         assert page > -1;
         final int offset = (page - 1) * size;
-        List<Post> posts = postMapper.getOrderedPostsByCommunityId(communityId, offset, size);
+        List<Post> posts = sortBy.equals(SortBy.MOST_LIKES) ? postMapper.getHotPostsByCommunityId(communityId, offset, size) : postMapper.getNewPostsByCommunityId(communityId, offset, size);
         List<PostVO> postVOs = convertPostToPostVO(posts);
         final Integer total = postMapper.countPostsByCommunityId(communityId);
         return Pager.<PostVO>builder().data(postVOs).page(page).size(size).total(total).build();
@@ -69,22 +69,8 @@ public class PostServiceImpl implements PostService {
         List<PostVO> postVOs = new ArrayList<>();
         for (Post post : posts) {
             User author = userMapper.getUserById(post.getAuthorId()).orElseThrow(() -> new NotFoundException("Author not found"));
-            PostVO postVO = PostVO.builder()
-                                  .id(post.getId())
-                                  .community(communityMapper.getCommunityById(post.getCommunityId()))
-                                  .author(author)
-                                  .title(post.getTitle())
-                                  .content(post.getContent().substring(0, Math.min(post.getContent().length(), 144))) // Get short content
-                                  .spoiler(post.getSpoiler())
-                                  .tags(post.getTags())
-                                  .images(imageService.getImagesByPostId(post.getId()))
-                                  .ctime(post.getCtime())
-                                  .utime(post.getUtime())
-                                  .likes(post.getLikes())
-                                  .dislikes(post.getDislikes())
-                                  .replies(post.getReplies())
-                                  .location(post.getLocation())
-                                  .build();
+            PostVO postVO = PostVO.builder().id(post.getId()).community(communityMapper.getCommunityById(post.getCommunityId())).author(author).title(post.getTitle()).content(post.getContent().substring(0, Math.min(post.getContent().length(), 144))) // Get short content
+                                  .spoiler(post.getSpoiler()).tags(post.getTags()).images(imageService.getImagesByPostId(post.getId())).ctime(post.getCtime()).utime(post.getUtime()).likes(post.getLikes()).dislikes(post.getDislikes()).replies(post.getReplies()).location(post.getLocation()).build();
 
             postVOs.add(postVO);
         }
@@ -97,37 +83,14 @@ public class PostServiceImpl implements PostService {
     public PostVO getPostVOById(Long postId) {
         Post post = postMapper.getPostById(postId).orElseThrow(() -> new NotFoundException("Post not found"));
         User author = userMapper.getUserById(post.getAuthorId()).orElseThrow(() -> new NotFoundException("Author not found"));
-        return PostVO.builder()
-                     .id(postId)
-                     .community(communityMapper.getCommunityByPostId(post.getId()))
-                     .author(author)
-                     .title(post.getTitle())
-                     .content(post.getContent())
-                     .spoiler(post.getSpoiler())
-                     .tags(post.getTags())
-                     .images(imageService.getImagesByPostId(postId))
-                     .ctime(post.getCtime())
-                     .utime(post.getUtime())
-                     .likes(post.getLikes())
-                     .dislikes(post.getDislikes())
-                     .replies(post.getReplies())
-                     .location(post.getLocation())
-                     .build();
+        return PostVO.builder().id(postId).community(communityMapper.getCommunityByPostId(post.getId())).author(author).title(post.getTitle()).content(post.getContent()).spoiler(post.getSpoiler()).tags(post.getTags()).images(imageService.getImagesByPostId(postId)).ctime(post.getCtime()).utime(post.getUtime()).likes(post.getLikes()).dislikes(post.getDislikes()).replies(post.getReplies()).location(post.getLocation()).build();
     }
 
     @Override
     @Transactional
     public PostVO createPost(Long userId, CreatePostDto createPostDto, String clientIp) {
         final String city = locationService.getCity(clientIp);
-        Post post = Post.builder()
-                        .communityId(createPostDto.getCommunityId())
-                        .authorId(userId)
-                        .title(createPostDto.getTitle())
-                        .content(createPostDto.getContent())
-                        .spoiler(createPostDto.getSpoiler())
-                        .tags(createPostDto.getTags())
-                        .location(city)
-                        .build();
+        Post post = Post.builder().communityId(createPostDto.getCommunityId()).authorId(userId).title(createPostDto.getTitle()).content(createPostDto.getContent()).spoiler(createPostDto.getSpoiler()).tags(createPostDto.getTags()).location(city).build();
         postMapper.insertOne(post);
         final Long postId = post.getId();
         // Add images

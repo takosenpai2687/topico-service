@@ -85,7 +85,6 @@ public class CommunityController {
     @GetMapping("/community_posts/{communityId}")
     public CommonResponse<Pager<PostVO>> getCommunityPosts(@PathVariable Long communityId, @RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "10") Integer size, @RequestParam(defaultValue = "MOST_LIKES") SortBy sortBy) {
         final Pager<PostVO> posts = postService.getPostsByCommunityId(communityId, page, size, sortBy);
-        log.info("getting trending posts: {}", posts);
         return CommonResponse.success(posts);
     }
 
