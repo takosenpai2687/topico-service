@@ -115,7 +115,7 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public void deletePostsByCommunityId(Long communityId) {
         List<Post> posts = postMapper.getPostsByCommunityId(communityId);
-        posts.parallelStream().forEach(post -> deletePostById(post.getId()));
+        posts.forEach(post -> deletePostById(post.getId()));
     }
 
     @Override

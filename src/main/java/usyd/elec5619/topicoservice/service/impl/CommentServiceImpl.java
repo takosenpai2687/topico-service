@@ -246,8 +246,9 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional
     public void deleteAllCommentsByPostId(Long id) {
         List<Comment> comments = commentMapper.getCommentsByPostId(id);
-        comments.parallelStream().forEach(comment -> deleteComment(comment.getAuthorId(), comment.getId()));
+        comments.forEach(comment -> deleteComment(comment.getAuthorId(), comment.getId()));
     }
 }

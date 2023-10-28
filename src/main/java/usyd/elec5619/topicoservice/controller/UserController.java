@@ -37,11 +37,4 @@ public class UserController {
         return CommonResponse.success(updatedUser);
     }
 
-
-    @GetMapping("/test")
-    public CommonResponse<Long> getCredential(Authentication authentication) {
-        final Long userId = Long.parseLong(authentication.getName());
-        return CommonResponse.success(userId);
-    }
-
 }

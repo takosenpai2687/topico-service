@@ -45,7 +45,7 @@ public interface CommunityMapper {
     @Update("UPDATE t_community SET followers = followers - 1 WHERE id = #{communityId}")
     void decrementCommunityFollowers(Long communityId);
 
-    @Select("SELECT * FROM t_community")
+    @Select("SELECT * FROM t_community ORDER BY followers DESC")
     List<Community> getAllCommunities();
 
     @Select("SELECT * FROM t_community ORDER BY followers DESC LIMIT 10")

@@ -12,12 +12,13 @@ import usyd.elec5619.topicoservice.pojo.CommonResponse;
 import usyd.elec5619.topicoservice.service.CheckinService;
 import usyd.elec5619.topicoservice.service.CommunityService;
 import usyd.elec5619.topicoservice.service.PostService;
-import usyd.elec5619.topicoservice.service.UserService;
 import usyd.elec5619.topicoservice.type.SortBy;
 import usyd.elec5619.topicoservice.util.LevelUtil;
 import usyd.elec5619.topicoservice.vo.CheckinVO;
 import usyd.elec5619.topicoservice.vo.Pager;
 import usyd.elec5619.topicoservice.vo.PostVO;
+
+import java.util.List;
 
 @RestController()
 @RequestMapping("/api/v1/communities")
@@ -25,10 +26,15 @@ import usyd.elec5619.topicoservice.vo.PostVO;
 @Slf4j
 public class CommunityController {
 
-    private final UserService userService;
     private final CheckinService checkinService;
     private final CommunityService communityService;
     private final PostService postService;
+
+    @GetMapping()
+    public CommonResponse<List<Community>> getAllCommunities() {
+        final List<Community> communities = communityService.getAllCommunities();
+        return CommonResponse.success(communities);
+    }
 
     @GetMapping("/{communityId}")
     public CommonResponse<Community> getCommunity(@Valid @PathVariable Long communityId) {

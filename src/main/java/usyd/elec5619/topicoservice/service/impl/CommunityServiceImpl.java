@@ -136,4 +136,9 @@ public class CommunityServiceImpl implements CommunityService {
         Optional<Integer> myUserComm = communityMapper.getMyLevel(userId, communityId);
         return myUserComm.orElse(0);
     }
+
+    @Override
+    public List<Community> getAllCommunities() {
+        return communityMapper.getAllCommunities();
+    }
 }
