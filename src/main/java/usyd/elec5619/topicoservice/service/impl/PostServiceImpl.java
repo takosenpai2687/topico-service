@@ -12,6 +12,7 @@ import usyd.elec5619.topicoservice.mapper.UserMapper;
 import usyd.elec5619.topicoservice.model.Post;
 import usyd.elec5619.topicoservice.model.User;
 import usyd.elec5619.topicoservice.service.*;
+import usyd.elec5619.topicoservice.type.Role;
 import usyd.elec5619.topicoservice.type.SortBy;
 import usyd.elec5619.topicoservice.vo.Pager;
 import usyd.elec5619.topicoservice.vo.PostVO;
@@ -105,7 +106,9 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public void deletePost(Long userId, Long postId) {
         Post post = postMapper.getPostById(postId).orElseThrow(() -> new NotFoundException("Post not found"));
-        if (!post.getAuthorId().equals(userId)) {
+        final User user = userMapper.getUserById(userId).orElseThrow(() -> new NotFoundException("User not found"));
+        final boolean isAdmin = user.getRole().equals(Role.ROLE_ADMIN);
+        if (!isAdmin && !post.getAuthorId().equals(userId)) {
             throw new NotFoundException("not your post");
         }
         deletePostById(postId);
