@@ -80,35 +80,3 @@ VOs are data sent from backend to frontend.
 
 Pojos are plain old java objects.
 
-## Team Responsibilities
-
-### Taohan Kang
-
-- Checkin
-- Notification
-- Image Upload / Fetch
-- Top Search
-
-### Yiyuan Lu
-
-- Post
-- Post likes
-- Top Communities
-
-### Paddy Zong
-
-- Auth / Login / HTTPS
-- Comment
-- Comment likes
-
-### Ao Xiao
-
-- Community get
-- Community Follow
-- Search
-
-### Mengting Nian
-
-- Admin Operations: create / delete community, assign admin
-- User Info Update / User password update
-- Signup
